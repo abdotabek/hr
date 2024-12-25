@@ -1,0 +1,257 @@
+POST localhost:8080/api/companies
+Content-Type: application/json
+
+{
+  "name": "uz auto motors",
+  "addressDTO": {
+    "regionId": 1,
+    "districtId": 1,
+    "street": "amir temur"
+  },
+  "tin": "200244767",
+  "brand": "GM"
+}
+
+###
+POST localhost:8080/api/branches
+Content-Type: application/json
+
+{
+  "name": "main branch",
+  "companyId": 1,
+  "addressDTO": {
+    "street": "maxtum qulli",
+    "districtId": 7,
+    "regionId": 6
+  }
+}
+
+###
+POST localhost:8080/api/districts
+Content-Type: application/json
+
+{
+  "name": "andijon",
+  "regionId": 1
+}
+
+####
+POST localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "firstName": "javohir",
+  "lastName": "javohirov",
+  "email": "javohir@45gmail.com",
+  "login": "javohir12",
+  "phoneNumber": "+998917754488",
+  "branchId": 3,
+  "companyId": 1,
+  "positionId": 4,
+  "departmentId": 2
+}
+
+###
+GET http://localhost:8080/api/companies/filterCompanyBySpecification
+Content-Type: application/json
+
+{
+  "search": "uzk"
+}
+
+###
+POST localhost:8080/api/employees/registration
+Content-Type: application/json
+
+{
+  "role": "ROLE_ADMIN",
+  "password": "123450",
+  "phoneNumber": "+998974125007",
+  "lastName": "abdulazizov",
+  "firstName": "otabek",
+  "login": "otb40071",
+  "companyId": 1,
+  "departmentId": 1,
+  "positionId": 3,
+  "branchId": 9,
+  "email": "otb250@gmail.com"
+}
+
+###
+
+###
+POST localhost:8080/api/employees/registration
+Content-Type: application/json
+
+{
+  "login": "admin45",
+  "email": "admin45@gmail.com",
+  "firstName": "admin",
+  "lastName": "adminov",
+  "phoneNumber": "+998951254785",
+  "password": "12345",
+  "role": "ROLE_ADMIN",
+  "branchId": 9,
+  "positionId": 3,
+  "departmentId": 1,
+  "companyId": 1
+}
+
+###
+GET localhost:8080/api/tasks
+Content-Type: application/json
+
+
+{
+  "title": "masjid",
+  "content": "asirni oqish"
+}
+
+###
+GET localhost:8080/api/tokens/generate
+
+###
+GET localhost:8080/api/tokens/parse/eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6Iis5OTg5NzQxMjUwMDciLCJzdWIiOiIrOTk4OTc0MTI1MDA3IiwiaWF0IjoxNzM0NjA2NDQ2LCJleHAiOjE3MzQ2OTI4NDZ9.zrzd17Tr83OEtmqhlh4YIzfO659_YoIjixNX2W8oNmtjg9YxFF5SjlBnVYCGENOqzu4UTn4pyCalkzTDjN9HWg
+###
+POST localhost:8080/api/employees/registration
+Content-Type: application/json
+
+{
+  "email": "baxti5@gmail.com",
+  "firstName": "baxti",
+  "lastName": "baxtiyorov",
+  "phoneNumber": "+998914788888",
+  "password": "12345",
+  "role": "ROLE_OWNER",
+  "branchId": 9,
+  "positionId": 3,
+  "departmentId": 1,
+  "companyId": 1
+}
+
+###
+POST localhost:8080/api/employees/authorization
+Content-Type: application/json
+
+{
+  "phone": "+998914788888",
+  "password": "12345"
+}
+
+### update access token
+POST localhost:8080/api/employees/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTE0Nzg4ODg4Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTE0Nzg4ODg4IiwiaWF0IjoxNzM0Nzg0NjY0LCJleHAiOjE3MzQ4NzEwNjR9.jLi3Zd52HoKRYO_dHMpgP-cNafD195TTpQnlw1avBEDwNYm5trZZezDW2sda5aEwefRIsbwQ3e6zR-5NXZO3Eg"
+}
+
+
+####
+POST localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTE0Nzg4ODg4Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTE0Nzg4ODg4IiwiaWF0IjoxNzM0Nzg1MDExLCJleHAiOjE3MzQ4NzE0MTF9.1DJOuVt-WMsXCKjjEGsJ1qhEf52jxo1mhN8wOydCh_NCBY5SQOwJnlAVYgRqOIOHGnhSXDSu8klKzKERkL3EVg
+
+{
+  "content": "masjid",
+  "title": "asr oqish",
+  "employeeId": 41
+}
+
+###
+
+
+###
+POST localhost:8080/api/tasks
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTkwMzExNTQ4Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTkwMzExNTQ4IiwiaWF0IjoxNzM0Nzg0NDIwLCJleHAiOjE3MzQ4NzA4MjB9.k3bhWrrDIPyxUofiFN-WZwtrMYBk5vvN-97Kas00ngDrd6il0WUBGiMP8jV-2KVVCA3Psz0QgqTmkWOwRE4sTg
+
+###
+POST localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTE0Nzg4ODg4Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTE0Nzg4ODg4IiwiaWF0IjoxNzM0Nzg1NzIzLCJleHAiOjE3MzQ4NzIxMjN9.CTqWo7_HrFNaWt7qv-6af6w2ct9gGxJC2kp3dB8IwlGE0_uFnvyeiJSFDg_EzyKvqLIWNUm6MThWuez_ihZ0uA
+
+{
+  "title": "bozor",
+  "content": "xarajat",
+  "employeeId": 48
+}
+
+###
+POST localhost:8080/api/employees/registration
+Content-Type: application/json
+
+{
+  "phoneNumber": "+998995552299",
+  "password": "12345",
+  "lastName": "mirzoyev",
+  "firstName": "mirzo",
+  "role": "ROLE_OWNER",
+  "email": "mirzo74@gmail.com",
+  "branchId": 9,
+  "positionId": 3,
+  "departmentId": 1,
+  "companyId": 1
+}
+
+####
+POST localhost:8080/api/employees/authorization
+Content-Type: application/json
+
+{
+  "phone": "+998995552299",
+  "password": "12345"
+}
+
+###
+GET localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODk5NTU1MjI5OSIsImlhdCI6MTczNTEwNDE3NCwiZXhwIjoxNzM1MTA1MjU0fQ.adWVPcMzr8_bqDnavekLhKAAEC-g3SV_lGVehCO-vsEWVnyvCcCNGO6mMRJSUPzr9tMYb1khdm5QjWrPzyn5KA
+
+{
+  "employeeId":35,
+  "title": "maktab",
+  "content": "oquvchini olish"
+}
+###
+DELETE localhost:8080/api/tasks/18
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDM5NzE5LCJleHAiOjE3MzUwNDA3OTl9.9GM95jBwAx8UvTR-A_jnS-m-cHFIf4cCnks12DpTPNfMPV71XRXhoUDvEOkG1h1qLYrqqYiZpxisSZRfj5E7OA
+
+###
+POST localhost:8080/api/employees/refresh-wtoken
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODk5NTU1MjI5OSIsImlhdCI6MTczNTEwMzg3NCwiZXhwIjoxNzM1MTA0OTU0fQ.4Ie6DmTEy9gZ7MEu7_V14fT5i3pSj9HiPPJWN3N2TSQX6jRP4e4uaaT6TmxJfhQdkVAfSYDod3YpEO6SuapZ-Q"
+}
+
+
+####
+GET localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDQ5NzMxLCJleHAiOjE3MzUwNTA4MTF9.Q2EmAHbYbT6VR5rcyPESbo3Wki3VR3-UWPZmqeizMATqynC2mPNB-psq44PDpaeZeoAnS3U3P0gz_6g1tS6y8g
+
+{
+  "employeeId":35,
+  "title": "ish",
+  "content": "taskni yopish"
+}
+
+###
+GET localhost:8080/api/employees/54
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTUyMjIyMDExIiwicm9sZSI6IlJPTEVfQURNSU4iLCJzdWIiOiIrOTk4OTUyMjIyMDExIiwiaWF0IjoxNzM0OTM4MDk4LCJleHAiOjE3MzUwMjQ0OTh9.pkx9rslGayaR3cQ_zbCyQ6GTf05XLO1902V_7gQFT874V2aqa_Kp5NLLwrOsBokTlG4tFjrtum_ioKhbs32QrQ
+
+{
+
+}
+###
+GET http://localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTUyMjIyMDExIiwicm9sZSI6IlJPTEVfQURNSU4iLCJzdWIiOiIrOTk4OTUyMjIyMDExIiwiaWF0IjoxNzM0OTQ5NjIwLCJleHAiOjE3MzUwMzYwMjB9.eplwcwHIMH9jK5krO4IoPAEbWlWQQwgGscfn13y9nsIgg-CqHVO-DbBsRCj3PV1D1-Fh_rIrC8BXYPzYqwn75A
+
+
+
+
+
+
+
