@@ -43,13 +43,13 @@ public class UserService {
     }
 
     @Transactional
-    public void deactivateAndDeleteUser(String userId) {
-        List<TokenStore> tokenStoreList = tokenStoreRepository.findAllByUserId(userId);
+    public void deactivateAndDeleteUser(String id) {
+        List<TokenStore> tokenStoreList = tokenStoreRepository.findAllByUserId(id);
         for (TokenStore token : tokenStoreList) {
             token.setActive(false);
             tokenStoreRepository.save(token);
         }
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setStatus("INACTIVE");

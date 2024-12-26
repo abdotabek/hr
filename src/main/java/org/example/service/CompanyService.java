@@ -95,7 +95,7 @@ public class CompanyService {
     @Transactional
     public Long update(Long id, CompanyDTO companyDTO) {
         if (companyDTO.getName() == null || companyDTO.getName().isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("company data is required");
+            throw ExceptionUtil.throwCustomIllegalArgumentException("company name is required");
         }
         return companyRepository.findById(id)
                 .map(company -> {

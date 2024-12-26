@@ -12,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "branch")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Branch extends BaseEntity {
+
     @Column(name = "name")
     String name;
 

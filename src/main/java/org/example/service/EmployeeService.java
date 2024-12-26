@@ -240,7 +240,7 @@ public class EmployeeService {
             if (optional.isPresent()) {
                 Employee employee = optional.get();
 
-                if (employee.getStatus().equals(GeneralStatus.BLOCK)) {
+                if (GeneralStatus.BLOCK == employee.getStatus()) {
                     throw ExceptionUtil.throwUserBlockedException("User is blocked");
                 }
                 TokenDTO response = new TokenDTO();

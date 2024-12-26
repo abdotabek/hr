@@ -14,16 +14,16 @@ import org.springframework.data.redis.core.RedisHash;
 public class TokenStore {
     @Id
     String id;
-    String userId;
+    String employeeId;
     String token;
     boolean active;
 
     public TokenStore() {
     }
 
-    public TokenStore(String id, String userId, String token, boolean active) {
+    public TokenStore(String id, String employeeId, String token, boolean active) {
         this.id = id;
-        this.userId = userId;
+        this.employeeId = employeeId;
         this.token = token;
         this.active = active;
     }

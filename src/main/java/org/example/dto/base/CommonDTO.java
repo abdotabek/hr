@@ -14,6 +14,6 @@ public class CommonDTO {
 
     @Override
     public String toString() {
-        return name;
+        return "CommonDTO {name='" + name + "'}";
     }
 }
