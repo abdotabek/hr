@@ -1,6 +1,5 @@
 package org.example.service;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.AccessLevel;
@@ -49,7 +48,6 @@ public class EmployeeService {
     EntityManager entityManager;
     AuthenticationManager authenticationManager;
     BCryptPasswordEncoder cryptPasswordEncoder;
-    RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public Long create(EmployeeDTO employeeDTO) {
