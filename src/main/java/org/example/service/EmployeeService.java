@@ -23,7 +23,6 @@ import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
 import org.example.util.JwtUtil;
 import org.springframework.data.domain.Page;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
