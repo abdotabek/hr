@@ -1,4 +1,4 @@
-package org.example.controller.redis;
+package org.example.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
