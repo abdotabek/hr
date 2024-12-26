@@ -28,6 +28,7 @@ public class TokenStoreController {
     public ResponseEntity<Optional<TokenStore>> get(@PathVariable String id) {
         return ResponseEntity.ok(tokenStoreService.getTokenById(id));
     }
+
     @GetMapping
     public ResponseEntity<List<TokenStore>> getList() {
         return ResponseEntity.ok(tokenStoreService.getList());

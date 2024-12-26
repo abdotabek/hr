@@ -18,6 +18,9 @@ public class TokenStore {
     String token;
     boolean active;
 
+    public TokenStore() {
+    }
+
     public TokenStore(String id, String userId, String token, boolean active) {
         this.id = id;
         this.userId = userId;
