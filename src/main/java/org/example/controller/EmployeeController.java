@@ -120,5 +120,4 @@ public class EmployeeController {
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
         return ResponseEntity.ok(employeeService.getNewAccessToken(tokenDTO));
     }
-
 }

@@ -52,9 +52,12 @@ public class SecurityConfig {
                     .requestMatchers(AUTH_WHITELIST).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
+//                    .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
                     .requestMatchers(HttpMethod.DELETE, "/api/tasks", "api/tasks/**").hasRole("OWNER")
                     .requestMatchers("api/companies/**").permitAll()
+                    .requestMatchers("api/employees/**").permitAll()
+                    .requestMatchers("api/users/**").permitAll()
+                    .requestMatchers("api/token-store/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

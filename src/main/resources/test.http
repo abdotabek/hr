@@ -249,6 +249,13 @@ GET http://localhost:8080/api/tasks
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTUyMjIyMDExIiwicm9sZSI6IlJPTEVfQURNSU4iLCJzdWIiOiIrOTk4OTUyMjIyMDExIiwiaWF0IjoxNzM0OTQ5NjIwLCJleHAiOjE3MzUwMzYwMjB9.eplwcwHIMH9jK5krO4IoPAEbWlWQQwgGscfn13y9nsIgg-CqHVO-DbBsRCj3PV1D1-Fh_rIrC8BXYPzYqwn75A
 
+###
+GET localhost:8080/api/employees/redis/test
+
+###
+POST localhost:8080/api/users/
+Content-Type: application/json
+
 
 
 
