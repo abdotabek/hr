@@ -18,7 +18,7 @@ import java.util.Optional;
 public class TokenStoreController {
     TokenStoreService tokenStoreService;
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<TokenStore> create(@RequestParam String id, @RequestParam String userId,
                                              @RequestParam String token, @RequestParam boolean active) {
         return ResponseEntity.ok(tokenStoreService.create(id, userId, token, active));
@@ -43,5 +43,5 @@ public class TokenStoreController {
     public ResponseEntity<Void> delete(@PathVariable("id") String id) {
         tokenStoreService.delete(id);
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

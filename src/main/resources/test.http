@@ -181,12 +181,12 @@ POST localhost:8080/api/employees/registration
 Content-Type: application/json
 
 {
-  "phoneNumber": "+998995552299",
+  "phoneNumber": "+998995551111",
   "password": "12345",
-  "lastName": "mirzoyev",
-  "firstName": "mirzo",
+  "lastName": "shkurov",
+  "firstName": "shkur",
   "role": "ROLE_OWNER",
-  "email": "mirzo74@gmail.com",
+  "email": "shkurov74@gmail.com",
   "branchId": 9,
   "positionId": 3,
   "departmentId": 1,

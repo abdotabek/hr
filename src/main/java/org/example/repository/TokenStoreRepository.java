@@ -6,5 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface TokenStoreRepository extends CrudRepository<TokenStore, String> {
-    List<TokenStore> findAllByUserId(String userId);
+
+    List<TokenStore> findAllByEmployeeId(Long employeeId);
 }

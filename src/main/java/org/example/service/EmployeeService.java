@@ -16,9 +16,11 @@ import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.JwtDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.entity.Employee;
+import org.example.entity.redis.TokenStore;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
 import org.example.repository.EmployeeRepository;
+import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
 import org.example.util.JwtUtil;
@@ -47,6 +49,8 @@ public class EmployeeService {
     EntityManager entityManager;
     AuthenticationManager authenticationManager;
     BCryptPasswordEncoder cryptPasswordEncoder;
+    TokenStoreRepository tokenStoreRepository;
+
 
     @Transactional
     public Long create(EmployeeDTO employeeDTO) {
@@ -167,26 +171,26 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
+
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
-        Optional<Employee> optional = employeeRepository.findByPhoneNumber(employeeDTO.getPhoneNumber());
-
-        if (optional.isPresent()) {
-            return null;
-        }
-
-        Employee employee = new Employee();
-        employee.setFirstName(employeeDTO.getFirstName());
-        employee.setLastName(employeeDTO.getLastName());
-        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setCompanyId(employeeDTO.getCompanyId());
-        employee.setBranchId(employeeDTO.getBranchId());
-        employee.setDepartmentId(employeeDTO.getDepartmentId());
-        employee.setPositionId(employeeDTO.getPositionId());
-        employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
-        employee.setRole(employeeDTO.getRole());
-
-        employeeRepository.save(employee);
+        employeeRepository.findByPhoneNumber(employeeDTO.getPhoneNumber())
+                .map(employee -> {
+                    if (GeneralStatus.BLOCK == employee.getStatus()) {
+                        throw ExceptionUtil.throwConflictException("employee status blocked");
+                    }
+                    employee.setFirstName(employeeDTO.getFirstName());
+                    employee.setLastName(employeeDTO.getLastName());
+                    employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+                    employee.setEmail(employeeDTO.getEmail());
+                    employee.setCompanyId(employeeDTO.getCompanyId());
+                    employee.setBranchId(employeeDTO.getBranchId());
+                    employee.setDepartmentId(employeeDTO.getDepartmentId());
+                    employee.setPositionId(employeeDTO.getPositionId());
+                    employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
+                    employee.setRole(employeeDTO.getRole());
+                    employeeRepository.save(employee);
+                    return employee.getId();
+                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with id does not exist!"));
         return employeeDTO;
     }
 
@@ -233,6 +237,7 @@ public class EmployeeService {
           throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid token");
       }*/
     public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
+
         if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
@@ -254,5 +259,12 @@ public class EmployeeService {
         throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
     }
 
-
+    public void dismissedEmployee(Long id) {
+        employeeRepository.findById(id)
+                .map(employee -> {
+                    employee.setStatus(GeneralStatus.BLOCK);
+                    employeeRepository.save(employee);
+                    return employee.getId();
+                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
+    }
 }

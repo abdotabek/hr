@@ -120,4 +120,10 @@ public class EmployeeController {
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
         return ResponseEntity.ok(employeeService.getNewAccessToken(tokenDTO));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> dismissedEmployee(@PathVariable("id") Long id) {
+        employeeService.dismissedEmployee(id);
+        return ResponseEntity.ok().build();
+    }
 }
