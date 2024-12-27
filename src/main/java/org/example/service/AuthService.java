@@ -79,13 +79,23 @@ public class AuthService {
                 if (GeneralStatus.BLOCK == employee.getStatus()) {
                     throw ExceptionUtil.throwConflictException("Employee is blocked");
                 }
-                String newAccessToken = JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name());
+                String accessToken = JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name());
                 String refreshToken = JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name());
 
+                tokenStore.setAccessToken(accessToken);
+                tokenStore.setRefreshToken(refreshToken);
+                tokenStoreRepository.save(tokenStore);
+
+                TokenDTO response = new TokenDTO();
+                response.setAccessToken(accessToken);
+                response.setRefreshToken(refreshToken);
+                response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
+                response.setType("Bearer");
+                return response;
 
             }
         }
-        return tokenDTO;
+        throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired refresh token");
     }
 
 }

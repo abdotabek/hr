@@ -17,4 +17,5 @@ public class TokenStore {
     Long employeeId;
     String token;
     String refreshToken;
+    String accessToken;
 }
