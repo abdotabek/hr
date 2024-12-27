@@ -111,10 +111,10 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.registration(employeeDTO));
     }
 
-    @PostMapping("/authorization")
+    /*@PostMapping("/authorization")
     public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(employeeService.authorization(authRequestDTO));
-    }
+    }*/
 
     @PostMapping("/refresh-token")
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {

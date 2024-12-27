@@ -16,5 +16,5 @@ public class TokenStore {
     String id;
     Long employeeId;
     String token;
-    Boolean active = Boolean.TRUE;
+    String refreshToken;
 }

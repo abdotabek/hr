@@ -48,4 +48,15 @@ public class ExceptionUtil {
                 .build();
         throw new UserBlockedException(errorDTO, message);
     }
+
+    public static EmployeeNotFoundException throwEmployeeNotFoundException(String message) {
+        ErrorDTO errorDTO = ErrorDTO.builder()
+                .title("Access Denied")
+                .message(message)
+                .status(HttpStatus.NOT_FOUND)
+                .localDateTime(LocalDateTime.now())
+                .build();
+        throw new EmployeeNotFoundException(errorDTO, message);
+    }
+
 }

@@ -8,4 +8,6 @@ import java.util.List;
 public interface TokenStoreRepository extends CrudRepository<TokenStore, String> {
 
     List<TokenStore> findAllByEmployeeId(Long employeeId);
+
+    void deleteAllByEmployeeId(Long employeeId);
 }

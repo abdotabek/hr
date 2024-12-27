@@ -33,4 +33,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> handlerUserBlockedException(UserBlockedException ex) {
         return new ResponseEntity<>(ex.getErrorDTO(), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handlerUserBlockedException(EmployeeNotFoundException ex) {
+        return new ResponseEntity<>(ex.getErrorDTO(), HttpStatus.NOT_FOUND);
+    }
 }

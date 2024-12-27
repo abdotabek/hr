@@ -181,12 +181,12 @@ POST localhost:8080/api/employees/registration
 Content-Type: application/json
 
 {
-  "phoneNumber": "+998995551111",
+  "phoneNumber": "+998900550022",
   "password": "12345",
-  "lastName": "shkurov",
-  "firstName": "shkur",
-  "role": "ROLE_OWNER",
-  "email": "shkurov74@gmail.com",
+  "lastName": "ali",
+  "firstName": "aliyev",
+  "role": "ROLE_ADMIN",
+  "email": "dilshod74@gmail.com",
   "branchId": 9,
   "positionId": 3,
   "departmentId": 1,
@@ -198,7 +198,7 @@ POST localhost:8080/api/employees/authorization
 Content-Type: application/json
 
 {
-  "phone": "+998995552299",
+  "phone": "+998900550022",
   "password": "12345"
 }
 
@@ -255,6 +255,15 @@ GET localhost:8080/api/employees/redis/test
 ###
 POST localhost:8080/api/users/
 Content-Type: application/json
+
+###
+POST localhost:8080/api/auths
+Content-Type: application/json
+
+{
+  "phone": "+998995001122",
+  "password": "12345"
+}
 
 
 

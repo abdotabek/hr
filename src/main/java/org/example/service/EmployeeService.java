@@ -172,12 +172,13 @@ public class EmployeeService {
     }
 
 
-    public EmployeeDTO registration(EmployeeDTO employeeDTO) {
+    /*public EmployeeDTO registration(EmployeeDTO employeeDTO) {
         employeeRepository.findByPhoneNumber(employeeDTO.getPhoneNumber())
                 .map(employee -> {
                     if (GeneralStatus.BLOCK == employee.getStatus()) {
                         throw ExceptionUtil.throwConflictException("employee status blocked");
                     }
+
                     employee.setFirstName(employeeDTO.getFirstName());
                     employee.setLastName(employeeDTO.getLastName());
                     employee.setPhoneNumber(employeeDTO.getPhoneNumber());
@@ -192,6 +193,24 @@ public class EmployeeService {
                     return employee.getId();
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with id does not exist!"));
         return employeeDTO;
+    }*/
+
+    public EmployeeDTO registration(EmployeeDTO employeeDTO) {
+        if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
+            throw ExceptionUtil.throwConflictException("Employee with this phone number already exists");
+        }
+        Employee employee = new Employee();
+        employee.setFirstName(employeeDTO.getFirstName());
+        employee.setLastName(employeeDTO.getLastName());
+        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+        employee.setEmail(employeeDTO.getEmail());
+        employee.setCompanyId(employeeDTO.getCompanyId());
+        employee.setBranchId(employeeDTO.getBranchId());
+        employee.setDepartmentId(employeeDTO.getDepartmentId());
+        employee.setPositionId(employeeDTO.getPositionId());
+        employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
+        employee.setRole(employeeDTO.getRole());
+        return mapper.toDTO(employeeRepository.save(employee));
     }
 
     public AuthResponseDTO authorization(AuthRequestDTO auth) {
@@ -264,6 +283,7 @@ public class EmployeeService {
                 .map(employee -> {
                     employee.setStatus(GeneralStatus.BLOCK);
                     employeeRepository.save(employee);
+                    tokenStoreRepository.deleteAllByEmployeeId(id);
                     return employee.getId();
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
     }

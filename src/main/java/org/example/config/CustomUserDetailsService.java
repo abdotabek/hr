@@ -3,6 +3,7 @@ package org.example.config;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.dto.enums.GeneralStatus;
 import org.example.entity.Employee;
 import org.example.repository.EmployeeRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // username = login or phone or email
-        Optional<Employee> optional = employeeRepository.findByPhoneNumber(username);
+//        Optional<Employee> optional = employeeRepository.findByPhoneNumber(username);
+        Optional<Employee> optional = employeeRepository.findByPhoneNumberAndStatus(username, GeneralStatus.ACTIVE);
         if (optional.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }

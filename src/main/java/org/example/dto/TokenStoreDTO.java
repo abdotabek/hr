@@ -12,5 +12,5 @@ public class TokenStoreDTO {
     String id;
     Long employeeId;
     String token;
-    Boolean active = Boolean.TRUE;
+    boolean active;
 }
