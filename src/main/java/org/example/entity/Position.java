@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "position")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Position extends BaseEntity {
+
     @Column(name = "name")
     String name;
 }

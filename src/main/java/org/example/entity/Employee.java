@@ -15,6 +15,7 @@ import org.example.dto.enums.GeneralStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Employee extends BaseEntity {
+
     @Column(name = "first_name")
     String firstName;
 

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "task")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Task extends BaseEntity {
+
     @Column(name = "title")
     String title;
 

@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "region")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Region extends BaseEntity {
+
     @Column(name = "name")
     String name;
 }
