@@ -66,7 +66,8 @@ public class AuthService {
         if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
-            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() -> ExceptionUtil.throwNotFoundException("Refresh token not found"));
+            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() ->
+                    ExceptionUtil.throwNotFoundException("Refresh token not found"));
 
             if (!tokenStore.getRefreshToken().equals(tokenDTO.getRefreshToken())) {
                 throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");

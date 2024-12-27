@@ -12,5 +12,4 @@ public class TokenStoreDTO {
     String id;
     Long employeeId;
     String token;
-    boolean active;
 }

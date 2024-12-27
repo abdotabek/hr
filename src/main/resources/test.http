@@ -181,7 +181,7 @@ POST localhost:8080/api/employees/registration
 Content-Type: application/json
 
 {
-  "phoneNumber": "+998900550022",
+  "phoneNumber": "+998922552222",
   "password": "12345",
   "lastName": "ali",
   "firstName": "aliyev",
@@ -217,18 +217,18 @@ DELETE localhost:8080/api/tasks/18
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDM5NzE5LCJleHAiOjE3MzUwNDA3OTl9.9GM95jBwAx8UvTR-A_jnS-m-cHFIf4cCnks12DpTPNfMPV71XRXhoUDvEOkG1h1qLYrqqYiZpxisSZRfj5E7OA
 
 ###
-POST localhost:8080/api/employees/refresh-wtoken
+POST localhost:8080/api/auths/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODk5NTU1MjI5OSIsImlhdCI6MTczNTEwMzg3NCwiZXhwIjoxNzM1MTA0OTU0fQ.4Ie6DmTEy9gZ7MEu7_V14fT5i3pSj9HiPPJWN3N2TSQX6jRP4e4uaaT6TmxJfhQdkVAfSYDod3YpEO6SuapZ-Q"
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTIyNTUyMjIyIiwicm9sZSI6IlJPTEVfQURNSU4iLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkyMjU1MjIyMiIsImlhdCI6MTczNTMxMDIwNCwiZXhwIjoxNzM1MzExMjg0fQ.6f6upwqmYuvSaOjPCYeDIPpSuSHbGBOFIvgsZHd83gGiAHVV65bsnSMLJcWWxFlnEDRLg5V_9NdH-0JEB_yjRQ"
 }
 
 
 ####
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDQ5NzMxLCJleHAiOjE3MzUwNTA4MTF9.Q2EmAHbYbT6VR5rcyPESbo3Wki3VR3-UWPZmqeizMATqynC2mPNB-psq44PDpaeZeoAnS3U3P0gz_6g1tS6y8g
+Authorization: Bearer Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDQ5NzMxLCJleHAiOjE3MzUwNTA4MTF9.Q2EmAHbYbT6VR5rcyPESbo3Wki3VR3-UWPZmqeizMATqynC2mPNB-psq44PDpaeZeoAnS3U3P0gz_6g1tS6y8g
 
 {
   "employeeId":35,
@@ -247,7 +247,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTUyMjIyMDExI
 ###
 GET http://localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTUyMjIyMDExIiwicm9sZSI6IlJPTEVfQURNSU4iLCJzdWIiOiIrOTk4OTUyMjIyMDExIiwiaWF0IjoxNzM0OTQ5NjIwLCJleHAiOjE3MzUwMzYwMjB9.eplwcwHIMH9jK5krO4IoPAEbWlWQQwgGscfn13y9nsIgg-CqHVO-DbBsRCj3PV1D1-Fh_rIrC8BXYPzYqwn75A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTIyNTUyMjIyIiwicm9sZSI6IlJPTEVfQURNSU4iLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJzdWIiOiIrOTk4OTIyNTUyMjIyIiwiaWF0IjoxNzM1MzEwMjA0LCJleHAiOjE3MzUzMTAyNDB9.gIj6aFoJsvuZDKtDLMTddvy5-Y59FmWOVUDhdPNkbtLWykb1CMMty8P9uZxYY9rVRsONMe5MLaB5PlGWz9lfEw
 
 ###
 GET localhost:8080/api/employees/redis/test
@@ -257,14 +257,17 @@ POST localhost:8080/api/users/
 Content-Type: application/json
 
 ###
-POST localhost:8080/api/auths
+POST localhost:8080/api/auths/refresh-token
 Content-Type: application/json
 
 {
-  "phone": "+998995001122",
+  "phone": "+998922552222",
   "password": "12345"
 }
 
+
+###
+GET localhost:8080/api/token-stores/63
 
 
 

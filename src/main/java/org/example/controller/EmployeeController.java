@@ -8,8 +8,6 @@ import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.employee.EmployeeDetailDTO;
 import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.filter.EmployeeFilterDTO;
-import org.example.dto.jwt.AuthRequestDTO;
-import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.service.EmployeeService;
 import org.springframework.data.domain.Page;

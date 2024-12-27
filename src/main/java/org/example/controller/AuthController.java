@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.jwt.AuthRequestDTO;
 import org.example.dto.jwt.AuthResponseDTO;
+import org.example.dto.jwt.TokenDTO;
 import org.example.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     AuthService authService;
 
-    @PostMapping
+    @PostMapping("/authorization")
     public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(authService.authorization(authRequestDTO));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
+        return ResponseEntity.ok(authService.getAccessToken(tokenDTO));
     }
 }
