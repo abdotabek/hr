@@ -12,4 +12,5 @@ public interface TokenStoreRepository extends CrudRepository<TokenStore, String>
     TokenStore findByEmployeeId(Long employeeId);
 
     void deleteAllByEmployeeId(Long employeeId);
+    void deleteByEmployeeId(Long employeeId);
 }

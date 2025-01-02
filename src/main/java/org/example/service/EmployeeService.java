@@ -48,7 +48,6 @@ public class EmployeeService {
     EmployeeCustomRepository customRepository;
     EntityManager entityManager;
     AuthenticationManager authenticationManager;
-    BCryptPasswordEncoder cryptPasswordEncoder;
     TokenStoreRepository tokenStoreRepository;
 
 
@@ -171,31 +170,7 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
-
     /*public EmployeeDTO registration(EmployeeDTO employeeDTO) {
-        employeeRepository.findByPhoneNumber(employeeDTO.getPhoneNumber())
-                .map(employee -> {
-                    if (GeneralStatus.BLOCK == employee.getStatus()) {
-                        throw ExceptionUtil.throwConflictException("employee status blocked");
-                    }
-
-                    employee.setFirstName(employeeDTO.getFirstName());
-                    employee.setLastName(employeeDTO.getLastName());
-                    employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-                    employee.setEmail(employeeDTO.getEmail());
-                    employee.setCompanyId(employeeDTO.getCompanyId());
-                    employee.setBranchId(employeeDTO.getBranchId());
-                    employee.setDepartmentId(employeeDTO.getDepartmentId());
-                    employee.setPositionId(employeeDTO.getPositionId());
-                    employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
-                    employee.setRole(employeeDTO.getRole());
-                    employeeRepository.save(employee);
-                    return employee.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with id does not exist!"));
-        return employeeDTO;
-    }*/
-
-    public EmployeeDTO registration(EmployeeDTO employeeDTO) {
         if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
             throw ExceptionUtil.throwConflictException("Employee with this phone number already exists");
         }
@@ -211,7 +186,7 @@ public class EmployeeService {
         employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
         employee.setRole(employeeDTO.getRole());
         return mapper.toDTO(employeeRepository.save(employee));
-    }
+    }*/
 
     public AuthResponseDTO authorization(AuthRequestDTO auth) {
         try {
@@ -232,30 +207,7 @@ public class EmployeeService {
         throw new UsernameNotFoundException("Phone or password wrong");
     }
 
-    /*  public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
-          try {
-              if (JwtUtil.isValid(tokenDTO.getRefreshToken())) {
-                  JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
-
-                  Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-
-                  if (optional.isPresent()) {
-                      Employee employee = optional.get();
-
-                      if (employee.getStatus().equals(GeneralStatus.BLOCK)) {
-                          throw ExceptionUtil.throwUserBlockedException("invalid token");
-                      }
-                      TokenDTO response = new TokenDTO();
-                      response.setRefreshToken(JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name()));
-                      return response;
-                  }
-              }
-          } catch (JwtException ignored) {
-
-          }
-          throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid token");
-      }*/
-    public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
+ /*   public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
 
         if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
@@ -276,14 +228,14 @@ public class EmployeeService {
             }
         }
         throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
-    }
+    }*/
 
     public void dismissedEmployee(Long id) {
         employeeRepository.findById(id)
                 .map(employee -> {
                     employee.setStatus(GeneralStatus.BLOCK);
                     employeeRepository.save(employee);
-                    tokenStoreRepository.deleteAllByEmployeeId(id);
+                    tokenStoreRepository.deleteByEmployeeId(id);
                     return employee.getId();
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
     }

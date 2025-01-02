@@ -56,10 +56,13 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.DELETE, "/api/tasks", "api/tasks/**").hasRole("OWNER")
                     .requestMatchers("api/companies/**").permitAll()
                     .requestMatchers("api/employees/**").permitAll()
-                    .requestMatchers("api/users/**").permitAll()
                     .requestMatchers("api/token-store/**").permitAll()
                     .requestMatchers("api/auths/**").permitAll()
                     .requestMatchers("api/token-stores/**").permitAll()
+                    .requestMatchers("api/regions/**").permitAll()
+                    .requestMatchers("api/branches/**").permitAll()
+                    .requestMatchers("api/districts/**").permitAll()
+                    .requestMatchers("api/departments/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

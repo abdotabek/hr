@@ -25,6 +25,7 @@ public class TaskService {
         task.setContent(taskDTO.getContent());
         task.setCreatedDate(LocalDateTime.now());
         task.setEmployeeId(taskDTO.getEmployeeId());
+        taskRepository.save(task);
         return task.getId();
     }
 

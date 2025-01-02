@@ -3,6 +3,7 @@ package org.example.controller;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.jwt.AuthRequestDTO;
 import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.TokenDTO;
@@ -20,6 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     AuthService authService;
 
+    @PostMapping("/registration")
+    public ResponseEntity<EmployeeDTO> creteRegistration(@RequestBody EmployeeDTO employeeDTO) {
+        return ResponseEntity.ok(authService.registration(employeeDTO));
+    }
+
+
     @PostMapping("/authorization")
     public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(authService.authorization(authRequestDTO));
@@ -28,5 +35,6 @@ public class AuthController {
     @PostMapping("/refresh-token")
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
         return ResponseEntity.ok(authService.getAccessToken(tokenDTO));
+
     }
 }

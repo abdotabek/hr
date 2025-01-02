@@ -65,7 +65,7 @@ Content-Type: application/json
 
 {
   "role": "ROLE_ADMIN",
-  "password": "123450",
+  "password": "12345",
   "phoneNumber": "+998974125007",
   "lastName": "abdulazizov",
   "firstName": "otabek",
@@ -134,7 +134,7 @@ POST localhost:8080/api/employees/authorization
 Content-Type: application/json
 
 {
-  "phone": "+998914788888",
+  "phone": "+998937877405",
   "password": "12345"
 }
 
@@ -150,12 +150,12 @@ Content-Type: application/json
 ####
 POST localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTE0Nzg4ODg4Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTE0Nzg4ODg4IiwiaWF0IjoxNzM0Nzg1MDExLCJleHAiOjE3MzQ4NzE0MTF9.1DJOuVt-WMsXCKjjEGsJ1qhEf52jxo1mhN8wOydCh_NCBY5SQOwJnlAVYgRqOIOHGnhSXDSu8klKzKERkL3EVg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDA1Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJzdWIiOiIrOTk4OTM3ODc3NDA1IiwiaWF0IjoxNzM1ODM2OTAyLCJleHAiOjE3MzU4MzY5Mzh9.nOx7VaGZeyvAxhRO8iFmwVANenVTIwAwPRpZWKlWgijHMMMvQJ4S58Jk9a2Wp0o7Z2ARnDsS6o1oDeNA39HRoA
 
 {
   "content": "masjid",
   "title": "asr oqish",
-  "employeeId": 41
+  "employeeId": 3
 }
 
 ###
@@ -217,11 +217,11 @@ DELETE localhost:8080/api/tasks/18
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1NTUyMjk5Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJzdWIiOiIrOTk4OTk1NTUyMjk5IiwiaWF0IjoxNzM1MDM5NzE5LCJleHAiOjE3MzUwNDA3OTl9.9GM95jBwAx8UvTR-A_jnS-m-cHFIf4cCnks12DpTPNfMPV71XRXhoUDvEOkG1h1qLYrqqYiZpxisSZRfj5E7OA
 
 ###
-POST localhost:8080/api/auths/refresh-token
+POST localhost:8080/api/employees/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTIyNTUyMjIyIiwicm9sZSI6IlJPTEVfQURNSU4iLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkyMjU1MjIyMiIsImlhdCI6MTczNTMxMDIwNCwiZXhwIjoxNzM1MzExMjg0fQ.6f6upwqmYuvSaOjPCYeDIPpSuSHbGBOFIvgsZHd83gGiAHVV65bsnSMLJcWWxFlnEDRLg5V_9NdH-0JEB_yjRQ"
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDA0Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkzNzg3NzQwNCIsImlhdCI6MTczNTgzNzU2NSwiZXhwIjoxNzM1ODM4NjQ1fQ.AY8UiKRbH_kTizYSb8miYzg4BdsefElfwZ5U7dTlHFXBAYG026GhD_x1_CJju0r2atdz7nzz6GPfWLT9XvDPvA"
 }
 
 

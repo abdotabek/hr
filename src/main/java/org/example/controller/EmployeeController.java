@@ -104,20 +104,20 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.filterBySpecification(search));
     }
 
-    @PostMapping("/registration")
+    /*@PostMapping("/registration")
     public ResponseEntity<EmployeeDTO> creteRegistration(@RequestBody EmployeeDTO employeeDTO) {
         return ResponseEntity.ok(employeeService.registration(employeeDTO));
-    }
+    }*/
 
     /*@PostMapping("/authorization")
     public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(employeeService.authorization(authRequestDTO));
     }*/
 
-    @PostMapping("/refresh-token")
+   /* @PostMapping("/refresh-token")
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
         return ResponseEntity.ok(employeeService.getNewAccessToken(tokenDTO));
-    }
+    }*/
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> dismissedEmployee(@PathVariable("id") Long id) {

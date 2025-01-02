@@ -1,0 +1,84 @@
+POST localhost:8080/api/companies
+Content-Type: application/json
+
+{
+  "name": "uzkassa",
+  "tin": "306351564",
+  "brand": "cdti",
+  "addressDTO": {
+    "regionId": 1,
+    "districtId": 1,
+    "street": "boz ko'cha"
+  }
+}
+###
+GET localhost:8080/api/branches/1
+Content-Type: application/json
+
+{
+  "companyId": 1,
+  "name": "uzkassa",
+  "addressDTO": {
+    "regionId":1,
+    "street": "istoqlol",
+    "districtId": 2
+  }
+}
+###
+
+POST localhost:8080/api/departments
+Content-Type: application/json
+
+{
+  "branchId": 1,
+  "name": "accounting"
+}
+###
+POST localhost:8080/api/auths/registration
+Content-Type: application/json
+
+{
+  "branchId": 1,
+  "companyId": 1,
+  "firstName": "joni",
+  "lastName": "jorayev",
+  "email": "joni4455@gmail.com",
+  "departmentId": 1,
+  "positionId": 1,
+  "password": "12345",
+  "phoneNumber": "+998937877403",
+  "role": "ROLE_OWNER"
+}
+####
+POST localhost:8080/api/auths/authorization
+Content-Type: application/json
+
+{
+  "password": "12345",
+  "phone": "+9989378775"
+}
+
+####
+POST localhost:8080/api/auths/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDA1Iiwicm9sZSI6IlJPTEVfQURNSU4iLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkzNzg3NzQwNSIsImlhdCI6MTczNTgzOTAzNywiZXhwIjoxNzM1ODQwMTE3fQ.j9biIVFnouBXawEh288USKVgjVdbcvJVT3cgYQJCXiUC2Vqobq-8WC6q8-8RyClykxrf0ZJx_OOHC6T2MYgsGw"
+}
+
+
+
+###
+GET localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDAzIiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJzdWIiOiIrOTk4OTM3ODc3NDAzIiwiaWF0IjoxNzM1ODQwOTI4LCJleHAiOjE3MzU4NDA5NjR9.bGB1x4U-7XcaJois-r3eiRrxpcR02ft3B69BpuijYL9MQF9H9BS_8oxI_2Th4cfYFjoPLTEp4PtZJK_mzSxzbw
+
+
+{
+  "employeeId": 4,
+  "title": "masjid",
+  "content": "asr oqish"
+}
+
+####
+PATCH localhost:8080/api/employees/3

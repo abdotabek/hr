@@ -32,7 +32,7 @@ public class Employee {
     @Column(name = "phone_number", unique = true)
     String phoneNumber;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     String password;
 
     @Column(name = "status")
