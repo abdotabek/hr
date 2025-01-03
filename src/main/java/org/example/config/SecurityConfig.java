@@ -29,9 +29,9 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtTokenFilter;
 
     public static final String[] AUTH_WHITELIST = {
-            "/api/employees/registration",
-            "/api/employees/authorization",
-            "/api/employees/refresh-token"
+            "/api/auths/registration",
+            "/api/auths/authorization",
+            "/api/auths/refresh-token"
     };
 
     @Bean
@@ -52,17 +52,9 @@ public class SecurityConfig {
                     .requestMatchers(AUTH_WHITELIST).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
-//                    .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/tasks", "api/tasks/**").hasRole("OWNER")
-                    .requestMatchers("api/companies/**").permitAll()
-                    .requestMatchers("api/employees/**").permitAll()
-                    .requestMatchers("api/token-store/**").permitAll()
-                    .requestMatchers("api/auths/**").permitAll()
-                    .requestMatchers("api/token-stores/**").permitAll()
-                    .requestMatchers("api/regions/**").permitAll()
-                    .requestMatchers("api/branches/**").permitAll()
-                    .requestMatchers("api/districts/**").permitAll()
-                    .requestMatchers("api/departments/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/tasks", "/api/tasks/**").hasRole("OWNER")
+                    .requestMatchers("/api/token-stores/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

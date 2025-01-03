@@ -25,7 +25,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -70,7 +69,7 @@ public class AuthService {
                 TokenStore tokenStore = new TokenStore();
                 tokenStore.setId(employee.getPhone());   //использую телефон в качестве ключа
                 tokenStore.setEmployeeId(employee.getEmployeeId());
-                tokenStore.setToken(accessToken);
+                tokenStore.setAccessToken(accessToken);
                 tokenStore.setRefreshToken(refreshToken);
                 tokenStoreRepository.save(tokenStore);
 
