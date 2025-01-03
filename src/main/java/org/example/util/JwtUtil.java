@@ -13,40 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
-    public static final int accessTokenLiveTime = 1000 * 36;
-    private static final int refreshTokenLiveTime = 1000 * 360 * 3;
+    public static final int accessTokenLiveTime = 3600 * 24;
+    private static final int refreshTokenLiveTime = 3600 * 24 * 15;
     private static final String secretKey = "veryLongSecretlasharamazgillattayevaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
 
-    /*public static String encode(String username, String role) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtClaims.USERNAME, username);
-        extraClaims.put(JwtClaims.ROLE, role);
-
-        return Jwts
-                .builder()
-                .claims(extraClaims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + accessTokenLiveTime))
-                .signWith(getSignInKey())
-                .compact();
-    }
-
-    public static String generationRefreshToken(String username, String role) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put(JwtClaims.USERNAME, username);
-        extraClaims.put(JwtClaims.ROLE, role);
-
-        return Jwts
-                .builder()
-                .claims(extraClaims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenLiveTime))
-                .signWith(getSignInKey())
-                .compact();
-    }*/
     public static String generateToken(String username, String role, long tokenLiveTime, String tokenType) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("tokenType", tokenType); // Добавляю тип токена чтобы refresh token не обращал на прямую на l end point
@@ -58,7 +29,7 @@ public class JwtUtil {
                 .claims(extraClaims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
+                .expiration(new Date(System.currentTimeMillis() + tokenLiveTime * 1000))
                 .signWith(getSignInKey())
                 .compact();
     }

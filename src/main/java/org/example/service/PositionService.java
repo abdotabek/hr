@@ -24,8 +24,8 @@ public class PositionService {
 
     @Transactional
     public Long create(CommonDTO positionDTO) {
-        if (positionDTO.getName() == null) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("position data in required");
+        if (positionDTO.getName() == null || positionDTO.getName().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("position name in required");
         }
         Position position = new Position();
         position.setName(positionDTO.getName());
@@ -55,8 +55,8 @@ public class PositionService {
 
     @Transactional
     public Long update(Long id, CommonDTO positionDTO) {
-        if (positionDTO.getName().isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("position data is required");
+        if (positionDTO.getName() == null || positionDTO.getName().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("position name is required");
         }
         return positionRepository.findById(id)
                 .map(position -> {

@@ -28,7 +28,7 @@ public class DepartmentService {
 
     @Transactional
     public Long create(DepartmentDTO departmentDTO) {
-        if (departmentDTO.getName().isEmpty()) {
+        if (departmentDTO.getName() == null || departmentDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("department name is required");
         }
         Department department = new Department();

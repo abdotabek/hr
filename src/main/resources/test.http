@@ -267,7 +267,7 @@ Content-Type: application/json
 
 
 ###
-GET localhost:8080/api/token-stores/63
+GET localhost:8080/api/token-stores
 
 
 

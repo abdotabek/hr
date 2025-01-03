@@ -20,6 +20,12 @@ public class TaskService {
     TaskRepository taskRepository;
 
     public Long create(TaskDTO taskDTO) {
+        if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("Task title is required!");
+        }
+        if (taskDTO.getEmployeeId() == null) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("employee id is required!");
+        }
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setContent(taskDTO.getContent());
@@ -56,6 +62,12 @@ public class TaskService {
     }
 
     public TaskDTO update(Long id, TaskDTO taskDTO) {
+        if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("Task title is required!");
+        }
+        if (taskDTO.getEmployeeId() == null) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("employee id is required!");
+        }
         taskRepository.findById(id)
                 .map(task -> {
                     task.setTitle(taskDTO.getTitle());

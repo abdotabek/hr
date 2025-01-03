@@ -25,6 +25,9 @@ public class RegionService {
 
     @Transactional
     public Long create(CommonDTO regionDTO) {
+        if (regionDTO.getName() == null || regionDTO.getName().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("region name is required!");
+        }
         Region region = new Region();
         region.setName(regionDTO.getName());
         return regionRepository.save(region).getId();
@@ -52,8 +55,8 @@ public class RegionService {
 
     @Transactional
     public Long update(Long id, CommonDTO regionDTO) {
-        if (regionDTO.getName().isEmpty()) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("region data is required");
+        if (regionDTO.getName() == null || regionDTO.getName().isEmpty()) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("region name is required");
         }
         return regionRepository.findById(id)
                 .map(region -> {

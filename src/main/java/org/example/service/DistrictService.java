@@ -27,7 +27,7 @@ public class DistrictService {
 
     @Transactional
     public Long create(DistrictDTO districtDTO) {
-        if (districtDTO.getName().isEmpty()) {
+        if (districtDTO.getName() == null || districtDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("district name is required");
         }
         District district = new District();
