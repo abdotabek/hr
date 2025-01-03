@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.TokenStoreDTO;
-import org.example.entity.redis.TokenStore;
 import org.example.service.TokenStoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,22 +21,12 @@ public class TokenStoreController {
     TokenStoreService tokenStoreService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<TokenStoreDTO> getTokenById(@PathVariable String id) {
-        try {
-            TokenStoreDTO token = tokenStoreService.get(id);
-            return ResponseEntity.ok(token);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<TokenStoreDTO> get(@PathVariable("id") String id) {
+        return ResponseEntity.ok(tokenStoreService.get(id));
     }
 
     @GetMapping
     public ResponseEntity<List<TokenStoreDTO>> getAllTokens() {
-        try {
-            List<TokenStoreDTO> tokens = tokenStoreService.getList();
-            return ResponseEntity.ok(tokens);
-        } catch (RuntimeException e) {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(tokenStoreService.getList());
     }
 }

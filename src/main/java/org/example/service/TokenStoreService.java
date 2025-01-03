@@ -18,7 +18,11 @@ public class TokenStoreService {
     TokenStoreRepository tokenStoreRepository;
 
     public TokenStoreDTO get(String id) {
-        return tokenStoreRepository.findById(id).map(this::toDTO).orElseThrow(() -> ExceptionUtil.throwNotFoundException("token with this id does not exist"));
+        TokenStoreDTO token = tokenStoreRepository.findById(id).map(this::toDTO).orElse(null);
+        if (token == null) {
+            throw ExceptionUtil.throwNotFoundException("token with this id does not exist");
+        }
+        return token;
     }
 
     public List<TokenStoreDTO> getList() {
@@ -32,7 +36,6 @@ public class TokenStoreService {
     private TokenStoreDTO toDTO(TokenStore tokenStore) {
         TokenStoreDTO tokenStoreDTO = new TokenStoreDTO();
         tokenStoreDTO.setId(tokenStore.getId());
-//        tokenStoreDTO.setToken(tokenStore.getToken());
         tokenStoreDTO.setAccessToken(tokenStore.getAccessToken());
         tokenStoreDTO.setRefreshToken(tokenStore.getRefreshToken());
         tokenStoreDTO.setEmployeeId(tokenStore.getEmployeeId());

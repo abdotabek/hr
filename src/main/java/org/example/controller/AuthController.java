@@ -26,7 +26,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.registration(employeeDTO));
     }
 
-
     @PostMapping("/authorization")
     public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(authService.authorization(authRequestDTO));

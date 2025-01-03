@@ -8,7 +8,6 @@ import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.employee.EmployeeDetailDTO;
 import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.filter.EmployeeFilterDTO;
-import org.example.dto.jwt.TokenDTO;
 import org.example.service.EmployeeService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -103,21 +102,6 @@ public class EmployeeController {
     public ResponseEntity<Page<EmployeeDTO>> filterBySpecification(@RequestBody EmployeeFilterDTO search) {
         return ResponseEntity.ok(employeeService.filterBySpecification(search));
     }
-
-    /*@PostMapping("/registration")
-    public ResponseEntity<EmployeeDTO> creteRegistration(@RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.ok(employeeService.registration(employeeDTO));
-    }*/
-
-    /*@PostMapping("/authorization")
-    public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
-        return ResponseEntity.ok(employeeService.authorization(authRequestDTO));
-    }*/
-
-   /* @PostMapping("/refresh-token")
-    public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
-        return ResponseEntity.ok(employeeService.getNewAccessToken(tokenDTO));
-    }*/
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> dismissedEmployee(@PathVariable("id") Long id) {

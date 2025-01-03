@@ -5,37 +5,23 @@ import jakarta.persistence.TypedQuery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.config.CustomUserDetails;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.employee.EmployeeDetailDTO;
 import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
-import org.example.dto.jwt.AuthRequestDTO;
-import org.example.dto.jwt.AuthResponseDTO;
-import org.example.dto.jwt.JwtDTO;
-import org.example.dto.jwt.TokenDTO;
 import org.example.entity.Employee;
-import org.example.entity.redis.TokenStore;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
-import org.example.util.JwtUtil;
 import org.springframework.data.domain.Page;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +33,6 @@ public class EmployeeService {
     EmployeeMapper mapper;
     EmployeeCustomRepository customRepository;
     EntityManager entityManager;
-    AuthenticationManager authenticationManager;
     TokenStoreRepository tokenStoreRepository;
 
 
@@ -170,25 +155,7 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
-    /*public EmployeeDTO registration(EmployeeDTO employeeDTO) {
-        if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
-            throw ExceptionUtil.throwConflictException("Employee with this phone number already exists");
-        }
-        Employee employee = new Employee();
-        employee.setFirstName(employeeDTO.getFirstName());
-        employee.setLastName(employeeDTO.getLastName());
-        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-        employee.setEmail(employeeDTO.getEmail());
-        employee.setCompanyId(employeeDTO.getCompanyId());
-        employee.setBranchId(employeeDTO.getBranchId());
-        employee.setDepartmentId(employeeDTO.getDepartmentId());
-        employee.setPositionId(employeeDTO.getPositionId());
-        employee.setPassword(cryptPasswordEncoder.encode(employeeDTO.getPassword()));
-        employee.setRole(employeeDTO.getRole());
-        return mapper.toDTO(employeeRepository.save(employee));
-    }*/
-
-    public AuthResponseDTO authorization(AuthRequestDTO auth) {
+    /*public AuthResponseDTO authorization(AuthRequestDTO auth) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.getPhone(), auth.getPassword()));
 
@@ -205,7 +172,7 @@ public class EmployeeService {
             throw new UsernameNotFoundException("Phone or password wrong");
         }
         throw new UsernameNotFoundException("Phone or password wrong");
-    }
+    }*/
 
  /*   public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
 

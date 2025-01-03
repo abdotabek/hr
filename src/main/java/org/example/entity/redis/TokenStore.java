@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Setter
-@RedisHash("token_store")
+@RedisHash(value = "token_store", timeToLive = 3600)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TokenStore {
     @Id

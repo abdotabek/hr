@@ -60,14 +60,14 @@ public class BranchController {
     }
 
 
-    @GetMapping("/branchesByCompany/{companyId}")
-    public ResponseEntity<List<BranchDTO>> getBranchesByCompany(@PathVariable Long companyId) {
-        return ResponseEntity.ok(branchService.getBranchesByCompanyId(companyId));
+    @GetMapping("/branchesByCompany/{id}")
+    public ResponseEntity<List<BranchDTO>> getBranchesByCompany(@PathVariable Long id) {
+        return ResponseEntity.ok(branchService.getBranchesByCompanyId(id));
     }
 
-    @GetMapping("/getBranchCountByCompanyId/{companyId}")
-    public ResponseEntity<Long> getBranchCountByCompanyId(@PathVariable("companyId") Long companyId) {
-        return ResponseEntity.ok(branchService.getBranchCountByCompanyId(companyId));
+    @GetMapping("/getBranchCountByCompanyId/{id}")
+    public ResponseEntity<Long> getBranchCountByCompanyId(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(branchService.getBranchCountByCompanyId(id));
     }
 
 

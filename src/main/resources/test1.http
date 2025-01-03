@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998937877403"
+  "phone": "+998995001122"
 }
 
 ####
@@ -63,7 +63,7 @@ POST localhost:8080/api/auths/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDAzIiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkzNzg3NzQwMyIsImlhdCI6MTczNTg4MDkxNSwiZXhwIjoxNzM1ODgxOTk1fQ.kwox1JZTh46fUBl5CSNlucx3edXyt8kP85H8RMfcZxIlH507Ber54QlNnopTQBzE-nfW2TsW12qx4xYQFOGuRQ"
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1MDAxMTIyIiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODk5NTAwMTEyMiIsImlhdCI6MTczNTg4MTY0MywiZXhwIjoxNzM1ODgyNzIzfQ.3tJXx69tMmUe-j0VudBKvIoVTPIG0IiISy7GBxJ4KhVbVb61EL3VgBjLWQysHMiWYy4wGmGCjwW6vY0lrhvbyg"
 }
 
 
@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDAzIiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJzdWIiOiIrOTk4OTM3ODc3NDAzIiwiaWF0IjoxNzM1ODc2MjE5LCJleHAiOjE3MzU4NzYyNTV9.kAhKc56pJg9YNBZIKKKSjLO0YrQOtHs7FZ4PrJTOV7oZmN3utfupToWN7sYlrCbLQCSYYf_DRFwPh9KRbAxLkQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTk1MDAxMTIyIiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODk5NTAwMTEyMiIsImlhdCI6MTczNTg4MTc1NCwiZXhwIjoxNzM1ODgyODM0fQ.c-YUTJi-3siQXnNy6owY-Rhel054wzYlBGKAo3TyH8DNSe-poZec5rVAbXFY17XOFz0FHpAi49YA_08OFo2A9A
 
 
 

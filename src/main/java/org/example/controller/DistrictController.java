@@ -43,7 +43,7 @@ public class DistrictController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         districtService.delete(id);
         return ResponseEntity.ok().build();
     }
