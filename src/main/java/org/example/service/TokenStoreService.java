@@ -10,6 +10,7 @@ import org.example.repository.TokenStoreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,9 @@ public class TokenStoreService {
         if (tokenStoreList.isEmpty()) {
             throw ExceptionUtil.throwNotFoundException("no tokens found");
         }
-        return tokenStoreList.stream().map(this::toDTO).toList();
+        return tokenStoreList.stream()
+                .filter(Objects::nonNull)      //дает разрешения и на null значении
+                .map(this::toDTO).toList();
     }
 
     private TokenStoreDTO toDTO(TokenStore tokenStore) {
