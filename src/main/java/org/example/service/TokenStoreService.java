@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TokenStoreService {
+
     TokenStoreRepository tokenStoreRepository;
 
     public TokenStoreDTO get(String id) {

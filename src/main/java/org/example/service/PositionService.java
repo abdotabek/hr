@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PositionService {
+
     PositionRepository positionRepository;
     PositionCustomRepository positionCustomRepository;
 

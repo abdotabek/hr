@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DistrictService {
+
     DistrictRepository districtRepository;
     DistrictCustomRepository districtCustomRepository;
 

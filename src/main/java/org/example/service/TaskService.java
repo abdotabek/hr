@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TaskService {
+
     TaskRepository taskRepository;
 
     public Long create(TaskDTO taskDTO) {

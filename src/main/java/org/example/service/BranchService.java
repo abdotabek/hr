@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class BranchService {
+
     EntityManager entityManager;
     BranchRepository branchRepository;
     BranchMapper mapper;

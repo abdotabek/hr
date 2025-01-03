@@ -25,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompanyService {
+
     CompanyRepository companyRepository;
     CompanyMapper mapper;
     CompanyCustomRepository customRepository;
