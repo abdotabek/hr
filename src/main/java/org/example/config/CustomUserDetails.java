@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,10 +39,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(role.name()));
-
-        return roles;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -63,7 +59,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return status.equals(GeneralStatus.ACTIVE);
+//        return status.equals(GeneralStatus.ACTIVE);
+        return GeneralStatus.ACTIVE.equals(status);
     }
 
     @Override
@@ -73,16 +70,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return GeneralStatus.ACTIVE.equals(status);
+//        return true;
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
 
 }

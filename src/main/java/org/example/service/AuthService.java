@@ -63,6 +63,9 @@ public class AuthService {
             if (authentication.isAuthenticated()) {
                 CustomUserDetails employee = (CustomUserDetails) authentication.getPrincipal();
 
+                if (GeneralStatus.BLOCK == employee.getStatus()) {
+                    throw ExceptionUtil.throwConflictException("Employee is blocked");
+                }
                 String accessToken = JwtUtil.encode(employee.getPhone(), employee.getRole().name());
                 String refreshToken = JwtUtil.generationRefreshToken(employee.getPhone(), employee.getRole().name());
 
