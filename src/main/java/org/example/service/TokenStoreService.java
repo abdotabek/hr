@@ -37,6 +37,17 @@ public class TokenStoreService {
                 .map(this::toDTO).toList();
     }
 
+
+   /* public void deleteByEmployeeId(Long employeeId) {
+        Iterable<TokenStore> allTokenStore = tokenStoreRepository.findAll();
+
+        for (TokenStore tokenStore : allTokenStore) {
+            if (tokenStore.getEmployeeId().equals(employeeId)) {
+                tokenStoreRepository.delete(tokenStore);
+            }
+        }
+    }*/
+
     private TokenStoreDTO toDTO(TokenStore tokenStore) {
         TokenStoreDTO tokenStoreDTO = new TokenStoreDTO();
         tokenStoreDTO.setId(tokenStore.getId());

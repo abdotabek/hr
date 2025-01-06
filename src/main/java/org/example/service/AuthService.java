@@ -96,9 +96,6 @@ public class AuthService {
             TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() ->
                     ExceptionUtil.throwNotFoundException("Refresh token not found"));
 
-            if (!tokenStore.getRefreshToken().equals(tokenDTO.getRefreshToken())) {
-                throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
-            }
             Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
 
             if (optional.isPresent()) {

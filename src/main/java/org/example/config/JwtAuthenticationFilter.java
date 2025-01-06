@@ -9,7 +9,12 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.dto.enums.GeneralStatus;
 import org.example.dto.jwt.JwtDTO;
+import org.example.entity.Employee;
+import org.example.exception.ExceptionUtil;
+import org.example.repository.EmployeeRepository;
+import org.example.repository.TokenStoreRepository;
 import org.example.util.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,12 +29,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    TokenStoreRepository tokenStoreRepository;
+    EmployeeRepository employeeRepository;
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
@@ -48,6 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+
         try {
             final String token = header.substring(7).trim();
 
@@ -58,6 +68,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             JwtDTO jwtDTO = JwtUtil.decode(token);
+            Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
+            if (optionalEmployee.isPresent()) {
+                Employee employee = optionalEmployee.get();
+                if (GeneralStatus.BLOCK == employee.getStatus()) {
+                    throw ExceptionUtil.throwConflictException("Employee is blocked");
+                }
+            }
+            filterChain.doFilter(request, response); // Continue the filter chain
+
+
             if (!"access".equals(jwtDTO.getTokenType())) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Token type is not allowed for this operation");
@@ -78,4 +98,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.getWriter().write("Authentication failed");
         }
     }
+
+   /* @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String token = getTokenFromRequest(request);
+        if (token != null && JwtUtil.isValid(token)) {
+            JwtDTO jwtDTO = JwtUtil.decode(token);
+            tokenStoreRepository.findById(jwtDTO.getUserName())
+                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Token not found"));
+
+            Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
+            if (optionalEmployee.isPresent()) {
+                Employee employee = optionalEmployee.get();
+                if (GeneralStatus.BLOCK == employee.getStatus()) {
+                    throw ExceptionUtil.throwConflictException("Employee is blocked");
+                }
+            } else {
+                throw ExceptionUtil.throwNotFoundException("Employee not found");
+            }
+            filterChain.doFilter(request, response);
+        } else {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired token");
+        }
+    }
+
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return null;
+    }*/
 }

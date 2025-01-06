@@ -11,6 +11,7 @@ import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
+import org.example.entity.redis.TokenStore;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
 import org.example.repository.EmployeeRepository;
@@ -174,36 +175,41 @@ public class EmployeeService {
         throw new UsernameNotFoundException("Phone or password wrong");
     }*/
 
- /*   public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
+    /*   public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
 
-        if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
-            JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
+           if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
+               JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
-            Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-            if (optional.isPresent()) {
-                Employee employee = optional.get();
+               Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
+               if (optional.isPresent()) {
+                   Employee employee = optional.get();
 
-                if (GeneralStatus.BLOCK == employee.getStatus()) {
-                    throw ExceptionUtil.throwUserBlockedException("User is blocked");
-                }
-                TokenDTO response = new TokenDTO();
-                response.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
-                response.setRefreshToken(JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name()));
-                response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
-                response.setType("Bearer");
-                return response;
-            }
-        }
-        throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
-    }*/
-
+                   if (GeneralStatus.BLOCK == employee.getStatus()) {
+                       throw ExceptionUtil.throwUserBlockedException("User is blocked");
+                   }
+                   TokenDTO response = new TokenDTO();
+                   response.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
+                   response.setRefreshToken(JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name()));
+                   response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
+                   response.setType("Bearer");
+                   return response;
+               }
+           }
+           throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
+       }*/
+    @Transactional
     public void dismissedEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
-
-        employee.setStatus(GeneralStatus.BLOCK);
-        employeeRepository.save(employee);
-
-        tokenStoreRepository.deleteByEmployeeId(id);
+        employeeRepository.findById(id)
+                .map(employee -> {
+                    employee.setStatus(GeneralStatus.BLOCK);
+                    return employeeRepository.save(employee);
+                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+        tokenStoreRepository.findAll()
+                .forEach(tokenStore -> {
+                    if (tokenStore.getEmployeeId().equals(id)) {
+                        tokenStoreRepository.delete(tokenStore);
+                    }
+                });
     }
+
 }

@@ -1,6 +1,7 @@
 package org.example.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -42,7 +43,7 @@ public class JwtUtil {
         return generateToken(username, role, refreshTokenLiveTime, "refresh");
     }
 
-    public static boolean isValid(String token) {
+  /*  public static boolean isValid(String token) {
         return Jwts
                 .parser()
                 .verifyWith(getSignInKey())
@@ -51,6 +52,21 @@ public class JwtUtil {
                 .getPayload()
                 .getExpiration().after(new Date());
     }
+*/
+  public static boolean isValid(String token) {
+      try {
+          // Parse the token
+          Jws<Claims> claims = Jwts.parser()
+                  .verifyWith(getSignInKey())
+                  .build()
+                  .parseSignedClaims(token);
+
+          Date expiration = claims.getPayload().getExpiration();
+          return expiration != null && expiration.after(new Date());
+      } catch (JwtException e) {
+          return false;
+      }
+  }
 
     public static boolean isTokenExpired(String token) {
         try {

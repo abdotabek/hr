@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998937877455"
+  "phone": "+998937877403"
 }
 
 ####
@@ -63,7 +63,7 @@ POST localhost:8080/api/auths/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDU1Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJyZWZyZXNoIiwic3ViIjoiKzk5ODkzNzg3NzQ1NSIsImlhdCI6MTczNTg5ODcyMywiZXhwIjoxNzM3MTk0NzIzfQ.vu8RimUihOX601lnxp3DpcPWVY5giP3zXwo8K0Q0FfpsjeHHhE-sUyuGgrnFnaouVrWR0_mPfyXjVWmNHaex2A"
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Iis5OTg5Mzc4Nzc0MDMiLCJzdWIiOiIrOTk4OTM3ODc3NDAzIiwiaWF0IjoxNzM2MTg1NjY2LCJleHAiOjE3Mzc0ODE2NjZ9.6m2mgzHocWnhsksS5p-lnOW5to57OkRkc-ytMkH7_QjqJVuhwgy8Lzyr90DE_BFWEPbq6NRkVmUZCuXB7AmN5Q"
 }
 
 
@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkzNzg3NzQ1NSIsInN1YiI6Iis5OTg5Mzc4Nzc0NTUiLCJpYXQiOjE3MzYxNzE4ODYsImV4cCI6MTczNjI1ODI4Nn0.wvzKLvabH3IvkdJxZK2GfkcjXdBVM2xh9j5vso1eucXB9IANUR-lLpo9DdxQEMoq5vji2sQK2Uu98NoZDE4rKw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Iis5OTg5Mzc4Nzc0MDMiLCJzdWIiOiIrOTk4OTM3ODc3NDAzIiwiaWF0IjoxNzM2MTg3MTQ1LCJleHAiOjE3Mzc0ODMxNDV9.CncXodD7v75I6JkKzFWMjXfNgdFM-Ss5766TPkuc6WSCVzGRvpt-gbbNPH5_IzOXg_poQYeN_Io2dGlwcjScNA
 
 
 
@@ -87,4 +87,8 @@ PATCH localhost:8080/api/employees/3
 GET localhost:8080/api/token-stores
 
 ###
-PATCH localhost:8080/api/employees/65
+PATCH localhost:8080/api/employees/5
+###
+DELETE localhost:8080/api/token-stores/+998937877403
+###
+DELETE localhost:8080/api/token-stores/5
