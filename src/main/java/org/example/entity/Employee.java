@@ -13,7 +13,6 @@ import org.example.dto.enums.GeneralStatus;
 @Entity
 @Table(name = "employee")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Employee {
 
     @Id

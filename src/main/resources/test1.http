@@ -52,7 +52,7 @@ Content-Type: application/json
 ####
 POST localhost:8080/api/auths/authorization
 Content-Type: application/json
-
+p
 {
   "password": "12345",
   "phone": "+998937877403"
