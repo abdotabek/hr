@@ -75,17 +75,17 @@ public class EmployeeController {
     }
 
     @GetMapping("/getByName/{name}")
-    public ResponseEntity<List<EmployeeDTO>> getByName(@PathVariable String name) {
+    public ResponseEntity<List<EmployeeDTO>> getByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(employeeService.getByName(name));
     }
 
     @GetMapping("/findIdAndNameBySurname/{surname}")
-    public ResponseEntity<List<?>> getIdNameBySurname(@PathVariable String surname) {
+    public ResponseEntity<List<?>> getIdNameBySurname(@PathVariable("surname") String surname) {
         return ResponseEntity.ok(employeeService.findIdAndNameBySurname(surname));
     }
 
     @GetMapping("/findEmployeeByPhone/{phone}")
-    public ResponseEntity<List<?>> getEmployeeByPhone(@PathVariable String phone) {
+    public ResponseEntity<List<?>> getEmployeeByPhone(@PathVariable("phone") String phone) {
         return ResponseEntity.ok(employeeService.getEmployeeDTOByPhone(phone));
     }
 
