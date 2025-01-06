@@ -198,12 +198,11 @@ public class EmployeeService {
     }*/
 
     public void dismissedEmployee(Long id) {
-        employeeRepository.findById(id)
-                .map(employee -> {
-                    employee.setStatus(GeneralStatus.BLOCK);
-                    employeeRepository.save(employee);
-                    tokenStoreRepository.deleteByEmployeeId(id);
-                    return employee.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
+
+        employee.setStatus(GeneralStatus.BLOCK);
+        employeeRepository.save(employee);
+
+        tokenStoreRepository.deleteByEmployeeId(id);
     }
 }
