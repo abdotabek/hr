@@ -30,7 +30,7 @@ public class TokenStoreService {
     public List<TokenStoreDTO> getList() {
         List<TokenStore> tokenStoreList = (List<TokenStore>) tokenStoreRepository.findAll();
         if (tokenStoreList.isEmpty()) {
-            throw ExceptionUtil.throwNotFoundException("no tokens found");
+            throw ExceptionUtil.throwNotFoundException("tokens not found");
         }
         return tokenStoreList.stream()
                 .filter(Objects::nonNull)      //дает разрешения и на null значении

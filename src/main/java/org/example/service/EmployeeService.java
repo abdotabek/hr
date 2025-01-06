@@ -198,7 +198,8 @@ public class EmployeeService {
     }*/
 
     public void dismissedEmployee(Long id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee this id not exist!"));
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
 
         employee.setStatus(GeneralStatus.BLOCK);
         employeeRepository.save(employee);
