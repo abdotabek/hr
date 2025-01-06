@@ -32,7 +32,7 @@ public class CompanyService {
 
     @Transactional
     public Long create(CompanyDTO companyDTO) {
-        if (companyDTO.getName().isEmpty()) {
+        if (companyDTO.getName() == null || companyDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("Company name is required.");
         }
         Company company = new Company();
