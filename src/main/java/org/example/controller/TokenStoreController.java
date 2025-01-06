@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TokenStoreController {
+
     TokenStoreService tokenStoreService;
 
     @GetMapping("/{id}")
