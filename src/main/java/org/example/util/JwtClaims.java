@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PUBLIC)
 public class JwtClaims {
-    static String USERNAME = "username,";
+    static String USERNAME = "username";
     static String ROLE = "role";
 }

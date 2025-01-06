@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSwiOiIrOTk4OTM3ODc3NDU1Iiwicm9sZSI6IlJPTEVfT1dORVIiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJzdWIiOiIrOTk4OTM3ODc3NDU1IiwiaWF0IjoxNzM1ODk4NzIzLCJleHAiOjE3MzU5ODUxMjN9.VYR3W3ZfW_CmVVeyUxlvJRHcM1tiF38m36y5JKTSEj58AJS5pf9X-LQxTc6rC9cdFXwe3H0vjRl_jyur3a13Uw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkzNzg3NzQ1NSIsInN1YiI6Iis5OTg5Mzc4Nzc0NTUiLCJpYXQiOjE3MzYxNzE4ODYsImV4cCI6MTczNjI1ODI4Nn0.wvzKLvabH3IvkdJxZK2GfkcjXdBVM2xh9j5vso1eucXB9IANUR-lLpo9DdxQEMoq5vji2sQK2Uu98NoZDE4rKw
 
 
 
@@ -87,4 +87,4 @@ PATCH localhost:8080/api/employees/3
 GET localhost:8080/api/token-stores
 
 ###
-DELETE localhost:8080/api/token-stores/99892255222
+PATCH localhost:8080/api/employees/65

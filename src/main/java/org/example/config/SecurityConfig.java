@@ -55,6 +55,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
                     .requestMatchers(HttpMethod.DELETE, "/api/tasks", "/api/tasks/**").hasRole("OWNER")
                     .requestMatchers("/api/token-stores/**").permitAll()
+                    .requestMatchers("/api/employees/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
