@@ -66,20 +66,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             JwtDTO jwtDTO = JwtUtil.decode(token);
-            Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-            if (optionalEmployee.isPresent()) {
-                Employee employee = optionalEmployee.get();
-                if (GeneralStatus.BLOCK == employee.getStatus()) {
-                    throw ExceptionUtil.throwConflictException("Employee is blocked");
-                }
-            }
-            filterChain.doFilter(request, response); // Continue the filter chain
 
             if (!"access".equals(jwtDTO.getTokenType())) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Token type is not allowed for this operation");
                 return;
             }
+            Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
+            if (optionalEmployee.isPresent()) {
+                Employee employee = optionalEmployee.get();
+                if (GeneralStatus.BLOCK == employee.getStatus()) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Employee is blocked");
+                    return;
+                }
+            }
+
             String phone = jwtDTO.getUserName();
             String role = jwtDTO.getRole();
             GrantedAuthority authority = new SimpleGrantedAuthority(role);
@@ -95,37 +97,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             response.getWriter().write("Authentication failed");
         }
     }
-
-   /* @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = getTokenFromRequest(request);
-        if (token != null && JwtUtil.isValid(token)) {
-            JwtDTO jwtDTO = JwtUtil.decode(token);
-            tokenStoreRepository.findById(jwtDTO.getUserName())
-                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Token not found"));
-
-            Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-            if (optionalEmployee.isPresent()) {
-                Employee employee = optionalEmployee.get();
-                if (GeneralStatus.BLOCK == employee.getStatus()) {
-                    throw ExceptionUtil.throwConflictException("Employee is blocked");
-                }
-            } else {
-                throw ExceptionUtil.throwNotFoundException("Employee not found");
-            }
-            filterChain.doFilter(request, response);
-        } else {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired token");
-        }
-    }
-
-
-    private String getTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        return null;
-    }*/
 }

@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998905552211"
+  "phone": "+998937877455"
 }
 
 ####
@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkwNTU1MjIxMSIsInN1YiI6Iis5OTg5MDU1NTIyMTEiLCJpYXQiOjE3MzYyMjYyNTQsImV4cCI6MTczNjMxMjY1NH0.6dfz5hlMtCGgQngsa7ncTxII8QdFWp4v_GxXl8wq_HvyCaAqQqm3oRLewqBtisChRpT10B4SUIGmbOqVgX-EQQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkzNzg3NzQ1NSIsInN1YiI6Iis5OTg5Mzc4Nzc0NTUiLCJpYXQiOjE3MzYyMjcyODIsImV4cCI6MTczNjMxMzY4Mn0.sIwpv_0HkmzcTT6IGZBtebvJcT06d7N3IfIMMtlpr5075cBTRGz7hn7fXsRKM43yW4F6hD2guzxQo1IIHrXeUQ
 
 
 

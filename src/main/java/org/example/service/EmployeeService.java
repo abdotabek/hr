@@ -204,6 +204,7 @@ public class EmployeeService {
                     employee.setStatus(GeneralStatus.BLOCK);
                     return employeeRepository.save(employee);
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+
         for (TokenStore tokenStore : tokenStoreRepository.findAll()) {
             if (tokenStore != null && tokenStore.getEmployeeId().equals(id)) {
                 tokenStoreRepository.delete(tokenStore);
