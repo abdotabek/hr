@@ -73,15 +73,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.getWriter().write("Token type is not allowed for this operation");
                 return;
             }
-            // проверяю старые но валидные токены, редис сохраняет только current token
-            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName())
-                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Token not found in Redis"));
-            // если token не евляется current token выбрасываю исключения даже если она валидна!
-            if (!token.equals(tokenStore.getAccessToken())) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token does not match the current active token");
-                return;
-            }
 
             Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
             if (optionalEmployee.isPresent()) {
@@ -91,6 +82,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     response.getWriter().write("Employee is blocked");
                     return;
                 }
+            }
+
+            // проверяю старые но валидные токены, редис сохраняет только current token
+            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName())
+                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Token not found in Redis"));
+            // если token не евляется current token выбрасываю исключения даже если она валидна!
+            if (!token.equals(tokenStore.getAccessToken())) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token does not match the current active token");
+                return;
             }
 
             String phone = jwtDTO.getUserName();
