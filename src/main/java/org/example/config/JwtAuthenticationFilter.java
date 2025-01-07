@@ -56,8 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response); // Continue the filter chain
             return;
         }
-
-
         try {
             final String token = header.substring(7).trim();
 
@@ -76,7 +74,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response); // Continue the filter chain
-
 
             if (!"access".equals(jwtDTO.getTokenType())) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);

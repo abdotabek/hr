@@ -40,13 +40,13 @@ Content-Type: application/json
 {
   "branchId": 1,
   "companyId": 1,
-  "firstName": "komil",
-  "lastName": "komilov",
-  "email": "komil4455@gmail.com",
+  "firstName": "omat",
+  "lastName": "omatov",
+  "email": "omat4455@gmail.com",
   "departmentId": 1,
   "positionId": 1,
   "password": "12345",
-  "phoneNumber": "+998937877455",
+  "phoneNumber": "+998905552211",
   "role": "ROLE_OWNER"
 }
 ####
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998937877403"
+  "phone": "+998905552211"
 }
 
 ####
@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Iis5OTg5Mzc4Nzc0MDMiLCJzdWIiOiIrOTk4OTM3ODc3NDAzIiwiaWF0IjoxNzM2MTg3MTQ1LCJleHAiOjE3Mzc0ODMxNDV9.CncXodD7v75I6JkKzFWMjXfNgdFM-Ss5766TPkuc6WSCVzGRvpt-gbbNPH5_IzOXg_poQYeN_Io2dGlwcjScNA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkwNTU1MjIxMSIsInN1YiI6Iis5OTg5MDU1NTIyMTEiLCJpYXQiOjE3MzYyMjYyNTQsImV4cCI6MTczNjMxMjY1NH0.6dfz5hlMtCGgQngsa7ncTxII8QdFWp4v_GxXl8wq_HvyCaAqQqm3oRLewqBtisChRpT10B4SUIGmbOqVgX-EQQ
 
 
 
@@ -87,7 +87,7 @@ PATCH localhost:8080/api/employees/3
 GET localhost:8080/api/token-stores
 
 ###
-PATCH localhost:8080/api/employees/5
+PATCH localhost:8080/api/employees/65
 ###
 DELETE localhost:8080/api/token-stores/+998937877403
 ###
