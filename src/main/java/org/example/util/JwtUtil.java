@@ -19,6 +19,7 @@ public class JwtUtil {
     private static final String secretKey = "veryLongSecretlasharamazgillattayevaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
 
+
     public static String generateToken(String username, String role, long tokenLiveTime, String tokenType) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("tokenType", tokenType); // Добавляю тип токена чтобы refresh token не обращал на прямую на l end point
@@ -43,30 +44,30 @@ public class JwtUtil {
         return generateToken(username, role, refreshTokenLiveTime, "refresh");
     }
 
-  /*  public static boolean isValid(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration().after(new Date());
-    }
-*/
-  public static boolean isValid(String token) {
-      try {
-          // Parse the token
-          Jws<Claims> claims = Jwts.parser()
+    /*  public static boolean isValid(String token) {
+          return Jwts
+                  .parser()
                   .verifyWith(getSignInKey())
                   .build()
-                  .parseSignedClaims(token);
-
-          Date expiration = claims.getPayload().getExpiration();
-          return expiration != null && expiration.after(new Date());
-      } catch (JwtException e) {
-          return false;
+                  .parseSignedClaims(token)
+                  .getPayload()
+                  .getExpiration().after(new Date());
       }
-  }
+  */
+    public static boolean isValid(String token) {
+        try {
+            // Parse the token
+            Jws<Claims> claims = Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(token);
+
+            Date expiration = claims.getPayload().getExpiration();
+            return expiration != null && expiration.after(new Date());
+        } catch (JwtException e) {
+            return false;
+        }
+    }
 
     public static boolean isTokenExpired(String token) {
         try {
