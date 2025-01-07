@@ -24,8 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -87,8 +85,8 @@ public class AuthService {
         }
         throw ExceptionUtil.throwEmployeeNotFoundException("Phone or password wrong");
     }
-
-    public TokenDTO getAccessToken(TokenDTO tokenDTO) {
+    // проверка refresh token на статус block сотрудника
+    /*public TokenDTO getAccessToken(TokenDTO tokenDTO) {
 
         if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
@@ -119,6 +117,30 @@ public class AuthService {
                 return response;
 
             }
+        }
+        throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired refresh token");
+    }*/
+
+    public TokenDTO getAccessToken(TokenDTO tokenDTO) {
+        if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
+            JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
+
+            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() -> ExceptionUtil.throwNotFoundException("token not found"));
+
+            String accessToken = JwtUtil.encode(jwtDTO.getUserName(), jwtDTO.getRole());
+            String refreshToken = JwtUtil.generationRefreshToken(jwtDTO.getUserName(), jwtDTO.getRole());
+
+            tokenStore.setAccessToken(accessToken);
+            tokenStore.setRefreshToken(refreshToken);
+            tokenStoreRepository.save(tokenStore);
+
+            TokenDTO response = new TokenDTO();
+            response.setAccessToken(accessToken);
+            response.setRefreshToken(refreshToken);
+            response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
+            response.setType("Bearer ");
+            return response;
+
         }
         throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired refresh token");
     }

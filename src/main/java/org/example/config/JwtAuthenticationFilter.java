@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.jwt.JwtDTO;
 import org.example.entity.Employee;
-import org.example.exception.ExceptionUtil;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.util.JwtUtil;
@@ -37,7 +36,6 @@ import java.util.Optional;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    TokenStoreRepository tokenStoreRepository;
     EmployeeRepository employeeRepository;
 
     @Override
