@@ -104,9 +104,15 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.filterBySpecification(search));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/dismissedEmployee/{id}")
     public ResponseEntity<Void> dismissedEmployee(@PathVariable("id") Long id) {
         employeeService.dismissedEmployee(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/saveBlockList/{id}")
+    public ResponseEntity<Void> saveBlockList(@PathVariable("id") Long id) {
+        employeeService.saveBlockList(id);
         return ResponseEntity.ok().build();
     }
 

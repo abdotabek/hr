@@ -56,6 +56,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.DELETE, "/api/tasks", "/api/tasks/**").hasRole("OWNER")
                     .requestMatchers("/api/token-stores/**").permitAll()
                     .requestMatchers("/api/employees/**").permitAll()
+                    .requestMatchers("/api/block-lists/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

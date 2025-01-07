@@ -60,7 +60,8 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
 //        return status.equals(GeneralStatus.ACTIVE);
-        return GeneralStatus.ACTIVE.equals(status);
+//        return GeneralStatus.ACTIVE.equals(status);
+        return true;
     }
 
     @Override
@@ -70,8 +71,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return GeneralStatus.ACTIVE.equals(status);
-//        return true;
+//        return GeneralStatus.ACTIVE.equals(status);
+        return true;
     }
 
 }

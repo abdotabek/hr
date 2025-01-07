@@ -12,10 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.jwt.JwtDTO;
 import org.example.entity.Employee;
-import org.example.entity.redis.TokenStore;
-import org.example.exception.ExceptionUtil;
 import org.example.repository.EmployeeRepository;
-import org.example.repository.TokenStoreRepository;
 import org.example.util.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,7 +36,6 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     EmployeeRepository employeeRepository;
-    TokenStoreRepository tokenStoreRepository;
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
@@ -57,10 +53,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response); // Continue the filter chain
             return;
         }
+
         try {
             final String token = header.substring(7).trim();
 
-            if (!JwtUtil.isValid(token)) {
+            // Проверить формат и срок действия токена
+            if (!JwtUtil.isValid(token) || JwtUtil.isTokenExpired(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid or expired token");
                 return;
@@ -74,6 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            // Проверьте, заблокирован ли сотрудник
             Optional<Employee> optionalEmployee = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
             if (optionalEmployee.isPresent()) {
                 Employee employee = optionalEmployee.get();
@@ -82,16 +81,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     response.getWriter().write("Employee is blocked");
                     return;
                 }
-            }
-
-            // проверяю старые но валидные токены, редис сохраняет только current token
-            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName())
-                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Token not found in Redis"));
-            // если token не евляется current token выбрасываю исключения даже если она валидна!
-            if (!token.equals(tokenStore.getAccessToken())) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token does not match the current active token");
-                return;
             }
 
             String phone = jwtDTO.getUserName();

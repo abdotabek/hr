@@ -11,18 +11,22 @@ import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
+import org.example.entity.redis.BlockList;
 import org.example.entity.redis.TokenStore;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
+import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
+import org.example.util.JwtUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +39,7 @@ public class EmployeeService {
     EmployeeCustomRepository customRepository;
     EntityManager entityManager;
     TokenStoreRepository tokenStoreRepository;
+    BlockListRepository blockListRepository;
 
 
     @Transactional
@@ -156,47 +161,6 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
-    /*public AuthResponseDTO authorization(AuthRequestDTO auth) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.getPhone(), auth.getPassword()));
-
-            if (authentication.isAuthenticated()) {
-
-                CustomUserDetails employee = (CustomUserDetails) authentication.getPrincipal();
-
-                AuthResponseDTO response = new AuthResponseDTO();
-                response.setAccessToken(JwtUtil.encode(employee.getPhone(), employee.getRole().name()));
-                response.setRefreshToken(JwtUtil.generationRefreshToken(employee.getPhone(), employee.getRole().name()));
-                return response;
-            }
-        } catch (BadCredentialsException e) {
-            throw new UsernameNotFoundException("Phone or password wrong");
-        }
-        throw new UsernameNotFoundException("Phone or password wrong");
-    }*/
-
-    /*   public TokenDTO getNewAccessToken(TokenDTO tokenDTO) {
-
-           if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
-               JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
-
-               Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-               if (optional.isPresent()) {
-                   Employee employee = optional.get();
-
-                   if (GeneralStatus.BLOCK == employee.getStatus()) {
-                       throw ExceptionUtil.throwUserBlockedException("User is blocked");
-                   }
-                   TokenDTO response = new TokenDTO();
-                   response.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
-                   response.setRefreshToken(JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name()));
-                   response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
-                   response.setType("Bearer");
-                   return response;
-               }
-           }
-           throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid refresh token");
-       }*/
     @Transactional
     public void dismissedEmployee(Long id) {
         employeeRepository.findById(id)
@@ -209,6 +173,30 @@ public class EmployeeService {
             if (tokenStore != null && tokenStore.getEmployeeId().equals(id)) {
                 tokenStoreRepository.delete(tokenStore);
             }
+        }
+    }
+
+    @Transactional
+    public void saveBlockList(Long id) {
+        employeeRepository.findById(id)
+                .map(employee -> {
+                    employee.setStatus(GeneralStatus.BLOCK);
+                    return employeeRepository.save(employee);
+                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+
+        Optional<BlockList> blockListOptional = blockListRepository.findByEmployeeId(id);
+        if (blockListOptional.isEmpty()) {
+            // Если блокировки нет, создаём новую запись
+            Employee employee = employeeRepository.findById(id)
+                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Employee with this id does not exist!"));
+
+            BlockList blockList = new BlockList();
+            blockList.setId(employee.getPhoneNumber()); // Используем номер телефона как id
+            blockList.setEmployeeId(employee.getId());
+            blockList.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
+
+            // Сохраняем в Redis
+            blockListRepository.save(blockList);
         }
     }
 

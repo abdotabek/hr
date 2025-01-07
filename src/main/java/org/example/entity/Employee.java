@@ -13,11 +13,7 @@ import org.example.dto.enums.GeneralStatus;
 @Entity
 @Table(name = "employee")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Employee extends BaseEntity {
 
     @Column(name = "first_name")
     String firstName;

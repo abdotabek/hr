@@ -11,8 +11,9 @@ import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.JwtDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.entity.Employee;
-import org.example.entity.redis.TokenStore;
+import org.example.entity.redis.BlockList;
 import org.example.exception.ExceptionUtil;
+import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
@@ -24,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -34,6 +37,7 @@ public class AuthService {
     EmployeeRepository employeeRepository;
     BCryptPasswordEncoder cryptPasswordEncoder;
     EmployeeMapper mapper;
+    BlockListRepository blockListRepository;
 
 
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
@@ -58,81 +62,45 @@ public class AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDTO.getPhone(), authRequestDTO.getPassword()));
+            {
+                if (authentication.isAuthenticated()) {
+                    CustomUserDetails employee = (CustomUserDetails) authentication.getPrincipal();
 
-            if (authentication.isAuthenticated()) {
-                CustomUserDetails employee = (CustomUserDetails) authentication.getPrincipal();
+                    if (GeneralStatus.BLOCK == employee.getStatus()) {
+                        BlockList blockList = new BlockList();
+                        blockList.setId(employee.getPhone());
+                        blockList.setEmployeeId(employee.getEmployeeId());
+                        blockList.setAccessToken(JwtUtil.encode(employee.getPhone(), employee.getRole().name()));
 
-                if (GeneralStatus.BLOCK == employee.getStatus()) {
-                    throw ExceptionUtil.throwConflictException("Employee is blocked");
+                        blockListRepository.save(blockList);
+
+                        throw ExceptionUtil.throwConflictException("Employee is block");
+                    }
+                    String accessToken = JwtUtil.encode(employee.getPhone(), employee.getRole().name());
+                    String refreshToken = JwtUtil.generationRefreshToken(employee.getPhone(), employee.getRole().name());
+
+                    AuthResponseDTO response = new AuthResponseDTO();
+                    response.setAccessToken(accessToken);
+                    response.setRefreshToken(refreshToken);
+                    return response;
                 }
-                String accessToken = JwtUtil.encode(employee.getPhone(), employee.getRole().name());
-                String refreshToken = JwtUtil.generationRefreshToken(employee.getPhone(), employee.getRole().name());
-
-                TokenStore tokenStore = new TokenStore();
-                tokenStore.setId(employee.getPhone());   //использую телефон в качестве ключа
-                tokenStore.setEmployeeId(employee.getEmployeeId());
-                tokenStore.setAccessToken(accessToken);
-                tokenStore.setRefreshToken(refreshToken);
-                tokenStoreRepository.save(tokenStore);
-
-                AuthResponseDTO response = new AuthResponseDTO();
-                response.setAccessToken(accessToken);
-                response.setRefreshToken(refreshToken);
-                return response;
             }
         } catch (BadCredentialsException e) {
             throw ExceptionUtil.throwEmployeeNotFoundException("Phone or password wrong");
         }
         throw ExceptionUtil.throwEmployeeNotFoundException("Phone or password wrong");
     }
-    // проверка refresh token на статус block сотрудника
-    /*public TokenDTO getAccessToken(TokenDTO tokenDTO) {
-
-        if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
-            JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
-
-            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() ->
-                    ExceptionUtil.throwNotFoundException("Refresh token not found"));
-
-            Optional<Employee> optional = employeeRepository.findByPhoneNumber(jwtDTO.getUserName());
-
-            if (optional.isPresent()) {
-                Employee employee = optional.get();
-
-                if (GeneralStatus.BLOCK == employee.getStatus()) {
-                    throw ExceptionUtil.throwConflictException("Employee is blocked");
-                }
-                String accessToken = JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name());
-                String refreshToken = JwtUtil.generationRefreshToken(employee.getPhoneNumber(), employee.getRole().name());
-
-                tokenStore.setAccessToken(accessToken);
-                tokenStore.setRefreshToken(refreshToken);
-                tokenStoreRepository.save(tokenStore);
-
-                TokenDTO response = new TokenDTO();
-                response.setAccessToken(accessToken);
-                response.setRefreshToken(refreshToken);
-                response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
-                response.setType("Bearer");
-                return response;
-
-            }
-        }
-        throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired refresh token");
-    }*/
 
     public TokenDTO getAccessToken(TokenDTO tokenDTO) {
         if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
-            TokenStore tokenStore = tokenStoreRepository.findById(jwtDTO.getUserName()).orElseThrow(() -> ExceptionUtil.throwNotFoundException("token not found"));
-
+            Optional<BlockList> blockList = blockListRepository.findByEmployeeId(Long.valueOf(jwtDTO.getUserName()));
+            if (blockList.isPresent()) {
+                throw ExceptionUtil.throwConflictException("Employee token blocked");
+            }
             String accessToken = JwtUtil.encode(jwtDTO.getUserName(), jwtDTO.getRole());
             String refreshToken = JwtUtil.generationRefreshToken(jwtDTO.getUserName(), jwtDTO.getRole());
-
-            tokenStore.setAccessToken(accessToken);
-            tokenStore.setRefreshToken(refreshToken);
-            tokenStoreRepository.save(tokenStore);
 
             TokenDTO response = new TokenDTO();
             response.setAccessToken(accessToken);
@@ -140,9 +108,9 @@ public class AuthService {
             response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
             response.setType("Bearer ");
             return response;
-
         }
         throw ExceptionUtil.throwCustomIllegalArgumentException("Invalid or expired refresh token");
+
     }
 
 }

@@ -3,11 +3,10 @@ package org.example.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.dto.TokenStoreDTO;
+import org.example.dto.redis.TokenStoreDTO;
 import org.example.entity.redis.TokenStore;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.TokenStoreRepository;
-import org.example.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,17 +36,6 @@ public class TokenStoreService {
                 .filter(Objects::nonNull)      //дает разрешения и на null значении
                 .map(this::toDTO).toList();
     }
-
-
-   /* public void deleteByEmployeeId(Long employeeId) {
-        Iterable<TokenStore> allTokenStore = tokenStoreRepository.findAll();
-
-        for (TokenStore tokenStore : allTokenStore) {
-            if (tokenStore.getEmployeeId().equals(employeeId)) {
-                tokenStoreRepository.delete(tokenStore);
-            }
-        }
-    }*/
 
     private TokenStoreDTO toDTO(TokenStore tokenStore) {
         TokenStoreDTO tokenStoreDTO = new TokenStoreDTO();
