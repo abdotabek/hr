@@ -194,7 +194,6 @@ public class EmployeeService {
             blockList.setId(employee.getPhoneNumber()); // Используем номер телефона как id
             blockList.setEmployeeId(employee.getId());
             blockList.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
-
             // Сохраняем в Redis
             blockListRepository.save(blockList);
         }

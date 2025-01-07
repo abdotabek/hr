@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
-    public static final int accessTokenLiveTime = 3600 * 24;
+    public static final int accessTokenLiveTime = 3600 * 8;
     private static final int refreshTokenLiveTime = 3600 * 24 * 15;
     private static final String secretKey = "veryLongSecretlasharamazgillattayevaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";
 
@@ -44,7 +44,7 @@ public class JwtUtil {
         return generateToken(username, role, refreshTokenLiveTime, "refresh");
     }
 
-    /*  public static boolean isValid(String token) {
+      /*public static boolean isValid(String token) {
           return Jwts
                   .parser()
                   .verifyWith(getSignInKey())
@@ -52,8 +52,7 @@ public class JwtUtil {
                   .parseSignedClaims(token)
                   .getPayload()
                   .getExpiration().after(new Date());
-      }
-  */
+      }*/
     public static boolean isValid(String token) {
         try {
             // Parse the token

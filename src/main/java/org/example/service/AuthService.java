@@ -15,7 +15,6 @@ import org.example.entity.redis.BlockList;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
-import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +31,6 @@ import java.util.Optional;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthService {
 
-    TokenStoreRepository tokenStoreRepository;
     AuthenticationManager authenticationManager;
     EmployeeRepository employeeRepository;
     BCryptPasswordEncoder cryptPasswordEncoder;

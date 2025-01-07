@@ -3,7 +3,6 @@ package org.example.config;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.dto.enums.GeneralStatus;
 import org.example.entity.Employee;
 import org.example.repository.EmployeeRepository;
 import org.springframework.security.core.userdetails.UserDetails;

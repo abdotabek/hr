@@ -53,9 +53,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/tasks", "/api/tasks/*").hasAnyRole("ADMIN", "OWNER", "MANAGER")
                     .requestMatchers(HttpMethod.PUT, "/api/tasks", "/api/tasks/*", "api/employees/*").hasAnyRole("ADMIN", "OWNER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/tasks", "/api/tasks/**").hasRole("OWNER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").hasRole("OWNER")
                     .requestMatchers("/api/token-stores/**").permitAll()
-                    .requestMatchers("/api/employees/**").permitAll()
                     .requestMatchers("/api/block-lists/**").permitAll()
                     .anyRequest()
                     .authenticated();
