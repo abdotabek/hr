@@ -20,13 +20,11 @@ import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
-import org.example.util.JwtUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,18 +182,9 @@ public class EmployeeService {
                     return employeeRepository.save(employee);
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
 
-        Optional<BlockList> blockListOptional = blockListRepository.findByEmployeeId(id);
-        if (blockListOptional.isEmpty()) {
-            // Если блокировки нет, создаём новую запись
-            Employee employee = employeeRepository.findById(id)
-                    .orElseThrow(() -> ExceptionUtil.throwNotFoundException("Employee with this id does not exist!"));
-
-            BlockList blockList = new BlockList();
-            blockList.setId(employee.getPhoneNumber()); // Используем номер телефона как id
-            blockList.setEmployeeId(employee.getId());
-            blockList.setAccessToken(JwtUtil.encode(employee.getPhoneNumber(), employee.getRole().name()));
+        if (!blockListRepository.existsById(id)) {
             // Сохраняем в Redis
-            blockListRepository.save(blockList);
+            blockListRepository.save(new BlockList(id));
         }
     }
 

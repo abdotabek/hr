@@ -22,7 +22,7 @@ public class BlockListController {
     BlockListService blockListService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<BlockListDTO> get(@PathVariable("id") String id) {
+    public ResponseEntity<BlockListDTO> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(blockListService.get(id));
     }
 

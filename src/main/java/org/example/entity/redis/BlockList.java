@@ -14,7 +14,10 @@ import org.springframework.data.redis.core.RedisHash;
 public class BlockList {
 
     @Id
-    String id;
-    Long employeeId;
-    String accessToken;
+    Long id;
+
+    public BlockList(Long id) {
+        this.id = id;
+    }
+
 }

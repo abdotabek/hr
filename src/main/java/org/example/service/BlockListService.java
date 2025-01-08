@@ -19,7 +19,7 @@ public class BlockListService {
 
     BlockListRepository blockListRepository;
 
-    public BlockListDTO get(String id) {
+    public BlockListDTO get(Long id) {
         BlockListDTO token = blockListRepository.findById(id).map(this::toDTO).orElse(null);
         if (token == null) {
             throw ExceptionUtil.throwNotFoundException("token with this id does not exist");
@@ -37,8 +37,6 @@ public class BlockListService {
     private BlockListDTO toDTO(BlockList blockList) {
         BlockListDTO blockListDTO = new BlockListDTO();
         blockListDTO.setId(blockList.getId());
-        blockListDTO.setEmployeeId(blockList.getEmployeeId());
-        blockListDTO.setAccessToken(blockList.getAccessToken());
         return blockListDTO;
     }
 }

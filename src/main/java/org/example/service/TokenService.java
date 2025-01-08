@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TokenService {
 
-    public String generateToken(String username, String role) {
-        return JwtUtil.encode(username, role);
-    }
-
     public JwtDTO parseToken(String token) {
         return JwtUtil.decode(token);
     }

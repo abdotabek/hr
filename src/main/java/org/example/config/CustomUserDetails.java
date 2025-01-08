@@ -18,13 +18,14 @@ import java.util.List;
 @Getter
 @Setter
 public class CustomUserDetails implements UserDetails {
+
+    Long id;
     String firstName;
     String lastName;
     String phone;
     String password;
     EmployeeRole role;
     GeneralStatus status;
-    Long employeeId;
 
     public CustomUserDetails(Employee employee) {
         this.firstName = employee.getFirstName();
@@ -33,7 +34,7 @@ public class CustomUserDetails implements UserDetails {
         this.password = employee.getPassword();
         this.role = employee.getRole();
         this.status = employee.getStatus();
-        this.employeeId = employee.getId();
+        this.id = employee.getId();
     }
 
 

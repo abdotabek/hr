@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BlockListDTO {
 
-    String id;
-    Long employeeId;
-    String accessToken;
+    Long id;
+
 }

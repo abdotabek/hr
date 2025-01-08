@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.config.CustomUserDetails;
+import org.example.config.JwtAuthenticationFilter;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.jwt.AuthRequestDTO;
@@ -11,7 +12,6 @@ import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.JwtDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.entity.Employee;
-import org.example.entity.redis.BlockList;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
@@ -24,8 +24,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -36,7 +34,7 @@ public class AuthService {
     BCryptPasswordEncoder cryptPasswordEncoder;
     EmployeeMapper mapper;
     BlockListRepository blockListRepository;
-
+    JwtAuthenticationFilter authenticationFilter;
 
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
         if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
@@ -65,17 +63,12 @@ public class AuthService {
                     CustomUserDetails employee = (CustomUserDetails) authentication.getPrincipal();
 
                     if (GeneralStatus.BLOCK == employee.getStatus()) {
-                        BlockList blockList = new BlockList();
-                        blockList.setId(employee.getPhone());
-                        blockList.setEmployeeId(employee.getEmployeeId());
-                        blockList.setAccessToken(JwtUtil.encode(employee.getPhone(), employee.getRole().name()));
-
-                        blockListRepository.save(blockList);
 
                         throw ExceptionUtil.throwConflictException("Employee is block");
                     }
-                    String accessToken = JwtUtil.encode(employee.getPhone(), employee.getRole().name());
-                    String refreshToken = JwtUtil.generationRefreshToken(employee.getPhone(), employee.getRole().name());
+                    JwtDTO jwtDTO = new JwtDTO(employee.getId(), employee.getPhone(), employee.getRole().name());
+                    String accessToken = JwtUtil.generateAccessToken(jwtDTO);
+                    String refreshToken = JwtUtil.generationRefreshToken(jwtDTO);
 
                     AuthResponseDTO response = new AuthResponseDTO();
                     response.setAccessToken(accessToken);
@@ -90,15 +83,15 @@ public class AuthService {
     }
 
     public TokenDTO getAccessToken(TokenDTO tokenDTO) {
-        if (JwtUtil.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
+        if (authenticationFilter.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
-            Optional<BlockList> blockList = blockListRepository.findByEmployeeId(Long.valueOf(jwtDTO.getUserName()));
-            if (blockList.isPresent()) {
+
+            if (blockListRepository.existsById(jwtDTO.getId())) {
                 throw ExceptionUtil.throwConflictException("Employee token blocked");
             }
-            String accessToken = JwtUtil.encode(jwtDTO.getUserName(), jwtDTO.getRole());
-            String refreshToken = JwtUtil.generationRefreshToken(jwtDTO.getUserName(), jwtDTO.getRole());
+            String accessToken = JwtUtil.generateAccessToken(jwtDTO);
+            String refreshToken = JwtUtil.generationRefreshToken(jwtDTO);
 
             TokenDTO response = new TokenDTO();
             response.setAccessToken(accessToken);

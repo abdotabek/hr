@@ -9,13 +9,22 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtDTO {
+
+    Long id;
     String userName;
     String role;
     String tokenType;
 
-    public JwtDTO(String userName, String role, String tokenType) {
+    public JwtDTO(Long id, String userName, String role, String tokenType) {
+        this.id = id;
         this.userName = userName;
         this.role = role;
         this.tokenType = tokenType;
+    }
+
+    public JwtDTO(Long id, String userName, String role) {
+        this.userName = userName;
+        this.role = role;
+        this.id = id;
     }
 }
