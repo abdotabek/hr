@@ -1,19 +1,16 @@
 package org.example.util;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.example.dto.jwt.JwtDTO;
-import org.example.repository.BlockListRepository;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class JwtUtil {
     public static final Long accessTokenLiveTime = 3600 * 8 * 1000 + 1L;
@@ -23,11 +20,10 @@ public class JwtUtil {
 
     public static String generateToken(Long id, String username, String role, String tokenType) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("tokenType", tokenType); // Добавляю тип токена чтобы refresh token не обращал на прямую на l end point
+        extraClaims.put("tokenType", tokenType);
         extraClaims.put(JwtClaims.USERNAME, username);
         extraClaims.put(JwtClaims.ROLE, role);
         extraClaims.put("id", id);
-//        Long tokenLifeTime = (Objects.equals(tokenType, "access")) ? accessTokenLiveTime : refreshTokenLiveTime;
         Long tokenLifeTime = ("access".equals(tokenType)) ? accessTokenLiveTime : refreshTokenLiveTime;
         return Jwts
                 .builder()

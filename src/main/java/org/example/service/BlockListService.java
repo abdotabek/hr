@@ -20,11 +20,11 @@ public class BlockListService {
     BlockListRepository blockListRepository;
 
     public BlockListDTO get(Long id) {
-        BlockListDTO token = blockListRepository.findById(id).map(this::toDTO).orElse(null);
-        if (token == null) {
-            throw ExceptionUtil.throwNotFoundException("token with this id does not exist");
+        BlockListDTO blockListDTO = blockListRepository.findById(id).map(this::toDTO).orElse(null);
+        if (blockListDTO == null) {
+            throw ExceptionUtil.throwNotFoundException("BlockList entry with ID does not exist.");
         }
-        return token;
+        return blockListDTO;
     }
 
     public List<BlockListDTO> getList() {

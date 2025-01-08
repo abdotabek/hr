@@ -86,7 +86,6 @@ public class AuthService {
         if (authenticationFilter.isValid(tokenDTO.getRefreshToken()) && !JwtUtil.isTokenExpired(tokenDTO.getRefreshToken())) {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
-
             if (blockListRepository.existsById(jwtDTO.getId())) {
                 throw ExceptionUtil.throwConflictException("Employee token blocked");
             }
