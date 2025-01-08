@@ -183,7 +183,6 @@ public class EmployeeService {
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
 
         if (!blockListRepository.existsById(id)) {
-            // Сохраняем в Redis
             blockListRepository.save(new BlockList(id));
         }
     }
