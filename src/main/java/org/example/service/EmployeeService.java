@@ -11,8 +11,7 @@ import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
-import org.example.entity.redis.BlockList;
-import org.example.entity.redis.TokenStore;
+import org.example.entity.redis.BlackList;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
 import org.example.repository.BlockListRepository;
@@ -167,11 +166,7 @@ public class EmployeeService {
                     return employeeRepository.save(employee);
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
 
-        for (TokenStore tokenStore : tokenStoreRepository.findAll()) {
-            if (tokenStore != null && tokenStore.getEmployeeId().equals(id)) {
-                tokenStoreRepository.delete(tokenStore);
-            }
-        }
+        tokenStoreRepository.deleteAll(tokenStoreRepository.findAllByEmployeeId(id));
     }
 
     @Transactional
@@ -183,8 +178,33 @@ public class EmployeeService {
                 }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
 
         if (!blockListRepository.existsById(id)) {
-            blockListRepository.save(new BlockList(id));
+            blockListRepository.save(new BlackList(id));
         }
     }
 
+    public void updateStatus2case(Long id, GeneralStatus status) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+        employee.setStatus(status);
+        employeeRepository.save(employee);
+        if (GeneralStatus.BLOCK == status) {
+            blockListRepository.save(new BlackList(id));
+        } else if (GeneralStatus.ACTIVE == status) {
+            blockListRepository.deleteById(id);
+        }
+    }
+
+    @Transactional
+    public void updateStatus(Long id, GeneralStatus status) {
+        employeeRepository.findById(id)
+                .ifPresentOrElse(employee -> {
+                    employee.setStatus(status);
+                    employeeRepository.save(employee);
+                    if (GeneralStatus.BLOCK == status) {
+                        blockListRepository.save(new BlackList(id));
+                    } else if (GeneralStatus.ACTIVE == status) {
+                        blockListRepository.deleteById(id);
+                    }
+                }, () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+    }
 }

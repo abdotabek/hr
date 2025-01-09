@@ -9,14 +9,14 @@ import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @Setter
-@RedisHash(value = "block_token", timeToLive = 3600 * 8)
+@RedisHash(value = "black_list", timeToLive = 3600 * 8)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BlockList {
+public class BlackList {
 
     @Id
     Long id;
 
-    public BlockList(Long id) {
+    public BlackList(Long id) {
         this.id = id;
     }
 

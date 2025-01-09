@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.redis.BlockListDTO;
-import org.example.entity.redis.BlockList;
+import org.example.entity.redis.BlackList;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BlockListRepository;
 import org.springframework.stereotype.Service;
@@ -28,15 +28,15 @@ public class BlockListService {
     }
 
     public List<BlockListDTO> getList() {
-        List<BlockList> blockList = (List<BlockList>) blockListRepository.findAll();
-        return blockList.stream()
+        List<BlackList> blackList = (List<BlackList>) blockListRepository.findAll();
+        return blackList.stream()
                 .filter(Objects::nonNull)      //дает разрешения и на null значении
                 .map(this::toDTO).toList();
     }
 
-    private BlockListDTO toDTO(BlockList blockList) {
+    private BlockListDTO toDTO(BlackList blackList) {
         BlockListDTO blockListDTO = new BlockListDTO();
-        blockListDTO.setId(blockList.getId());
+        blockListDTO.setId(blackList.getId());
         return blockListDTO;
     }
 }

@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.employee.EmployeeDetailDTO;
 import org.example.dto.employee.EmployeeListDTO;
+import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.service.EmployeeService;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,12 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody EmployeeDTO employeeDTO) {
         return ResponseEntity.ok(employeeService.update(id, employeeDTO));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable("id") Long id, @RequestBody GeneralStatus status) {
+        employeeService.updateStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

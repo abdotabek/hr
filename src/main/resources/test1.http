@@ -46,7 +46,7 @@ Content-Type: application/json
   "departmentId": 1,
   "positionId": 1,
   "password": "12345",
-  "phoneNumber": "+998905552211",
+  "phoneNumber": "+998905552220",
   "role": "ROLE_OWNER"
 }
 ####
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998937877455"
+  "phone": "+998905552220"
 }
 
 ####
@@ -71,8 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiKzk5ODkzNzg3NzQ1NSIsInN1YiI6Iis5OTg5Mzc4Nzc0NTUiLCJpYXQiOjE3MzYyNTkzNjMsImV4cCI6MTczNjI1OTM5OX0.Chxtm_KLH65Ok3syjMI-45UDAFGEDMdYhIK4PAMsGNIBM2IHcFCRAZLLYoGShPfkLzKoS9g0_nmuLmYPRPxbYQ
-
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3MywidG9rZW5UeXBlIjoiYWNjZXNzIiwidXNlcm5hbWUiOiIrOTk4OTA1NTUyMjIwIiwic3ViIjoiKzk5ODkwNTU1MjIyMCIsImlhdCI6MTczNjM5NTEwNywiZXhwIjoxNzM2NDIzOTA3fQ.92MXsjTSSzIaCxBWx8zI5hqiZSrO3zp-MyNS6bHYf9nWX5egaMNhrTvrj1E39XWUBdRrR0IaaSk1bGbR4tIQFQ
 
 
 {
@@ -96,4 +95,8 @@ DELETE localhost:8080/api/token-stores/5
 ####
 GET localhost:8080/api/block-lists
 ###
-PATCH localhost:8080/api/employees/saveBlockList/65
+PATCH localhost:8080/api/employees/saveBlockList/71
+###
+PUT localhost:8080/api/employees/73/status
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3MywidG9rZW5UeXBlIjoiYWNjZXNzIiwidXNlcm5hbWUiOiIrOTk4OTA1NTUyMjIwIiwic3ViIjoiKzk5ODkwNTU1MjIyMCIsImlhdCI6MTczNjM5NTExNiwiZXhwIjoxNzM2NDIzOTE2fQ.SJLv1AKfCbsyceeepDMegfExPHFsZKRwj17dR_SdSHyBz1CG2m_OfvxKYa7hjq-bsFjxCSaeKOjCCvgUWbjyTg
