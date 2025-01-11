@@ -46,7 +46,7 @@ Content-Type: application/json
   "departmentId": 1,
   "positionId": 1,
   "password": "12345",
-  "phoneNumber": "+998905552220",
+  "phoneNumber": "+998905552221",
   "role": "ROLE_OWNER"
 }
 ####
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 {
   "password": "12345",
-  "phone": "+998905552220"
+  "phone": "+998905552221"
 }
 
 ####
@@ -71,7 +71,7 @@ Content-Type: application/json
 ###
 GET localhost:8080/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3MywidG9rZW5UeXBlIjoiYWNjZXNzIiwidXNlcm5hbWUiOiIrOTk4OTA1NTUyMjIwIiwic3ViIjoiKzk5ODkwNTU1MjIyMCIsImlhdCI6MTczNjM5NTEwNywiZXhwIjoxNzM2NDIzOTA3fQ.92MXsjTSSzIaCxBWx8zI5hqiZSrO3zp-MyNS6bHYf9nWX5egaMNhrTvrj1E39XWUBdRrR0IaaSk1bGbR4tIQFQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3NCwidG9rZW5UeXBlIjoiYWNjZXNzIiwidXNlcm5hbWUiOiIrOTk4OTA1NTUyMjIxIiwic3ViIjoiKzk5ODkwNTU1MjIyMSIsImlhdCI6MTczNjUxNDcyOSwiZXhwIjoxNzM2NTQzNTI5fQ.zQZb6F2mS40TG7EawZe7M-LhRRYM4ijo20Qpr5C7_qt9vrFPdsv8c6VaIsAIgOWs3w5DwYQeH8aD7FclZxW2iw
 
 
 {

@@ -23,7 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.spec.OAEPParameterSpec;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -182,7 +184,8 @@ public class EmployeeService {
         }
     }
 
-    public void updateStatus2case(Long id, GeneralStatus status) {
+    @Transactional
+    public void updateStatus(Long id, GeneralStatus status) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
         employee.setStatus(status);
@@ -194,7 +197,7 @@ public class EmployeeService {
         }
     }
 
-    @Transactional
+   /* @Transactional
     public void updateStatus(Long id, GeneralStatus status) {
         employeeRepository.findById(id)
                 .ifPresentOrElse(employee -> {
@@ -206,5 +209,6 @@ public class EmployeeService {
                         blockListRepository.deleteById(id);
                     }
                 }, () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
-    }
+
+    }*/
 }
