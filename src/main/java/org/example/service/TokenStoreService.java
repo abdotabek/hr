@@ -17,6 +17,7 @@ import java.util.Objects;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TokenStoreService {
 
+
     TokenStoreRepository tokenStoreRepository;
 
     public TokenStoreDTO get(String id) {
