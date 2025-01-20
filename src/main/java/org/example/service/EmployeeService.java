@@ -160,29 +160,38 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
+    /*
+        @Transactional
+        public void dismissedEmployee(Long id) {
+            employeeRepository.findById(id)
+                    .map(employee -> {
+                        employee.setStatus(GeneralStatus.BLOCK);
+                        return employeeRepository.save(employee);
+                    }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+
+            tokenStoreRepository.deleteAll(tokenStoreRepository.findAllByEmployeeId(id));
+        }*/
     @Transactional
     public void dismissedEmployee(Long id) {
-        employeeRepository.findById(id)
-                .map(employee -> {
-                    employee.setStatus(GeneralStatus.BLOCK);
-                    return employeeRepository.save(employee);
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
-
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+        employee.setStatus(GeneralStatus.BLOCK);
+        employeeRepository.save(employee);
         tokenStoreRepository.deleteAll(tokenStoreRepository.findAllByEmployeeId(id));
     }
 
     @Transactional
     public void saveBlockList(Long id) {
-        employeeRepository.findById(id)
-                .map(employee -> {
-                    employee.setStatus(GeneralStatus.BLOCK);
-                    return employeeRepository.save(employee);
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+        employee.setStatus(GeneralStatus.BLOCK);
+        employeeRepository.save(employee);
 
         if (!blockListRepository.existsById(id)) {
             blockListRepository.save(new BlackList(id));
         }
     }
+
 
     @Transactional
     public void updateStatus(Long id, GeneralStatus status) {

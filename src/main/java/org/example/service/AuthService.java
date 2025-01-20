@@ -87,7 +87,7 @@ public class AuthService {
             JwtDTO jwtDTO = JwtUtil.decode(tokenDTO.getRefreshToken());
 
             if (blockListRepository.existsById(jwtDTO.getId())) {
-                throw ExceptionUtil.throwConflictException("Employee token blocked");
+                throw ExceptionUtil.throwConflictException("Employee token is blocked");
             }
             String accessToken = JwtUtil.generateAccessToken(jwtDTO);
             String refreshToken = JwtUtil.generationRefreshToken(jwtDTO);
