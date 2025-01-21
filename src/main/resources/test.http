@@ -267,7 +267,9 @@ Content-Type: application/json
 
 
 ###
-GET localhost:8080/api/token-stores
+DELETE localhost:8080/api/1/sendToQueue
+###
+DELETE localhost:8080/api/employees/1
 
 
 

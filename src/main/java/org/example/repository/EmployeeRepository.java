@@ -2,7 +2,6 @@ package org.example.repository;
 
 import org.example.dto.enums.GeneralStatus;
 import org.example.entity.Employee;
-import org.example.entity.redis.TokenStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

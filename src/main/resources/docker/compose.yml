@@ -10,5 +10,15 @@ services:
       - redis-data:/data
     command: ["redis-server", "--appendonly", "yes"]
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # Порт для приложений
+      - "15672:15672" # Веб-интерфейс
+    environment:
+      RABBITMQ_DEFAULT_USER: guest # Пользователь по умолчанию
+      RABBITMQ_DEFAULT_PASS: guest # Пароль по умолчанию
+
 volumes:
   redis-data:
