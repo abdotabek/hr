@@ -10,6 +10,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CustomIllegalArgumentException extends RuntimeException{
+
     ErrorDTO errorDTO;
 
     public CustomIllegalArgumentException(ErrorDTO error, String message) {

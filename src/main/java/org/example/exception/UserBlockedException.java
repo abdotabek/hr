@@ -10,6 +10,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserBlockedException extends RuntimeException {
+
     ErrorDTO errorDTO;
 
     public UserBlockedException(ErrorDTO error, String message) {

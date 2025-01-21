@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 public class ExceptionUtil {
     public static NotFoundExceptions throwNotFoundException(String message) {
+
         ErrorDTO errorDTO = ErrorDTO
                 .builder()
                 .title("Resource Not Found")
@@ -19,6 +20,7 @@ public class ExceptionUtil {
     }
 
     public static ConflictException throwConflictException(String message) {
+
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Conflict Error")
                 .message(message)
@@ -29,6 +31,7 @@ public class ExceptionUtil {
     }
 
     public static IllegalArgumentException throwCustomIllegalArgumentException(String message) {
+
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Bad Request")
                 .message(message)
@@ -40,6 +43,7 @@ public class ExceptionUtil {
     }
 
     public static UserBlockedException throwUserBlockedException(String message) {
+
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Access Denied")
                 .message(message)
@@ -50,6 +54,7 @@ public class ExceptionUtil {
     }
 
     public static EmployeeNotFoundException throwEmployeeNotFoundException(String message) {
+
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Access Denied")
                 .message(message)

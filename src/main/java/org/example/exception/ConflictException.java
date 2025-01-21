@@ -11,6 +11,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ConflictException extends RuntimeException {
+
     ErrorDTO errorDTO;
 
     public ConflictException(ErrorDTO error, String message) {

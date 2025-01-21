@@ -10,6 +10,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class NotFoundExceptions extends RuntimeException {
+
     ErrorDTO errorDTO;
 
     public NotFoundExceptions(ErrorDTO error, String message) {

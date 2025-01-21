@@ -10,6 +10,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EmployeeNotFoundException extends RuntimeException {
+
     ErrorDTO errorDTO;
 
     public EmployeeNotFoundException(ErrorDTO error, String message) {

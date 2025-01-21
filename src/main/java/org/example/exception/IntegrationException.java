@@ -10,6 +10,7 @@ import org.example.dto.error.ErrorDTO;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class IntegrationException extends RuntimeException {
+
     ErrorDTO error;
 
     public IntegrationException(ErrorDTO error, String message) {
