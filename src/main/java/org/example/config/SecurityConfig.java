@@ -57,6 +57,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/token-stores/**").permitAll()
                     .requestMatchers("/api/block-lists/**").permitAll()
                     .requestMatchers("/api/employees/**").permitAll()
+                    .requestMatchers("api/rabbit/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

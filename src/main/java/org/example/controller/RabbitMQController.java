@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequestMapping("/api")
+@RequestMapping("/api/rabbit")
 public class RabbitMQController {
 
     RabbitMQService rabbitMQService;
 
-    @DeleteMapping("/{id}/sendToQueue")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> sendEmployeeIdQueue(@PathVariable("id") Long id) {
         rabbitMQService.sendMessage(id);
         return ResponseEntity.ok().build();
