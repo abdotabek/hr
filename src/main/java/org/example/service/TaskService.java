@@ -7,11 +7,15 @@ import org.example.dto.task.TaskDTO;
 import org.example.entity.Task;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.TaskRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.example.constants.MyConstants.TASK_QUEUE_EXCHANGE;
+import static org.example.constants.MyConstants.TASK_QUEUE_ROUTING_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class TaskService {
 
     TaskRepository taskRepository;
     RabbitMQService rabbitMQService;
+    RabbitTemplate rabbitTemplate;
 
     public Long create(TaskDTO taskDTO) {
         if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
@@ -81,9 +86,11 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    public void deleteBatch(List<Long> ids) {
+    /*public void deleteBatch(List<Long> ids) {
         ids.forEach(rabbitMQService::deleteTask);
-    }
+    }*/
+
+
 
     private TaskDTO toDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();

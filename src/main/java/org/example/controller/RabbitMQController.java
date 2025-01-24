@@ -23,10 +23,4 @@ public class RabbitMQController {
         rabbitMQService.deleteEmployee(id);
         return ResponseEntity.ok().build();
     }
-
-    @DeleteMapping("task/{id}")
-    public ResponseEntity<Void> sendTask(@PathVariable("id") Long id) {
-        rabbitMQService.deleteTask(id);
-        return ResponseEntity.ok().build();
-    }
 }
