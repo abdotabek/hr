@@ -3,36 +3,48 @@ package org.example.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.constants.MyConstants;
+import org.example.repository.EmployeeRepository;
+import org.example.repository.TaskRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class RabbitMQService {
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+public class RabbitMQService implements MyConstants {
 
-    final RabbitTemplate rabbitTemplate;
-    final EmployeeService employeeService;
+    RabbitTemplate rabbitTemplate;
+    EmployeeRepository employeeRepository;
+    TaskRepository taskRepository;
 
-    @Value("${rabbitmq.exchange}")
-    String exchange;
 
-    @Value("${rabbitmq.routing-key}")
-    String routingKey;
-
-    @RabbitListener(queues = "${rabbitmq.queue}")
-    public void receiveMessage(String message) {
+    @RabbitListener(queues = EMPLOYEE_QUEUE_NAME)
+    public void receiveEmployeeDeleteMessage(String message) {
         try {
             Long employeeId = Long.parseLong(message);
-            employeeService.delete(employeeId);
+            employeeRepository.deleteById(employeeId);
         } catch (NumberFormatException e) {
             System.out.println("Invalid message received : " + message);
         }
     }
 
-    public void sendMessage(Long employeeId) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, employeeId.toString());
+    @RabbitListener(queues = TASK_QUEUE_NAME)
+    public void receiveTaskDeleteMessage(String message) {
+        try {
+            Long taskId = Long.parseLong(message);
+            taskRepository.deleteById(taskId);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid message received : " + message);
+        }
+    }
+
+    public void deleteEmployee(Long employeeId) {
+        rabbitTemplate.convertAndSend(EMPLOYEE_QUEUE_EXCHANGE, EMPLOYEE_QUEUE_ROUTING_KEY, employeeId.toString());
+    }
+
+    public void deleteTask(Long taskId) {
+        rabbitTemplate.convertAndSend(TASK_QUEUE_EXCHANGE, TASK_QUEUE_ROUTING_KEY, taskId.toString());
     }
 }

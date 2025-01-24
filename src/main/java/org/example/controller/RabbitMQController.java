@@ -18,10 +18,15 @@ public class RabbitMQController {
 
     RabbitMQService rabbitMQService;
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("employee/{id}")
     public ResponseEntity<Void> sendEmployeeIdQueue(@PathVariable("id") Long id) {
-        rabbitMQService.sendMessage(id);
+        rabbitMQService.deleteEmployee(id);
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("task/{id}")
+    public ResponseEntity<Void> sendTask(@PathVariable("id") Long id) {
+        rabbitMQService.deleteTask(id);
+        return ResponseEntity.ok().build();
+    }
 }

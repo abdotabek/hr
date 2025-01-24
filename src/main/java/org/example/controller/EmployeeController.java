@@ -56,6 +56,12 @@ public class EmployeeController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deleteBatch(@RequestBody List<Long> ids) {
+        employeeService.deleteBatch(ids);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/getAllEmployees")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployee() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
