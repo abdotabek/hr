@@ -20,11 +20,6 @@ public class RabbitConfig {
         return new Queue(MyConstants.EMPLOYEE_QUEUE_NAME, true);
     }
 
-    /*@Bean
-    public Queue taskQueue() {
-        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
-    }
-*/
     @Bean
     public Queue taskQueue() {
         return QueueBuilder.durable(MyConstants.TASK_QUEUE_NAME)

@@ -21,8 +21,8 @@ public class TaskController {
     RabbitMQService rabbitMQService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody TaskDTO dto) {
-        return ResponseEntity.ok(taskService.create(dto));
+    public ResponseEntity<Long> create(@RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(taskService.create(taskDTO));
     }
 
     @GetMapping

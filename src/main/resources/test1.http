@@ -114,7 +114,17 @@ POST localhost:8080/api/auths/authorization
 Content-Type: application/json
 
 {
-  "phone": "998905552221",
+  "phone": "+998905552221",
   "password": "12345"
+}
+###
+POST localhost:8080/api/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3NCwidG9rZW5UeXBlIjoiYWNjZXNzIiwidXNlcm5hbWUiOiIrOTk4OTA1NTUyMjIxIiwic3ViIjoiKzk5ODkwNTU1MjIyMSIsImlhdCI6MTczNzY5ODY0NywiZXhwIjoxNzM3NzI3NDQ3fQ.MDirvrdHs271KbI9Y6H2Sh7dbm5frFedaNMIHGm5ueBjRgpRrTtgqQQjpGGDf1DgM0MNIy1fpF98sYyjZDA7VA
+
+{
+  "employeeId": 14,
+  "content": "reset password",
+  "title": "password"
 }
 
