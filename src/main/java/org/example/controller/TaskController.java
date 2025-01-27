@@ -38,6 +38,12 @@ public class TaskController {
         return ResponseEntity.ok(taskService.update(id, taskDTO));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        taskService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteBatch(@RequestBody List<Long> ids) {
         taskService.deleteBatch(ids);

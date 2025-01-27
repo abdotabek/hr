@@ -3,10 +3,7 @@ package org.example.config;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.example.constants.MyConstants;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,11 +21,17 @@ public class RabbitConfig {
                 .build();
     }
 
-    @Bean
+    /*@Bean
     public Queue taskQueue() {
         return new Queue(MyConstants.TASK_QUEUE_NAME, true);
-    }
+    }*/
 
+    @Bean
+    public Queue taskQueue() {
+        return QueueBuilder.durable(MyConstants.TASK_QUEUE_NAME)
+                .withArgument("x-delayed-type", "direct")  // Задержка для сообщений
+                .build();
+    }
 
     @Bean
     public TopicExchange employeeExchange() {

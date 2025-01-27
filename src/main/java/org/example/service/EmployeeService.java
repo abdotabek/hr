@@ -158,17 +158,6 @@ public class EmployeeService {
         return customRepository.filterBySpecification(search);
     }
 
-    /*
-        @Transactional
-        public void dismissedEmployee(Long id) {
-            employeeRepository.findById(id)
-                    .map(employee -> {
-                        employee.setStatus(GeneralStatus.BLOCK);
-                        return employeeRepository.save(employee);
-                    }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
-
-            tokenStoreRepository.deleteAll(tokenStoreRepository.findAllByEmployeeId(id));
-        }*/
     @Transactional
     public void dismissedEmployee(Long id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(

@@ -85,7 +85,6 @@ public class TaskService {
         ids.forEach(rabbitMQService::deleteTask);
     }
 
-
     private TaskDTO toDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setId(task.getId());
