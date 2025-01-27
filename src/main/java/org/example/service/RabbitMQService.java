@@ -31,7 +31,6 @@ public class RabbitMQService implements MyConstants {
 
     @RabbitListener(queues = MyConstants.EMPLOYEE_QUEUE_NAME, concurrency = "1")
     public void receiveEmployeeDeleteMessage(String message) {
-
         try {
             Long employeeId = Long.parseLong(message);
             System.out.println("Received employee with id : " + employeeId + " at " + LocalDateTime.now());
@@ -49,9 +48,7 @@ public class RabbitMQService implements MyConstants {
         }
     }
 
-
     public void sendDeleteTaskMessage(List<Long> employeeIds, int delaySeconds) {
-
         int[] delayCount = {0};  // Массив для изменения значения внутри лямбды
 
         employeeIds.forEach(employeeId -> {
@@ -78,7 +75,6 @@ public class RabbitMQService implements MyConstants {
         }
     }
 
-
     private void deleteTasksWithDelay(List<Task> tasks, Long employeeId) {
         int[] delayCount = {0};  // Массив для изменения значения внутри лямбды
 
@@ -99,7 +95,6 @@ public class RabbitMQService implements MyConstants {
     }
 
     public void deleteEmployeeBatchWithDelay(List<Long> employeeIds, int delaySeconds) {
-
         int[] delayCount = {0};
 
         employeeIds.forEach(employeeId -> {
@@ -123,11 +118,8 @@ public class RabbitMQService implements MyConstants {
         });
     }
 
-
-
     @RabbitListener(queues = MyConstants.TASK_QUEUE_NAME, concurrency = "1")
     public void receiveTaskDeleteMessage(String message) {
-
         try {
             Long employeeId = Long.parseLong(message);
             System.out.println("Received task delete message for employee with id : " + employeeId);
@@ -152,5 +144,5 @@ public class RabbitMQService implements MyConstants {
     }
 
 
-
 }
+

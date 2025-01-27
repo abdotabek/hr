@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,10 +81,11 @@ public class TaskService {
     public void delete(Long id) {
         taskRepository.deleteById(id);
     }
-
+/*
     public void deleteBatch(List<Long> ids) {
         ids.forEach(rabbitMQService::deleteTask);
-    }
+    }*/
+
 
     private TaskDTO toDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();

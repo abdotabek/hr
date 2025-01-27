@@ -7,12 +7,14 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.enums.EmployeeRole;
 import org.example.dto.enums.GeneralStatus;
+import org.hibernate.annotations.SQLDelete;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "employee")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SQLDelete(sql = "UPDATE employee SET deleted = true WHERE id=?")
 public class Employee extends BaseEntity {
 
     @Column(name = "first_name")
@@ -65,5 +67,8 @@ public class Employee extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "position_id", updatable = false, insertable = false)
     Position position;
+
+    @Column(name = "deleted")
+    Boolean deleted = false;    //soft delete flag
 
 }
