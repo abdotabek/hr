@@ -37,7 +37,6 @@ public class EmployeeService {
     EntityManager entityManager;
     TokenStoreRepository tokenStoreRepository;
     BlockListRepository blockListRepository;
-    RabbitMQService rabbitMQService;
 
 
     @Transactional
@@ -203,11 +202,6 @@ public class EmployeeService {
         } else if (GeneralStatus.ACTIVE == status) {
             blockListRepository.deleteById(id);
         }
-    }
-
-    @Transactional
-    public void deleteBatch(List<Long> ids) {
-        ids.forEach(rabbitMQService::deleteEmployee);
     }
 
    /* @Transactional

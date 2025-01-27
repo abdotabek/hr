@@ -10,7 +10,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -20,44 +24,53 @@ public class RabbitMQService implements MyConstants {
     RabbitTemplate rabbitTemplate;
     EmployeeRepository employeeRepository;
     TaskRepository taskRepository;
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 
-    @RabbitListener(queues = EMPLOYEE_QUEUE_NAME)
+    @RabbitListener(queues = MyConstants.EMPLOYEE_QUEUE_NAME, concurrency = "1")
     public void receiveEmployeeDeleteMessage(String message) {
         try {
             Long employeeId = Long.parseLong(message);
+            System.out.println("Received employee with id : " + employeeId + " at " + LocalDateTime.now());
             employeeRepository.deleteById(employeeId);
+            System.out.println("employee with id " + employeeId + " has been deleted.");
         } catch (NumberFormatException e) {
             System.out.println("Invalid message received : " + message);
         }
     }
 
-    @RabbitListener(queues = MyConstants.TASK_QUEUE_NAME)
+    public void deleteEmployeeBatchWithDelay(List<Long> employeeIds, int delayMilliseconds) {
+        int[] delayCount = {0};
+
+        employeeIds.forEach(employeeId -> {
+            int currentDelay = delayMilliseconds + delayCount[0];
+            delayCount[0] += delayMilliseconds;
+
+            scheduler.schedule(() -> {
+                try {
+                    employeeRepository.deleteById(employeeId);
+                    System.out.println("Employee with id " + employeeId + " has been deleted at " + LocalDateTime.now());
+                } catch (Exception e) {
+                    System.out.println("Failed to delete employee with id " + employeeId + ": " + e.getMessage());
+                }
+            }, currentDelay, TimeUnit.MILLISECONDS);
+
+            System.out.println("Scheduled deletion for employee " + employeeId + " after " + currentDelay + " ms");
+        });
+    }
+
+     @RabbitListener(queues = TASK_QUEUE_NAME)
     public void receiveTaskDeleteMessage(String message) {
         try {
             Long taskId = Long.parseLong(message);
             taskRepository.deleteById(taskId);
-            System.out.println("task with id " + taskId + " has been deleted.");
         } catch (NumberFormatException e) {
-            System.out.println("invalid message received : " + message);
+            System.out.println("Invalid message received : " + message);
         }
     }
 
-    public void deleteEmployee(Long employeeId) {
-        rabbitTemplate.convertAndSend(EMPLOYEE_QUEUE_EXCHANGE, EMPLOYEE_QUEUE_ROUTING_KEY, employeeId.toString());
+    public void deleteTask(Long taskId) {
+        rabbitTemplate.convertAndSend(TASK_QUEUE_EXCHANGE, TASK_QUEUE_ROUTING_KEY, taskId.toString());
     }
 
-    public void deleteBatchWithDelay(List<Long> taskIds, int delayMilliseconds) {
-        taskIds.forEach(taskId -> {
-            rabbitTemplate.convertAndSend(
-                    MyConstants.TASK_QUEUE_EXCHANGE,
-                    MyConstants.TASK_QUEUE_ROUTING_KEY,
-                    taskId.toString(),
-                    message -> {
-                        message.getMessageProperties().setHeader("x-delay", delayMilliseconds);
-                        return message;
-                    }
-            );
-        });
-    }
 }

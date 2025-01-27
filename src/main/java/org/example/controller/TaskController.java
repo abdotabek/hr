@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.task.TaskDTO;
-import org.example.service.RabbitMQService;
 import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import java.util.List;
 public class TaskController {
 
     TaskService taskService;
-    RabbitMQService rabbitMQService;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody TaskDTO taskDTO) {
@@ -40,15 +38,9 @@ public class TaskController {
         return ResponseEntity.ok(taskService.update(id, taskDTO));
     }
 
-    @DeleteMapping("/batch")
+    @DeleteMapping
     public ResponseEntity<Void> deleteBatch(@RequestBody List<Long> ids) {
-        rabbitMQService.deleteBatchWithDelay(ids, 10000);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
-        rabbitMQService.deleteBatchWithDelay(List.of(id), 10000);
+        taskService.deleteBatch(ids);
         return ResponseEntity.ok().build();
     }
 }

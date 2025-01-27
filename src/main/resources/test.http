@@ -198,7 +198,7 @@ POST localhost:8080/api/employees/authorization
 Content-Type: application/json
 
 {
-  "phone": "+998900550022",
+  "phone": "+998905552221",
   "password": "12345"
 }
 

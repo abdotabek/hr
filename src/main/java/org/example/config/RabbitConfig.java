@@ -15,16 +15,18 @@ import org.springframework.context.annotation.Configuration;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RabbitConfig {
 
+
+
     @Bean
     public Queue employeeQueue() {
-        return new Queue(MyConstants.EMPLOYEE_QUEUE_NAME, true);
+        return QueueBuilder.durable(MyConstants.EMPLOYEE_QUEUE_NAME)
+                .withArgument("x-delayed-type", "direct")
+                .build();
     }
 
     @Bean
     public Queue taskQueue() {
-        return QueueBuilder.durable(MyConstants.TASK_QUEUE_NAME)
-                .withArgument("x-delayed-type", "direct")
-                .build();
+        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
     }
 
 

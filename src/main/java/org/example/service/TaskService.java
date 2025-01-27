@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     TaskRepository taskRepository;
+    RabbitMQService rabbitMQService;
 
     public Long create(TaskDTO taskDTO) {
         if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
@@ -80,6 +81,9 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    public void deleteBatch(List<Long> ids) {
+        ids.forEach(rabbitMQService::deleteTask);
+    }
 
 
     private TaskDTO toDTO(Task task) {

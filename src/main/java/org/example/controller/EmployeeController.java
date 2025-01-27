@@ -10,6 +10,7 @@ import org.example.dto.employee.EmployeeListDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.service.EmployeeService;
+import org.example.service.RabbitMQService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import java.util.List;
 public class EmployeeController {
 
     EmployeeService employeeService;
+    RabbitMQService rabbitMQService;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody EmployeeDTO employeeDTO) {
@@ -50,15 +52,15 @@ public class EmployeeController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        employeeService.delete(id);
+    @DeleteMapping("/batch")
+    public ResponseEntity<Void> deleteEmployeeBatch(@RequestBody List<Long> ids) {
+        rabbitMQService.deleteEmployeeBatchWithDelay(ids, 60000);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteBatch(@RequestBody List<Long> ids) {
-        employeeService.deleteBatch(ids);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
+        rabbitMQService.deleteEmployeeBatchWithDelay(List.of(id), 60000);
         return ResponseEntity.ok().build();
     }
 
@@ -128,6 +130,5 @@ public class EmployeeController {
         employeeService.saveBlockList(id);
         return ResponseEntity.ok().build();
     }
-
 
 }
