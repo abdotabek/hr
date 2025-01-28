@@ -8,6 +8,7 @@ import org.example.entity.Task;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TaskRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,44 +25,33 @@ public class RabbitMQService implements MyConstants {
     EmployeeRepository employeeRepository;
     TaskRepository taskRepository;
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    RabbitTemplate rabbitTemplate;
 
 
     @RabbitListener(queues = MyConstants.EMPLOYEE_QUEUE_NAME, concurrency = "1")
-    public void receiveEmployeeDeleteMessage(String message) {
+    public void receiveEmployeeDeleteMessage(Long employeeId) {
+
         try {
-            Long employeeId = Long.parseLong(message);
-            System.out.println("Received employee with id : " + employeeId + " at " + LocalDateTime.now());
+            List<Task> taskList = taskRepository.findByEmployeeId(employeeId);
+            if (!taskList.isEmpty()) {
+                taskRepository.deleteAll(taskList);
+            }
             employeeRepository.deleteById(employeeId);
-            System.out.println("employee with id " + employeeId + " has been deleted.");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid message received : " + message);
+        } catch (Exception e) {
+            System.out.println("Failed to delete employee with id " + employeeId + ": " + e.getMessage());
         }
     }
 
-    public void deleteEmployee(List<Long> ids) {
-        deleteEmployeeBatchWithDelay(ids, 30_000);
-    }
+    public void deleteEmployee(List<Long> employeeIds, int delayMilliseconds) {
 
-    public void deleteEmployeeBatchWithDelay(List<Long> employeeIds, int delayMilliseconds) {
         int[] delayCount = {0};
-
         employeeIds.forEach(employeeId -> {
             int currentDelay = delayMilliseconds + delayCount[0];
             delayCount[0] += delayMilliseconds;
 
             scheduler.schedule(() -> {
-                try {
-                    List<Task> taskList = taskRepository.findByEmployeeId(employeeId);
-                    taskRepository.deleteAll(taskList);
-
-                    employeeRepository.deleteById(employeeId);
-                    System.out.println("Employee with id " + employeeId + " has been deleted at " + LocalDateTime.now());
-                } catch (Exception e) {
-                    System.out.println("Failed to delete employee with id " + employeeId + ": " + e.getMessage());
-                }
+                rabbitTemplate.convertAndSend(MyConstants.EMPLOYEE_QUEUE_NAME, employeeId);
             }, currentDelay, TimeUnit.MILLISECONDS);
-
-            System.out.println("Scheduled deletion for employee " + employeeId + " after " + currentDelay + " ms");
         });
     }
 
