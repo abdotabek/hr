@@ -114,7 +114,7 @@ POST localhost:8080/api/auths/authorization
 Content-Type: application/json
 
 {
-  "phone": "+998905552221",
+  "phone": "+998905c552221",
   "password": "12345"
 }
 ###

@@ -5,12 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "branch")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SQLDelete(sql = "UPDATE branch SET deleted = TRUE WHERE id=?")
 public class Branch extends BaseEntity {
 
     @Column(name = "name")
@@ -25,4 +27,7 @@ public class Branch extends BaseEntity {
 
     @Embedded
     Address address;
+
+    @Column(name = "deleted")
+    Boolean delete = false;
 }

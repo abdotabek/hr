@@ -9,6 +9,7 @@ import org.example.dto.company.CompanyDetailDTO;
 import org.example.dto.company.CompanyListDTO;
 import org.example.dto.filter.CompanyFilterDTO;
 import org.example.service.CompanyService;
+import org.example.service.RabbitMQService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CompanyController {
 
     CompanyService companyService;
+    RabbitMQService rabbitMQService;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody CompanyDTO companyDTO) {
@@ -67,5 +69,11 @@ public class CompanyController {
     @GetMapping("/filterCompanyBySpecification")
     public ResponseEntity<Page<CompanyDTO>> filterCompanyBySpecification(@RequestBody CompanyFilterDTO search) {
         return ResponseEntity.ok(companyService.filterCompanyBySpecification(search));
+    }
+
+    @DeleteMapping("/batch")
+    public ResponseEntity<Void> deleteCompanyBatch(@RequestBody List<Long> ids) {
+        rabbitMQService.deleteCompany(ids);
+        return ResponseEntity.ok().build();
     }
 }

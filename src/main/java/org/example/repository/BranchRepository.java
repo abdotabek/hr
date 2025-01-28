@@ -1,11 +1,14 @@
 package org.example.repository;
 
 import org.example.entity.Branch;
+import org.example.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface BranchRepository extends JpaRepository<Branch, Long>, JpaSpecificationExecutor<Branch> {
@@ -24,4 +27,6 @@ public interface BranchRepository extends JpaRepository<Branch, Long>, JpaSpecif
     /* Native SQL Query */
     @Query(value = "select count (b.id) from branch b inner join company c on b.company_id = c.id where c.id=?", nativeQuery = true)
     Long countAllByCompanyIdTest3(Long companyId);
+
+    List<Branch> findByCompanyId(Long branchId);
 }

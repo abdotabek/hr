@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "task")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@SQLDelete(sql = "UPDATE task SET deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE task SET deleted = TRUE WHERE id=?")
 public class Task extends BaseEntity {
 
     @Column(name = "title")

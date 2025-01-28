@@ -31,4 +31,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     Optional<Employee> findByPhoneNumber(String phone);
     Optional<Employee> findByPhoneNumberAndStatus(String phone, GeneralStatus status);
+
+    List<Employee> findByCompanyId(Long companyId);
 }

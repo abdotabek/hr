@@ -8,12 +8,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "company")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SQLDelete(sql = "UPDATE company SET deleted = TRUE WHERE id=?")
 public class Company extends BaseEntity {
 
     @Column(name = "name")
@@ -27,4 +29,7 @@ public class Company extends BaseEntity {
 
     @Embedded
     Address address;
+
+    @Column(name = "deleted")
+    Boolean deleted = false;  // soft delete flag
 }
