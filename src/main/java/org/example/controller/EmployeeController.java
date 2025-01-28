@@ -52,18 +52,11 @@ public class EmployeeController {
         return ResponseEntity.ok().build();
     }
 
-
     @DeleteMapping("/batch")
-    public ResponseEntity<Void> deleteEmployeeBatch(@RequestBody List<Long> ids, @RequestParam int delaySeconds) {
-
-        rabbitMQService.sendDeleteTaskMessage(ids, delaySeconds);
-
-        // Запланировать удаление сотрудников с задержкой
-        rabbitMQService.deleteEmployeeBatchWithDelay(ids, delaySeconds);
-
+    public ResponseEntity<Void> deleteEmployeeBatch(@RequestBody List<Long> ids) {
+        rabbitMQService.deleteEmployee(ids);
         return ResponseEntity.ok().build();
     }
-
 
     @GetMapping("/getAllEmployees")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployee() {

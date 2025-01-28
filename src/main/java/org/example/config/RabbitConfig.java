@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
 
 
-
     @Bean
     public Queue employeeQueue() {
         return QueueBuilder.durable(MyConstants.EMPLOYEE_QUEUE_NAME)
@@ -21,17 +20,11 @@ public class RabbitConfig {
                 .build();
     }
 
-    /*@Bean
-    public Queue taskQueue() {
-        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
-    }*/
-
     @Bean
     public Queue taskQueue() {
-        return QueueBuilder.durable(MyConstants.TASK_QUEUE_NAME)
-                .withArgument("x-delayed-type", "direct")  // Задержка для сообщений
-                .build();
+        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
     }
+
 
     @Bean
     public TopicExchange employeeExchange() {

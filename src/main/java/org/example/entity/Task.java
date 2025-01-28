@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "task")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SQLDelete(sql = "UPDATE task SET deleted = true WHERE id=?")
 public class Task extends BaseEntity {
 
     @Column(name = "title")
@@ -27,7 +29,10 @@ public class Task extends BaseEntity {
     @Column(name = "employee_id")
     Long employeeId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id", updatable = false, insertable = false)
     Employee employee;
+
+    @Column(name = "deleted")
+    Boolean deleted = false;
 }
