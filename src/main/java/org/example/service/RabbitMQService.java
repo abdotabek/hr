@@ -8,7 +8,6 @@ import org.example.entity.Task;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TaskRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RabbitMQService implements MyConstants {
 
-    RabbitTemplate rabbitTemplate;
     EmployeeRepository employeeRepository;
     TaskRepository taskRepository;
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -76,10 +74,5 @@ public class RabbitMQService implements MyConstants {
             System.out.println("Invalid message received : " + message);
         }
     }
-
-    public void deleteTask(Long taskId) {
-        rabbitTemplate.convertAndSend(TASK_QUEUE_EXCHANGE, TASK_QUEUE_ROUTING_KEY, taskId.toString());
-    }
-
 }
 

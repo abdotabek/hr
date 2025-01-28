@@ -7,8 +7,5 @@ import java.util.List;
 
 public interface TokenStoreRepository extends CrudRepository<TokenStore, String> {
 
-//    Iterable<TokenStore> findAll(); // Для получения всех записей
-
-
     List<TokenStore> findAllByEmployeeId(Long employeeId);
 }

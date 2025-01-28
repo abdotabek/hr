@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
 
-
     /*Hibernate Query Language*/
     @Query("FROM Company WHERE tin = :tin")
     Company findByTin(@Param("tin") String tin);
