@@ -41,7 +41,9 @@ public class RabbitMQService implements MyConstants {
         }
     }
 
-    public void deleteEmployee(List<Long> employeeIds, int delayMilliseconds) {
+    public void deleteEmployee(List<Long> employeeIds) {
+
+        final int delayMilliseconds = 10_000;  // интервал 10 секунд
 
         int[] delayCount = {0};
         employeeIds.forEach(employeeId -> {
