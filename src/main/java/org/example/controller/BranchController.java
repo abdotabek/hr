@@ -52,11 +52,11 @@ public class BranchController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/batch")
+   /* @DeleteMapping("/batch")
     public ResponseEntity<Void> deleteBranchBatch(@RequestBody List<Long> ids) {
         rabbitMQService.deleteBranch(ids);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     @GetMapping("/findAllBranches")
     public ResponseEntity<List<BranchDTO>> getAllBranches() {

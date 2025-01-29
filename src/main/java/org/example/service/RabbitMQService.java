@@ -26,28 +26,32 @@ public class RabbitMQService implements MyConstants {
     EmployeeRepository employeeRepository;
     TaskRepository taskRepository;
     RabbitTemplate rabbitTemplate;
-    CompanyRepository companyRepository;
-    BranchRepository branchRepository;
-
 
     @RabbitListener(queues = MyConstants.EMPLOYEE_QUEUE_NAME, concurrency = "1")
     public void receiveEmployeeDeleteMessage(String message) {
         Long employeeId = Long.parseLong(message);
-        employeeRepository.deleteById(employeeId);  // Удаляем сотрудника
+        employeeRepository.deleteById(employeeId);
     }
 
     public void deleteEmployee(List<Long> employeeIds) {
-        final int delayMilliseconds = 30_0000; // задержка 30 секунд
 
-        employeeIds.forEach(employeeId -> {
+        int initialDelayMilliseconds = 10_000;  // задержка для первого сообщения 30 секунд
+
+        int[] cumulativeDelay = {0};
+        for (Long employeeId : employeeIds) {
+
+            int delayMilliseconds = initialDelayMilliseconds + cumulativeDelay[0];
+            cumulativeDelay[0] += initialDelayMilliseconds;
+
             MessageProperties messageProperties = new MessageProperties();
             messageProperties.setHeader("x-delay", delayMilliseconds);
 
             Message message = new Message(employeeId.toString().getBytes(), messageProperties);
-            rabbitTemplate.send(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, EMPLOYEE_QUEUE_ROUTING_KEY, message);
-        });
-    }
 
+            System.out.println("Sending message for employeeId: " + employeeId + " with delay: " + delayMilliseconds);
+            rabbitTemplate.send(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY, message);
+        }
+    }
 
     @RabbitListener(queues = MyConstants.TASK_QUEUE_NAME)
     public void receiveTaskDeleteMessage(String message) {
@@ -59,50 +63,6 @@ public class RabbitMQService implements MyConstants {
         }
     }
 
-    public void deleteCompany(List<Long> companyIds) {
 
-
-        companyIds.forEach(companyId -> {
-            List<Employee> employeeList = employeeRepository.findByCompanyId(companyId);
-            employeeList.forEach(employee -> {
-                rabbitTemplate.convertAndSend(MyConstants.EMPLOYEE_QUEUE_NAME, employee.getId());
-            });
-
-            List<Branch> branchList = branchRepository.findByCompanyId(companyId);
-            branchList.forEach(branch -> {
-                rabbitTemplate.convertAndSend(MyConstants.BRANCH_QUEUE_NAME, branch.getId());
-            });
-
-            rabbitTemplate.convertAndSend(MyConstants.COMPANY_QUEUE_NAME, companyId);
-        });
-    }
-
-    @RabbitListener(queues = MyConstants.COMPANY_QUEUE_NAME)
-    public void receiveCompanyDeleteMessage(Long companyId) {
-
-        try {
-            companyRepository.deleteById(companyId);
-            System.out.println("company with Id " + companyId + " has been deleted.");
-        } catch (Exception e) {
-            System.out.println("Failed to delete company with id " + companyId + ": " + e.getMessage());
-        }
-    }
-
-
-    public void deleteBranch(List<Long> ids) {
-        ids.forEach(branchId -> {
-            rabbitTemplate.convertAndSend(MyConstants.BRANCH_QUEUE_NAME, branchId);
-        });
-    }
-
-    @RabbitListener(queues = MyConstants.BRANCH_QUEUE_NAME)
-    public void receiveBranchDeleteMessage(String message) {
-        try {
-            Long branchId = Long.parseLong(message);
-            branchRepository.deleteById(branchId);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid message received : " + message);
-        }
-    }
 }
 

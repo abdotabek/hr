@@ -45,65 +45,12 @@ public class RabbitConfig {
         return new TopicExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE);
     }
 
-    /*@Bean
-    public Binding employeeBinding() {
-        return new Binding(
-                MyConstants.EMPLOYEE_QUEUE_NAME,
-                Binding.DestinationType.QUEUE,
-                MyConstants.EMPLOYEE_QUEUE_EXCHANGE,
-                MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY,
-                null
-        );
-    }*/
 
     @Bean
     public Binding employeeBinding() {
         return BindingBuilder.bind(employeeQueue())
                 .to(employeeExchange())
                 .with(MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY);
-    }
-
-
-    @Bean
-    public Queue companyQueue() {
-        return new Queue(MyConstants.COMPANY_QUEUE_NAME, true);
-    }
-
-    @Bean
-    public TopicExchange companyExchange() {
-        return new TopicExchange(MyConstants.COMPANY_QUEUE_EXCHANGE);
-    }
-
-    @Bean
-    public Binding companyBinding() {
-        return new Binding(
-                MyConstants.COMPANY_QUEUE_NAME,
-                Binding.DestinationType.QUEUE,
-                MyConstants.COMPANY_QUEUE_EXCHANGE,
-                MyConstants.COMPANY_QUEUE_ROUTING_KEY,
-                null
-        );
-    }
-
-    @Bean
-    public Queue branchQueue() {
-        return new Queue(MyConstants.BRANCH_QUEUE_NAME, true);
-    }
-
-    @Bean
-    public TopicExchange branchExchange() {
-        return new TopicExchange(MyConstants.BRANCH_QUEUE_EXCHANGE);
-    }
-
-    @Bean
-    public Binding branchBinding() {
-        return new Binding(
-                MyConstants.BRANCH_QUEUE_NAME,
-                Binding.DestinationType.QUEUE,
-                MyConstants.BRANCH_QUEUE_EXCHANGE,
-                MyConstants.BRANCH_QUEUE_ROUTING_KEY,
-                null
-        );
     }
 
 

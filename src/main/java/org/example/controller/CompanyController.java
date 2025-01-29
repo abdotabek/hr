@@ -70,10 +70,9 @@ public class CompanyController {
     public ResponseEntity<Page<CompanyDTO>> filterCompanyBySpecification(@RequestBody CompanyFilterDTO search) {
         return ResponseEntity.ok(companyService.filterCompanyBySpecification(search));
     }
-
-    @DeleteMapping("/batch")
+    /*@DeleteMapping("/batch")
     public ResponseEntity<Void> deleteCompanyBatch(@RequestBody List<Long> ids) {
         rabbitMQService.deleteCompany(ids);
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
