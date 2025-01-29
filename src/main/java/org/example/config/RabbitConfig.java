@@ -45,7 +45,7 @@ public class RabbitConfig {
         return new TopicExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE);
     }
 
-    @Bean
+    /*@Bean
     public Binding employeeBinding() {
         return new Binding(
                 MyConstants.EMPLOYEE_QUEUE_NAME,
@@ -54,7 +54,15 @@ public class RabbitConfig {
                 MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY,
                 null
         );
+    }*/
+
+    @Bean
+    public Binding employeeBinding() {
+        return BindingBuilder.bind(employeeQueue())
+                .to(employeeExchange())
+                .with(MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY);
     }
+
 
     @Bean
     public Queue companyQueue() {
