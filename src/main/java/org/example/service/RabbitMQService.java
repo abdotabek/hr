@@ -4,10 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.constants.MyConstants;
-import org.example.entity.Branch;
-import org.example.entity.Employee;
-import org.example.repository.BranchRepository;
-import org.example.repository.CompanyRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TaskRepository;
 import org.springframework.amqp.core.Message;
@@ -35,7 +31,7 @@ public class RabbitMQService implements MyConstants {
 
     public void deleteEmployee(List<Long> employeeIds) {
 
-        int initialDelayMilliseconds = 10_000;  // задержка для первого сообщения 30 секунд
+        int initialDelayMilliseconds = 30_000;  // задержка для первого сообщения 30 секунд
 
         int[] cumulativeDelay = {0};
         for (Long employeeId : employeeIds) {

@@ -34,15 +34,15 @@ public class RabbitConfig {
     }
 
     @Bean
+    public DirectExchange employeeExchange() {
+        return new DirectExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, true, false);
+    }
+
+    @Bean
     public Queue employeeQueue() {
         return QueueBuilder.durable(MyConstants.EMPLOYEE_QUEUE_NAME)
                 .withArgument("x-delayed-type", "direct")
                 .build();
-    }
-
-    @Bean
-    public TopicExchange employeeExchange() {
-        return new TopicExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE);
     }
 
 
