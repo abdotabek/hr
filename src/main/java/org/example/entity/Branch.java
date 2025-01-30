@@ -12,7 +12,7 @@ import org.hibernate.annotations.SQLDelete;
 @Entity
 @Table(name = "branch")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@SQLDelete(sql = "UPDATE branch SET deleted = TRUE WHERE id=?")
+@SQLDelete(sql = "UPDATE branch SET deleted = true WHERE id=?")
 public class Branch extends BaseEntity {
 
     @Column(name = "name")

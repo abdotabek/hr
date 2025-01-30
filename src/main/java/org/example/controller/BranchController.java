@@ -10,7 +10,6 @@ import org.example.dto.branch.BranchDetailsDTO;
 import org.example.dto.branch.BranchIdNameCompanyDTO;
 import org.example.dto.filter.BranchFilterDTO;
 import org.example.service.BranchService;
-import org.example.service.RabbitMQService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,6 @@ import java.util.List;
 public class BranchController {
 
     BranchService branchService;
-    RabbitMQService rabbitMQService;
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody BranchDTO branchDTO) {
@@ -51,12 +49,6 @@ public class BranchController {
         branchService.delete(id);
         return ResponseEntity.ok().build();
     }
-
-   /* @DeleteMapping("/batch")
-    public ResponseEntity<Void> deleteBranchBatch(@RequestBody List<Long> ids) {
-        rabbitMQService.deleteBranch(ids);
-        return ResponseEntity.ok().build();
-    }*/
 
     @GetMapping("/findAllBranches")
     public ResponseEntity<List<BranchDTO>> getAllBranches() {

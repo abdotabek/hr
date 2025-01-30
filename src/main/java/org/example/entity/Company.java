@@ -15,7 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 @Entity
 @Table(name = "company")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@SQLDelete(sql = "UPDATE company SET deleted = TRUE WHERE id=?")
+@SQLDelete(sql = "UPDATE company SET deleted = true WHERE id=?")
 public class Company extends BaseEntity {
 
     @Column(name = "name")

@@ -7,51 +7,30 @@ import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RabbitConfig {
 
     @Bean
-    public Queue taskQueue() {
-        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
-    }
-
-    @Bean
-    public TopicExchange taskExchange() {
-        return new TopicExchange(MyConstants.TASK_QUEUE_EXCHANGE);
-    }
-
-    @Bean
-    public Binding taskBinding() {
-        return new Binding(
-                MyConstants.TASK_QUEUE_NAME,
-                Binding.DestinationType.QUEUE,
-                MyConstants.TASK_QUEUE_EXCHANGE,
-                MyConstants.TASK_QUEUE_ROUTING_KEY,
-                null
-        );
-    }
-
-    @Bean
-    public DirectExchange employeeExchange() {
-        return new DirectExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, true, false);
+    public CustomExchange delayedExchange() {
+        return new CustomExchange(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, "x-delayed-message", true, false,
+                Map.of("x-delayed-type", "direct"));
     }
 
     @Bean
     public Queue employeeQueue() {
-        return QueueBuilder.durable(MyConstants.EMPLOYEE_QUEUE_NAME)
-                .withArgument("x-delayed-type", "direct")
-                .build();
+        return QueueBuilder.durable(MyConstants.EMPLOYEE_QUEUE_NAME).build();
     }
-
 
     @Bean
-    public Binding employeeBinding() {
-        return BindingBuilder.bind(employeeQueue())
-                .to(employeeExchange())
-                .with(MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY);
+    public Binding employeeBinding(Queue employeeQueue, CustomExchange delayedExchange) {
+        return BindingBuilder.bind(employeeQueue)
+                .to(delayedExchange)
+                .with(MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY)
+                .noargs();
     }
-
-
 }
+
