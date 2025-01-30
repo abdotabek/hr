@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
+
     public static final Long accessTokenLiveTime = 3600 * 8 * 1000 + 1L;
     private static final Long refreshTokenLiveTime = 3600 * 24 * 15 * 1000 + 1L;
     private static final String secretKey = "veryLongSecretlasharamazgillattayevaxmojonjinnijonsurbetbekkiydirhonuxlatdibekloxovdangasabekochkozjonduxovmashaynikmaydagapchishularnioqiganbolsangizgapyoqaniqsizmazgi";

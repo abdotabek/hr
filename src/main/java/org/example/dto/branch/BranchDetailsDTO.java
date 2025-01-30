@@ -14,5 +14,6 @@ import org.example.dto.base.CommonDTO;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BranchDetailsDTO extends CommonDTO {
+
     AddressDetailsDTO addressDetailsDTO;
 }

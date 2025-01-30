@@ -10,6 +10,7 @@ import org.example.dto.enums.EmployeeRole;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeDTO {
+
     Long id;
 
     String firstName;
@@ -31,8 +32,5 @@ public class EmployeeDTO {
     Long positionId;
 
     EmployeeRole role;
-
-
-    /*ProfileRole role;*/
 
 }

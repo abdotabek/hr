@@ -10,6 +10,7 @@ import org.example.dto.base.CommonDTO;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DistrictDetailDTO extends CommonDTO {
+
     String regionName;
 
 }

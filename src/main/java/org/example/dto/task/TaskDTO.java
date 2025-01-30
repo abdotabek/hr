@@ -9,9 +9,14 @@ import java.time.LocalDateTime;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskDTO {
+
     Long id;
+
     String title;
+
     String content;
+
     LocalDateTime createdDate;
+
     Long employeeId;
 }

@@ -9,5 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BranchFilterDTO extends BaseFilter {
+
     Long branchId;
 }

@@ -10,5 +10,6 @@ import org.example.dto.base.CommonDTO;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DepartmentDetailDTO extends CommonDTO {
+
     Long branchId;
 }

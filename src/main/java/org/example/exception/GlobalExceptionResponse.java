@@ -16,7 +16,10 @@ import java.time.LocalDateTime;
 public class GlobalExceptionResponse {
 
     String title;
+
     String message;
+
     HttpStatus status;
+
     LocalDateTime localDateTime;
 }

@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthResponseDTO {
+
     String accessToken;
+
     String refreshToken;
 
 }

@@ -9,8 +9,12 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TokenDTO {
+
     String refreshToken;
+
     String accessToken;
+
     Long expaired;
+
     String type = "Bearer";
 }

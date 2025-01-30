@@ -9,7 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddressDTO {
+
     String street;
+
     Long regionId;
+
     Long districtId;
 }

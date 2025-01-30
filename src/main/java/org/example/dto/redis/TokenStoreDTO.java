@@ -11,7 +11,10 @@ import lombok.experimental.FieldDefaults;
 public class TokenStoreDTO {
 
     String id;
+
     Long employeeId;
+
     String refreshToken;
+
     String accessToken;
 }

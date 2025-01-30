@@ -11,8 +11,11 @@ import lombok.experimental.FieldDefaults;
 public class JwtDTO {
 
     Long id;
+
     String userName;
+
     String role;
+
     String tokenType;
 
     public JwtDTO(Long id, String userName, String role, String tokenType) {

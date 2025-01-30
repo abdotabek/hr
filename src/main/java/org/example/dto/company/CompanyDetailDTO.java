@@ -11,7 +11,10 @@ import org.example.dto.base.CommonDTO;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompanyDetailDTO extends CommonDTO {
+
     String tin;
+
     AddressDetailsDTO addressDetailsDTO;
+
     String brand;
 }

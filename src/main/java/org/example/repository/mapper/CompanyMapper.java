@@ -10,7 +10,10 @@ import org.mapstruct.Mapping;
 public interface CompanyMapper extends BaseMapper<CompanyDTO, Company> {
 
     @Mapping(source = "address.street", target = "addressDTO.street")
+
     @Mapping(source = "address.regionId", target = "addressDTO.regionId")
+
     @Mapping(source = "address.districtId", target = "addressDTO.districtId")
+
     CompanyDTO toDTO(Company company);
 }

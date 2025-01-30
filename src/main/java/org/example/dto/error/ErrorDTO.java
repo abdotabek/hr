@@ -16,7 +16,10 @@ import java.time.LocalDateTime;
 public class ErrorDTO {
 
     String title;
+
     String message;
+
     HttpStatus status;
+
     LocalDateTime localDateTime;
 }

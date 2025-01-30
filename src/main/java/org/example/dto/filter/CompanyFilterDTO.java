@@ -9,7 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompanyFilterDTO extends BaseFilter {
+
     Long companyId;
+
     String sortingBy;
+
     String sortDirection;
 }

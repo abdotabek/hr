@@ -9,8 +9,12 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeListDTO {
+
     Long id;
+
     String firstName;
+
     String lastName;
+
     String positionName;
 }
