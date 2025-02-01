@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RabbitConfig {
+public class RabbitConfig implements MyConstants {
 
     @Bean
     public CustomExchange delayedExchange() {
@@ -32,5 +32,22 @@ public class RabbitConfig {
                 .with(MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY)
                 .noargs();
     }
+
+    @Bean
+    public DirectExchange exchange() {
+        return new DirectExchange(MyConstants.TASK_QUEUE_EXCHANGE);
+    }
+
+    @Bean
+    public Queue taskQueue() {
+        return new Queue(MyConstants.TASK_QUEUE_NAME, true);
+    }
+
+    @Bean
+    public Binding binding(Queue taskQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(taskQueue).to(exchange).with(MyConstants.TASK_QUEUE_ROUTING_KEY);
+    }
+
+
 }
 

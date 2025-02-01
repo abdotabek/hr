@@ -1,17 +1,24 @@
 package org.example.service;
 
+import com.google.common.collect.Iterables;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.constants.MyConstants;
 import org.example.dto.task.TaskDTO;
 import org.example.entity.Task;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.TaskRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +27,11 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     TaskRepository taskRepository;
-    RabbitMQService rabbitMQService;
+    RabbitTemplate rabbitTemplate;
+
+
+    static Logger log = LoggerFactory.getLogger(TaskService.class);
+    static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public Long create(TaskDTO taskDTO) {
         if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
@@ -81,19 +92,28 @@ public class TaskService {
     public void delete(Long id) {
         taskRepository.deleteById(id);
     }
-/*
-    public void deleteBatch(List<Long> ids) {
-        ids.forEach(rabbitMQService::deleteTask);
-    }*/
 
+    public void sendTaskIdsToQueue(List<Long> taskIds) {
+        Iterable<List<Long>> partitions = Iterables.partition(taskIds, 4);
 
-    private TaskDTO toDTO(Task task) {
-        TaskDTO taskDTO = new TaskDTO();
-        taskDTO.setId(task.getId());
-        taskDTO.setTitle(task.getTitle());
-        taskDTO.setContent(task.getContent());
-        taskDTO.setCreatedDate(task.getCreatedDate());
-        taskDTO.setEmployeeId(task.getEmployeeId());
-        return taskDTO;
+        for (List<Long> partition : partitions) {
+            for (Long taskId : partition) {
+                rabbitTemplate.convertAndSend(MyConstants.TASK_QUEUE_EXCHANGE, MyConstants.TASK_QUEUE_ROUTING_KEY, taskId);
+            }
+        }
+    }
+
+    @RabbitListener(queues = MyConstants.TASK_QUEUE_NAME)
+    public void deleteTask(Long taskId) {
+        taskRepository.deleteById(taskId);
+        log.info("task with id {} has been deleted.", taskId);
+    }
+
+    @Scheduled(cron = "0 0 0 1 * *")
+    public void startTaskDeletionAtStartOfMonth() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        List<Long> taskIds = taskRepository.findTasksIdsToDelete(thirtyDaysAgo);
+        sendTaskIdsToQueue(taskIds);
+        log.info("Starting task deletion at the beginning of the month.");
     }
 }

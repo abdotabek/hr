@@ -19,14 +19,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RabbitMQService implements MyConstants {
+public class RabbitMQService implements MyConstants{
 
     EmployeeRepository employeeRepository;
     RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = MyConstants.EMPLOYEE_QUEUE_NAME, concurrency = "1")
     public void receiveEmployeeDeleteMessage(String message) {
-        log.info("receiveEmployeeDeleteMessage: " + message);
+        log.info("receiveEmployeeDeleteMessage: {}", message);
         Long employeeId = Long.parseLong(message);
         employeeRepository.deleteById(employeeId);
 
@@ -46,10 +46,10 @@ public class RabbitMQService implements MyConstants {
 
             Message message = new Message(employeeId.toString().getBytes(StandardCharsets.UTF_8), messageProperties);
 
-            System.out.println("Sending message for employeeId: " + employeeId + " with delay: " + delayMilliseconds);
             rabbitTemplate.send(MyConstants.EMPLOYEE_QUEUE_EXCHANGE, MyConstants.EMPLOYEE_QUEUE_ROUTING_KEY, message);
         }
     }
+
 }
 
 

@@ -43,4 +43,10 @@ public class TaskController {
         taskService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteTasks(@RequestBody List<Long> tasksIds) {
+        taskService.sendTaskIdsToQueue(tasksIds);
+        return ResponseEntity.ok().build();
+    }
 }
