@@ -29,7 +29,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 
     boolean existsEmployeeByPhoneNumber(String phoneNumber);
 
+//    Optional<Employee> findOneByLogin(String login);
+
     Optional<Employee> findByPhoneNumber(String phone);
+
     Optional<Employee> findByPhoneNumberAndStatus(String phone, GeneralStatus status);
 
     List<Employee> findByCompanyId(Long companyId);

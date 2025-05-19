@@ -31,7 +31,8 @@ public class SecurityConfig {
     public static final String[] AUTH_WHITELIST = {
             "/api/auths/registration",
             "/api/auths/authorization",
-            "/api/auths/refresh-token"
+            "/api/auths/refresh-token",
+            "/api/auths/login"
     };
 
     @Bean

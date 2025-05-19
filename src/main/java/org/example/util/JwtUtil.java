@@ -5,12 +5,19 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.config.CustomUserDetails;
+import org.example.dto.enums.EmployeeRole;
 import org.example.dto.jwt.JwtDTO;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.security.config.Elements.JWT;
 
 public class JwtUtil {
 
@@ -27,13 +34,13 @@ public class JwtUtil {
         extraClaims.put("id", id);
         Long tokenLifeTime = ("access".equals(tokenType)) ? accessTokenLiveTime : refreshTokenLiveTime;
         return Jwts
-                .builder()
-                .claims(extraClaims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + tokenLifeTime))
-                .signWith(getSignInKey())
-                .compact();
+            .builder()
+            .claims(extraClaims)
+            .subject(username)
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(new Date(System.currentTimeMillis() + tokenLifeTime))
+            .signWith(getSignInKey())
+            .compact();
     }
 
     public static String generateAccessToken(JwtDTO jwtDTO) {
@@ -47,12 +54,12 @@ public class JwtUtil {
     public static boolean isTokenExpired(String token) {
         try {
             Date expirationDate = Jwts
-                    .parser()
-                    .verifyWith(getSignInKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getExpiration();
+                .parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
             return expirationDate.before(new Date());
         } catch (JwtException e) {
             return true;
@@ -61,11 +68,11 @@ public class JwtUtil {
 
     public static JwtDTO decode(String token) {
         Claims claims = Jwts
-                .parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+            .parser()
+            .verifyWith(getSignInKey())
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
         String username = (String) claims.get(JwtClaims.USERNAME);
         String role = (String) claims.get(JwtClaims.ROLE);
         String tokenType = claims.get("tokenType").toString();
@@ -76,5 +83,21 @@ public class JwtUtil {
     private static SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public static String createToken(Authentication authentication) {
+
+        if (!(authentication.getPrincipal() instanceof CustomUserDetails customUser)) {
+            throw new IllegalArgumentException("Invalid authentication principal");
+        }
+
+        JwtDTO jwtDTO = new JwtDTO(
+            customUser.getId(),
+            customUser.getPhone(),  // phone используется как username
+            customUser.getRole().name(),
+            "access"
+        );
+
+        return generateAccessToken(jwtDTO);
     }
 }

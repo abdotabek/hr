@@ -5,6 +5,7 @@ import jakarta.persistence.TypedQuery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.dto.LoginVM;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.employee.EmployeeDetailDTO;
 import org.example.dto.employee.EmployeeListDTO;
@@ -20,10 +21,13 @@ import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.custom.EmployeeCustomRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,49 +63,74 @@ public class EmployeeService {
 
     public EmployeeDetailDTO get(Long id) {
         return employeeRepository.findById(id)
-                .map(employee -> {
-                    EmployeeDetailDTO employeeDetailDTO = new EmployeeDetailDTO();
-                    employeeDetailDTO.setId(employee.getId());
-                    employeeDetailDTO.setFirstName(employee.getFirstName());
-                    employeeDetailDTO.setLastName(employee.getLastName());
-                    employeeDetailDTO.setPhoneNumber(employee.getPhoneNumber());
-                    employeeDetailDTO.setCompanyName(employee.getCompany() != null ? employee.getCompany().getName() : null);
-                    employeeDetailDTO.setBranchName(employee.getBranch() != null ? employee.getBranch().getName() : null);
-                    employeeDetailDTO.setPositionName(employee.getPosition() != null ? employee.getPosition().getName() : null);
-                    employeeDetailDTO.setDepartmentName(employee.getDepartment() != null ? employee.getDepartment().getName() : null);
-                    return employeeDetailDTO;
-                }).orElseThrow(() ->
-                        ExceptionUtil.throwNotFoundException("employee with this ID does not exist"));
+            .map(employee -> {
+                EmployeeDetailDTO employeeDetailDTO = new EmployeeDetailDTO();
+                employeeDetailDTO.setId(employee.getId());
+                employeeDetailDTO.setFirstName(employee.getFirstName());
+                employeeDetailDTO.setLastName(employee.getLastName());
+                employeeDetailDTO.setPhoneNumber(employee.getPhoneNumber());
+                employeeDetailDTO.setCompanyName(employee.getCompany() != null ? employee.getCompany().getName() : null);
+                employeeDetailDTO.setBranchName(employee.getBranch() != null ? employee.getBranch().getName() : null);
+                employeeDetailDTO.setPositionName(employee.getPosition() != null ? employee.getPosition().getName() : null);
+                employeeDetailDTO.setDepartmentName(employee.getDepartment() != null ? employee.getDepartment().getName() : null);
+                return employeeDetailDTO;
+            }).orElseThrow(() ->
+                ExceptionUtil.throwNotFoundException("employee with this ID does not exist"));
     }
 
     public List<EmployeeListDTO> getList() {
         return employeeRepository.findAll()
-                .stream().map(employee -> {
-                    EmployeeListDTO employeeListDTO = new EmployeeListDTO();
-                    employeeListDTO.setId(employee.getId());
-                    employeeListDTO.setFirstName(employee.getFirstName());
-                    employeeListDTO.setLastName(employee.getLastName());
-                    employeeListDTO.setPositionName(employee.getPosition() != null ? employee.getPosition().getName() : null);
-                    return employeeListDTO;
-                }).collect(Collectors.toList());
+            .stream().map(employee -> {
+                EmployeeListDTO employeeListDTO = new EmployeeListDTO();
+                employeeListDTO.setId(employee.getId());
+                employeeListDTO.setFirstName(employee.getFirstName());
+                employeeListDTO.setLastName(employee.getLastName());
+                employeeListDTO.setPositionName(employee.getPosition() != null ? employee.getPosition().getName() : null);
+                return employeeListDTO;
+            }).collect(Collectors.toList());
     }
 
     @Transactional
     public Long update(Long id, EmployeeDTO employeeDTO) {
         employeeRepository.findById(id)
-                .map(employee -> {
-                    employee.setFirstName(employeeDTO.getFirstName());
-                    employee.setLastName(employeeDTO.getLastName());
-                    employee.setPhoneNumber(employeeDTO.getPhoneNumber());
-                    employee.setCompanyId(employeeDTO.getCompanyId());
-                    employee.setBranchId(employeeDTO.getBranchId());
-                    employee.setDepartmentId(employeeDTO.getDepartmentId());
-                    employee.setPositionId(employeeDTO.getPositionId());
+            .map(employee -> {
+                employee.setFirstName(employeeDTO.getFirstName());
+                employee.setLastName(employeeDTO.getLastName());
+                employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+                employee.setCompanyId(employeeDTO.getCompanyId());
+                employee.setBranchId(employeeDTO.getBranchId());
+                employee.setDepartmentId(employeeDTO.getDepartmentId());
+                employee.setPositionId(employeeDTO.getPositionId());
 
-                    employeeRepository.save(employee);
-                    return employee.getId();
-                }).orElseThrow(() -> new NotFoundException("employee with this id does not exist!"));
+                employeeRepository.save(employee);
+                return employee.getId();
+            }).orElseThrow(() -> new NotFoundException("employee with this id does not exist!"));
         return employeeDTO.getId();
+    }
+
+    public void authenticationSuccessHandler(LoginVM vm) {
+        Employee employee = employeeRepository.
+            findByPhoneNumber(vm.getUsername()).orElseThrow(
+                () -> new NotFoundException("user.not.found with id: " + vm.getUsername()));
+        employee.setFailedAttempts(null);
+        employee.setLockTime(null);
+        employeeRepository.save(employee);
+    }
+
+    public void authenticationFailureHandler(LoginVM vm, Exception e) {
+        if (e instanceof BadCredentialsException) {
+            Employee employee = employeeRepository
+                .findByPhoneNumber(vm.getUsername())
+                .orElseThrow(
+                    () -> new NotFoundException("employee.not.found with id: " + vm.getUsername()));
+            Integer failedAttempts = employee.getFailedAttempts() != null ? employee.getFailedAttempts() + 1 : 1;
+            employee.setFailedAttempts(failedAttempts);
+            LocalDateTime lockTime = Optional.ofNullable(employee.getLockTime()).orElse(LocalDateTime.MIN);
+            if (employee.getFailedAttempts() % 3 == 0 && lockTime.isBefore(LocalDateTime.now())) {
+                employee.setLockTime(LocalDateTime.now().plusMinutes(20));
+            }
+            employeeRepository.save(employee);
+        }
     }
 
     @Transactional
@@ -145,7 +174,7 @@ public class EmployeeService {
 
     public Long countEmployeeByDepartment(String departmentName) {
         TypedQuery<Long> query = entityManager.createQuery(
-                "select count (e) from Employee e inner join Department d on e.id = d.id where d.name =:name", Long.class);
+            "select count (e) from Employee e inner join Department d on e.id = d.id where d.name =:name", Long.class);
         query.setParameter("name", departmentName);
         return query.getSingleResult();
     }
@@ -161,7 +190,7 @@ public class EmployeeService {
     @Transactional
     public void dismissedEmployee(Long id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+            () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
         employee.setStatus(GeneralStatus.BLOCK);
         employeeRepository.save(employee);
         tokenStoreRepository.deleteAll(tokenStoreRepository.findAllByEmployeeId(id));
@@ -170,7 +199,7 @@ public class EmployeeService {
     @Transactional
     public void saveBlockList(Long id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+            () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
         employee.setStatus(GeneralStatus.BLOCK);
         employeeRepository.save(employee);
 
@@ -183,7 +212,7 @@ public class EmployeeService {
     @Transactional
     public void updateStatus(Long id, GeneralStatus status) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
-                () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
+            () -> ExceptionUtil.throwNotFoundException("employee with this id does not exist!"));
         employee.setStatus(status);
         employeeRepository.save(employee);
         if (GeneralStatus.BLOCK == status) {

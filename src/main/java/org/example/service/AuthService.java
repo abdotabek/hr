@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.config.CustomUserDetails;
 import org.example.config.JwtAuthenticationFilter;
+import org.example.dto.LoginVM;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.enums.GeneralStatus;
 import org.example.dto.jwt.AuthRequestDTO;
 import org.example.dto.jwt.AuthResponseDTO;
 import org.example.dto.jwt.JwtDTO;
+import org.example.dto.jwt.LoginVMDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.entity.Employee;
 import org.example.exception.ExceptionUtil;
@@ -17,10 +19,14 @@ import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.util.JwtUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +41,7 @@ public class AuthService {
     EmployeeMapper mapper;
     BlockListRepository blockListRepository;
     JwtAuthenticationFilter authenticationFilter;
+    private final EmployeeService employeeService;
 
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
         if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
@@ -95,7 +102,7 @@ public class AuthService {
             TokenDTO response = new TokenDTO();
             response.setAccessToken(accessToken);
             response.setRefreshToken(refreshToken);
-            response.setExpaired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
+            response.setExpired(System.currentTimeMillis() + JwtUtil.accessTokenLiveTime);
             response.setType("Bearer ");
             return response;
         }
@@ -103,4 +110,38 @@ public class AuthService {
 
     }
 
+    public ResponseEntity<LoginVMDTO> login(LoginVM loginVM) {
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
+
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            CustomUserDetails customUser = (CustomUserDetails) authentication.getPrincipal();
+
+            JwtDTO jwtDTO = new JwtDTO(
+                customUser.getId(),
+                customUser.getPhone(),
+                customUser.getRole().name(),
+                null
+            );
+
+            String accessToken = JwtUtil.generateAccessToken(jwtDTO);
+            String refreshToken = JwtUtil.generationRefreshToken(jwtDTO);
+
+            LoginVMDTO tokenDTO = new LoginVMDTO();
+            tokenDTO.setAccessToken(accessToken);
+            tokenDTO.setRefreshToken(refreshToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+
+            employeeService.authenticationSuccessHandler(loginVM);
+            return new ResponseEntity<>(tokenDTO, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            employeeService.authenticationFailureHandler(loginVM, e);
+            throw e;
+        }
+    }
 }

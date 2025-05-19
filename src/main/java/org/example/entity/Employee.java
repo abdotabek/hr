@@ -9,6 +9,8 @@ import org.example.dto.enums.EmployeeRole;
 import org.example.dto.enums.GeneralStatus;
 import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -70,5 +72,11 @@ public class Employee extends BaseEntity {
 
     @Column(name = "deleted")
     Boolean deleted = false;    //soft delete flag
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
+
+    @Column(name = "failed_attempts")
+    private Integer failedAttempts = 0;
 
 }

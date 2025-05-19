@@ -1,11 +1,14 @@
 package org.example.controller;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.example.dto.LoginVM;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.jwt.AuthRequestDTO;
 import org.example.dto.jwt.AuthResponseDTO;
+import org.example.dto.jwt.LoginVMDTO;
 import org.example.dto.jwt.TokenDTO;
 import org.example.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,10 @@ public class AuthController {
     @PostMapping("/refresh-token")
     public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
         return ResponseEntity.ok(authService.getAccessToken(tokenDTO));
+    }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginVMDTO> login(@Valid @RequestBody LoginVM loginVM) {
+        return authService.login(loginVM);
     }
 }

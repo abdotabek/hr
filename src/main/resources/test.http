@@ -64,23 +64,22 @@ POST localhost:8080/api/employees/registration
 Content-Type: application/json
 
 {
-  "role": "ROLE_ADMIN",
-  "password": "12345",
-  "phoneNumber": "+998974125007",
-  "lastName": "abdulazizov",
   "firstName": "otabek",
-  "login": "otb40071",
+  "lastName": "abdulazizov",
+  "phoneNumber": "+998937877405",
+  "email": "otb250@gmail.com",
   "companyId": 1,
+  "branchId": 9,
   "departmentId": 1,
   "positionId": 3,
-  "branchId": 9,
-  "email": "otb250@gmail.com"
+  "password": "12345",
+  "role": "ROLE_ADMIN"
 }
 
 ###
 
 ###
-POST localhost:8080/api/employees/registration
+POST localhost:8080/api/auths/registration
 Content-Type: application/json
 
 {
@@ -91,8 +90,8 @@ Content-Type: application/json
   "phoneNumber": "+998951254785",
   "password": "12345",
   "role": "ROLE_ADMIN",
-  "branchId": 9,
-  "positionId": 3,
+  "branchId": 1,
+  "positionId": 1,
   "departmentId": 1,
   "companyId": 1
 }
@@ -270,6 +269,10 @@ Content-Type: application/json
 DELETE localhost:8080/api/1/sendToQueue
 ###
 DELETE localhost:8080/api/rabbit/6
+
+###
+POST http://localhost:8080/api/auths/login
+Content-Type: application/json
 
 
 
