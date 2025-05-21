@@ -5,19 +5,12 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.example.config.CustomUserDetails;
-import org.example.dto.enums.EmployeeRole;
 import org.example.dto.jwt.JwtDTO;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.springframework.security.config.Elements.JWT;
 
 public class JwtUtil {
 
@@ -83,21 +76,5 @@ public class JwtUtil {
     private static SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public static String createToken(Authentication authentication) {
-
-        if (!(authentication.getPrincipal() instanceof CustomUserDetails customUser)) {
-            throw new IllegalArgumentException("Invalid authentication principal");
-        }
-
-        JwtDTO jwtDTO = new JwtDTO(
-            customUser.getId(),
-            customUser.getPhone(),  // phone используется как username
-            customUser.getRole().name(),
-            "access"
-        );
-
-        return generateAccessToken(jwtDTO);
     }
 }

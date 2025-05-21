@@ -128,17 +128,15 @@ public class AuthService {
             );
 
             String accessToken = JwtUtil.generateAccessToken(jwtDTO);
-            String refreshToken = JwtUtil.generationRefreshToken(jwtDTO);
 
-            LoginVMDTO tokenDTO = new LoginVMDTO();
-            tokenDTO.setAccessToken(accessToken);
-            tokenDTO.setRefreshToken(refreshToken);
+            LoginVMDTO loginVMDTO = new LoginVMDTO();
+            loginVMDTO.setAccessToken(accessToken);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
             employeeService.authenticationSuccessHandler(loginVM);
-            return new ResponseEntity<>(tokenDTO, headers, HttpStatus.OK);
+            return new ResponseEntity<>(loginVMDTO, headers, HttpStatus.OK);
         } catch (Exception e) {
             employeeService.authenticationFailureHandler(loginVM, e);
             throw e;
