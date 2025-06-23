@@ -7,7 +7,6 @@ import org.example.dto.filter.PositionFilterDTO;
 import org.example.entity.Position;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.PositionRepository;
-import org.example.service.custom.PositionCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.util.List;
 public class PositionService {
 
     private final PositionRepository positionRepository;
-    private final PositionCustomRepositoryImp positionCustomRepositoryImp;
 
     @Transactional
     public Long create(final CommonDTO positionDTO) {
@@ -71,12 +69,12 @@ public class PositionService {
     }
 
     public ListResult<CommonDTO> filterPosition(final PositionFilterDTO search) {
-        Page<CommonDTO> page = positionCustomRepositoryImp.filterPosition(search);
+        Page<CommonDTO> page = positionRepository.filterPosition(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<CommonDTO> filterPositionBySpecification(final PositionFilterDTO search) {
-        Page<CommonDTO> page = positionCustomRepositoryImp.filterPositionBySpecification(search);
+        Page<CommonDTO> page = positionRepository.filterPositionBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

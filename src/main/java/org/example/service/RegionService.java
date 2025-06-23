@@ -7,7 +7,6 @@ import org.example.dto.filter.RegionFilterDTO;
 import org.example.entity.Region;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.RegionRepository;
-import org.example.service.custom.RegionCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.util.List;
 public class RegionService {
 
     private final RegionRepository regionRepository;
-    private final RegionCustomRepositoryImp regionCustomRepositoryImp;
 
 
     @Transactional
@@ -70,12 +68,12 @@ public class RegionService {
     }
 
     public ListResult<CommonDTO> filterRegion(final RegionFilterDTO search) {
-        Page<CommonDTO> page = regionCustomRepositoryImp.filterRegion(search);
+        Page<CommonDTO> page = regionRepository.filterRegion(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<CommonDTO> filterRegionBySpecification(final RegionFilterDTO search) {
-        Page<CommonDTO> page = regionCustomRepositoryImp.filterRegionBySpecification(search);
+        Page<CommonDTO> page = regionRepository.filterRegionBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

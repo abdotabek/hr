@@ -18,7 +18,6 @@ import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
-import org.example.service.custom.EmployeeCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,6 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper mapper;
-    private final EmployeeCustomRepositoryImp customRepository;
     private final EntityManager entityManager;
     private final TokenStoreRepository tokenStoreRepository;
     private final BlockListRepository blockListRepository;
@@ -137,22 +135,22 @@ public class EmployeeService {
 
 
     public ListResult<EmployeeDTO> filterNameAndSurname(final EmployeeFilterDTO filter) {
-        Page<EmployeeDTO> page = customRepository.filterNameAndSurname(filter);
+        Page<EmployeeDTO> page = employeeRepository.filterNameAndSurname(filter);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<EmployeeDTO> filterByDepartmentName(final EmployeeFilterDTO filter) {
-        Page<EmployeeDTO> page = customRepository.filterByDepartmentName(filter);
+        Page<EmployeeDTO> page = employeeRepository.filterByDepartmentName(filter);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<EmployeeDTO> filterByNameSurname(final EmployeeFilterDTO filter) {
-        Page<EmployeeDTO> page = customRepository.filterByNameSurname(filter);
+        Page<EmployeeDTO> page = employeeRepository.filterByNameSurname(filter);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<EmployeeDTO> filterEmployeeByPosition(final EmployeeFilterDTO filter) {
-        Page<EmployeeDTO> page = customRepository.filterEmployeeByPosition(filter);
+        Page<EmployeeDTO> page = employeeRepository.filterEmployeeByPosition(filter);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
@@ -180,12 +178,12 @@ public class EmployeeService {
     }
 
     public ListResult<EmployeeDTO> filterEmployee(final EmployeeFilterDTO search) {
-        Page<EmployeeDTO> page = customRepository.filterEmployee(search);
+        Page<EmployeeDTO> page = employeeRepository.filterEmployee(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<EmployeeDTO> filterBySpecification(final EmployeeFilterDTO search) {
-        Page<EmployeeDTO> page = customRepository.filterBySpecification(search);
+        Page<EmployeeDTO> page = employeeRepository.filterBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 

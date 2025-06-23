@@ -9,7 +9,6 @@ import org.example.dto.filter.DepartmentFilterDTO;
 import org.example.entity.Department;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.DepartmentRepository;
-import org.example.service.custom.DepartmentCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ import java.util.List;
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
-    private final DepartmentCustomRepositoryImp departmentCustomRepositoryImp;
 
 
     @Transactional
@@ -83,12 +81,12 @@ public class DepartmentService {
     }
 
     public ListResult<CommonDTO> filterDepartment(final DepartmentFilterDTO search) {
-        Page<CommonDTO> page = departmentCustomRepositoryImp.filterDepartment(search);
+        Page<CommonDTO> page = departmentRepository.filterDepartment(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<CommonDTO> filterDepartmentBySpecification(final DepartmentFilterDTO search) {
-        Page<CommonDTO> page = departmentCustomRepositoryImp.filterDepartmentBySpecification(search);
+        Page<CommonDTO> page = departmentRepository.filterDepartmentBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }
