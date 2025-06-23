@@ -18,7 +18,7 @@ import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.TokenStoreRepository;
 import org.example.repository.mapper.EmployeeMapper;
-import org.example.service.custom.EmployeeCustomRepository;
+import org.example.service.custom.EmployeeCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper mapper;
-    private final EmployeeCustomRepository customRepository;
+    private final EmployeeCustomRepositoryImp customRepository;
     private final EntityManager entityManager;
     private final TokenStoreRepository tokenStoreRepository;
     private final BlockListRepository blockListRepository;

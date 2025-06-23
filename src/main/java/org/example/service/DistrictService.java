@@ -8,7 +8,7 @@ import org.example.dto.filter.DistrictFilterDTO;
 import org.example.entity.District;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.DistrictRepository;
-import org.example.service.custom.DistrictCustomRepository;
+import org.example.service.custom.DistrictCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DistrictService {
 
     private final DistrictRepository districtRepository;
-    private final DistrictCustomRepository districtCustomRepository;
+    private final DistrictCustomRepositoryImp districtCustomRepositoryImp;
 
     @Transactional
     public Long create(final CommonDTO districtDTO) {
@@ -76,12 +76,12 @@ public class DistrictService {
     }
 
     public ListResult<CommonDTO> filterDistrict(final DistrictFilterDTO search) {
-        Page<CommonDTO> page = districtCustomRepository.filterDistrict(search);
+        Page<CommonDTO> page = districtCustomRepositoryImp.filterDistrict(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<CommonDTO> filterDistrictBySpecification(final DistrictFilterDTO search) {
-        Page<CommonDTO> page = districtCustomRepository.filterDistrictBySpecification(search);
+        Page<CommonDTO> page = districtCustomRepositoryImp.filterDistrictBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }
