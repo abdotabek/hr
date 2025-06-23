@@ -4,9 +4,7 @@ package org.example.service.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.dto.company.CompanyDTO;
 import org.example.dto.filter.CompanyFilterDTO;
 import org.example.entity.Company;
@@ -24,30 +22,32 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompanyCustomRepository {
-    CompanyMapper mapper;
-    EntityManager entityManager;
-    CompanyRepository companyRepository;
+    private final CompanyMapper mapper;
+    private final EntityManager entityManager;
+    private final CompanyRepository companyRepository;
 
     public Page<CompanyDTO> filterCompany(CompanyFilterDTO search) {
         StringBuilder select = new StringBuilder("select c");
         StringBuilder count = new StringBuilder("select count(c.id) ");
         StringBuilder jpql = new StringBuilder(" from Company c where 1=1");
 
-        if (!StringUtils.hasText(search.getSearch())) {
-            throw ExceptionUtil.throwCustomIllegalArgumentException("company data is required");
+        if (StringUtils.hasText(search.getSearch())) {
+            jpql.append(" and (lower(c.name) like :search");
+            jpql.append(" or lower(c.tin) like :search");
+            jpql.append(" or lower(c.brand) like :search)");
         }
-        jpql.append(" and (lower(c.name) like :search");
-        jpql.append(" or lower(c.tin) like :search");
-        jpql.append(" or lower(c.brand) like :search)");
+
         select.append(jpql);
         count.append(jpql);
+
         TypedQuery<Company> query = entityManager.createQuery(select.toString(), Company.class);
         TypedQuery<Long> countQuery = entityManager.createQuery(count.toString(), Long.class);
+
         if (StringUtils.hasText(search.getSearch())) {
-            query.setParameter("search", "%" + search.getSearch().toLowerCase() + "%");
-            countQuery.setParameter("search", "%" + search.getSearch().toLowerCase() + "%");
+            String searchParam = "%" + search.getSearch().toLowerCase() + "%";
+            query.setParameter("search", searchParam);
+            countQuery.setParameter("search", searchParam);
         }
 
         int pageNo = search.getPageNo();

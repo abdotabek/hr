@@ -20,7 +20,7 @@ public class TokenStoreService {
 
     TokenStoreRepository tokenStoreRepository;
 
-    public TokenStoreDTO get(String id) {
+    public TokenStoreDTO get(final String id) {
         TokenStoreDTO token = tokenStoreRepository.findById(id).map(this::toDTO).orElse(null);
         if (token == null) {
             throw ExceptionUtil.throwNotFoundException("token with this id does not exist");
@@ -38,7 +38,7 @@ public class TokenStoreService {
                 .map(this::toDTO).toList();
     }
 
-    private TokenStoreDTO toDTO(TokenStore tokenStore) {
+    private TokenStoreDTO toDTO(final TokenStore tokenStore) {
         TokenStoreDTO tokenStoreDTO = new TokenStoreDTO();
         tokenStoreDTO.setId(tokenStore.getId());
         tokenStoreDTO.setAccessToken(tokenStore.getAccessToken());

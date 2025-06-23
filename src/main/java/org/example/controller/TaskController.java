@@ -1,52 +1,57 @@
 package org.example.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.Result;
 import org.example.dto.task.TaskDTO;
 import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TaskController {
 
-    TaskService taskService;
+    private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.create(taskDTO));
+    public ResponseEntity<Result<Long>> create(@RequestBody final TaskDTO taskDTO) {
+        return ResponseEntity.ok(Result.success(taskService.create(taskDTO)));
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> getList() {
-        return ResponseEntity.ok(taskService.getList());
+    public ResponseEntity<Result<List<TaskDTO>>> getList() {
+        return ResponseEntity.ok(Result.success(taskService.getList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(taskService.get(id));
+    public ResponseEntity<Result<TaskDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(taskService.get(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> update(@PathVariable("id") Long id, @RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.update(id, taskDTO));
+    public ResponseEntity<Result<TaskDTO>> update(@PathVariable("id") final Long id, @RequestBody final TaskDTO taskDTO) {
+        return ResponseEntity.ok(Result.success(taskService.update(id, taskDTO)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
         taskService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteTasks(@RequestBody List<Long> tasksIds) {
+    public ResponseEntity<Result<Void>> deleteTasks(@RequestBody final List<Long> tasksIds) {
         taskService.sendTaskIdsToQueue(tasksIds);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 }

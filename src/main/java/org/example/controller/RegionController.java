@@ -1,59 +1,64 @@
 package org.example.controller;
 
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
+import org.example.dto.Result;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.RegionFilterDTO;
 import org.example.service.RegionService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/regions")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RegionController {
 
-    RegionService regionService;
+    private final RegionService regionService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody CommonDTO regionDTO) {
-        return ResponseEntity.ok(regionService.create(regionDTO));
+    public ResponseEntity<Result<Long>> create(@RequestBody final CommonDTO regionDTO) {
+        return ResponseEntity.ok(Result.success(regionService.create(regionDTO)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(regionService.get(id));
+    public ResponseEntity<Result<CommonDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(regionService.get(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<CommonDTO>> getList() {
-        return ResponseEntity.ok(regionService.getList());
+    public ResponseEntity<Result<List<CommonDTO>>> getList() {
+        return ResponseEntity.ok(Result.success(regionService.getList()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody CommonDTO regionDTO) {
-        return ResponseEntity.ok(regionService.update(id, regionDTO));
+    public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CommonDTO regionDTO) {
+        return ResponseEntity.ok(Result.success(regionService.update(id, regionDTO)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
         regionService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 
     @GetMapping("/filterRegion")
-    public ResponseEntity<Page<CommonDTO>> filterRegion(@RequestBody RegionFilterDTO search) {
-        return ResponseEntity.ok(regionService.filterRegion(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterRegion(@RequestBody final RegionFilterDTO search) {
+        return ResponseEntity.ok(Result.success(regionService.filterRegion(search)));
     }
 
     @GetMapping("/filterRegionBySpecification")
-    public ResponseEntity<Page<CommonDTO>> filterRegionBySpecification(@RequestBody RegionFilterDTO search) {
-        return ResponseEntity.ok(regionService.filterRegionBySpecification(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterRegionBySpecification(@RequestBody final RegionFilterDTO search) {
+        return ResponseEntity.ok(Result.success(regionService.filterRegionBySpecification(search)));
     }
 }

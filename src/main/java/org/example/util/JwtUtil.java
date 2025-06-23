@@ -27,13 +27,13 @@ public class JwtUtil {
         extraClaims.put("id", id);
         Long tokenLifeTime = ("access".equals(tokenType)) ? accessTokenLiveTime : refreshTokenLiveTime;
         return Jwts
-                .builder()
-                .claims(extraClaims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + tokenLifeTime))
-                .signWith(getSignInKey())
-                .compact();
+            .builder()
+            .claims(extraClaims)
+            .subject(username)
+            .issuedAt(new Date(System.currentTimeMillis()))
+            .expiration(new Date(System.currentTimeMillis() + tokenLifeTime))
+            .signWith(getSignInKey())
+            .compact();
     }
 
     public static String generateAccessToken(JwtDTO jwtDTO) {
@@ -47,12 +47,12 @@ public class JwtUtil {
     public static boolean isTokenExpired(String token) {
         try {
             Date expirationDate = Jwts
-                    .parser()
-                    .verifyWith(getSignInKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getExpiration();
+                .parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
             return expirationDate.before(new Date());
         } catch (JwtException e) {
             return true;
@@ -61,11 +61,11 @@ public class JwtUtil {
 
     public static JwtDTO decode(String token) {
         Claims claims = Jwts
-                .parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+            .parser()
+            .verifyWith(getSignInKey())
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
         String username = (String) claims.get(JwtClaims.USERNAME);
         String role = (String) claims.get(JwtClaims.ROLE);
         String tokenType = claims.get("tokenType").toString();

@@ -1,8 +1,7 @@
 package org.example.service;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.RegionFilterDTO;
 import org.example.entity.Region;
@@ -17,65 +16,66 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RegionService {
 
-    RegionRepository regionRepository;
-    RegionCustomRepository regionCustomRepository;
+    private final RegionRepository regionRepository;
+    private final RegionCustomRepository regionCustomRepository;
 
 
     @Transactional
-    public Long create(CommonDTO regionDTO) {
+    public Long create(final CommonDTO regionDTO) {
         if (regionDTO.getName() == null || regionDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("region name is required!");
         }
-        Region region = new Region();
+        final Region region = new Region();
         region.setName(regionDTO.getName());
         return regionRepository.save(region).getId();
     }
 
-    public CommonDTO get(Long id) {
+    public CommonDTO get(final Long id) {
         return regionRepository.findById(id)
-                .map(region -> {
-                    CommonDTO regionDTO = new CommonDTO();
-                    regionDTO.setId(region.getId());
-                    regionDTO.setName(region.getName());
-                    return regionDTO;
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("region with this ID does not exist"));
+            .map(region -> {
+                final CommonDTO regionDTO = new CommonDTO();
+                regionDTO.setId(region.getId());
+                regionDTO.setName(region.getName());
+                return regionDTO;
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("region with this ID does not exist"));
     }
 
     public List<CommonDTO> getList() {
         return regionRepository.findAll()
-                .stream().map(region -> {
-                    CommonDTO regionDTO = new CommonDTO();
-                    regionDTO.setId(region.getId());
-                    regionDTO.setName(region.getName());
-                    return regionDTO;
-                }).toList();
+            .stream().map(region -> {
+                final CommonDTO regionDTO = new CommonDTO();
+                regionDTO.setId(region.getId());
+                regionDTO.setName(region.getName());
+                return regionDTO;
+            }).toList();
     }
 
     @Transactional
-    public Long update(Long id, CommonDTO regionDTO) {
+    public Long update(final Long id, final CommonDTO regionDTO) {
         if (regionDTO.getName() == null || regionDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("region name is required");
         }
         return regionRepository.findById(id)
-                .map(region -> {
-                    region.setName(regionDTO.getName());
-                    return region.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("region with id not exist"));
+            .map(region -> {
+                region.setName(regionDTO.getName());
+                return region.getId();
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("region with id not exist"));
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         regionRepository.findById(id);
     }
 
-    public Page<CommonDTO> filterRegion(RegionFilterDTO search) {
-        return regionCustomRepository.filterRegion(search);
+    public ListResult<CommonDTO> filterRegion(final RegionFilterDTO search) {
+        Page<CommonDTO> page = regionCustomRepository.filterRegion(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
-    public Page<CommonDTO> filterRegionBySpecification(RegionFilterDTO search) {
-        return regionCustomRepository.filterRegionBySpecification(search);
+    public ListResult<CommonDTO> filterRegionBySpecification(final RegionFilterDTO search) {
+        Page<CommonDTO> page = regionCustomRepository.filterRegionBySpecification(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

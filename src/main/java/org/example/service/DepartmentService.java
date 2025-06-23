@@ -1,10 +1,8 @@
 package org.example.service;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
 import org.example.dto.base.CommonDTO;
-import org.example.dto.deparment.DepartmentDTO;
 import org.example.dto.deparment.DepartmentDetailDTO;
 import org.example.dto.deparment.DepartmentIdNameBranchIdDTO;
 import org.example.dto.filter.DepartmentFilterDTO;
@@ -20,64 +18,63 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DepartmentService {
 
-    DepartmentRepository departmentRepository;
-    DepartmentCustomRepository departmentCustomRepository;
+    private final DepartmentRepository departmentRepository;
+    private final DepartmentCustomRepository departmentCustomRepository;
 
 
     @Transactional
-    public Long create(DepartmentDTO departmentDTO) {
+    public Long create(final CommonDTO departmentDTO) {
         if (departmentDTO.getName() == null || departmentDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("department name is required");
         }
-        Department department = new Department();
+        final Department department = new Department();
         department.setName(departmentDTO.getName());
-        department.setBranchId(departmentDTO.getBranchId());
+        department.setBranchId(departmentDTO.getId());
         return departmentRepository.save(department).getId();
     }
 
-    public DepartmentDetailDTO get(Long id) {
+    public DepartmentDetailDTO get(final Long id) {
         return departmentRepository.findById(id)
-                .map(department -> {
-                    DepartmentDetailDTO detailDTO = new DepartmentDetailDTO();
-                    detailDTO.setId(department.getId());
-                    detailDTO.setName(department.getName());
-                    detailDTO.setBranchId(department.getBranchId());
-                    return detailDTO;
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("department not found"));
+            .map(department -> {
+                final DepartmentDetailDTO detailDTO = new DepartmentDetailDTO();
+                detailDTO.setId(department.getId());
+                detailDTO.setName(department.getName());
+                detailDTO.setBranchId(department.getBranchId());
+                return detailDTO;
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("department not found"));
     }
 
     public List<CommonDTO> getList() {
         return departmentRepository.findAll()
-                .stream().map(department -> {
-                    CommonDTO commonDTO = new CommonDTO();
-                    commonDTO.setId(department.getId());
-                    commonDTO.setName(department.getName());
-                    return commonDTO;
-                }).toList();
+            .stream().map(department -> {
+                final CommonDTO commonDTO = new CommonDTO();
+                commonDTO.setId(department.getId());
+                commonDTO.setName(department.getName());
+                return commonDTO;
+            }).toList();
     }
 
     @Transactional
-    public Long update(Long id, DepartmentDTO departmentDTO) {
+    public Long update(final Long id, final CommonDTO departmentDTO) {
         if (departmentDTO.getName() == null || departmentDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("department name is required");
         }
         departmentRepository.findById(id)
-                .map(department -> {
-                    department.setName(departmentDTO.getName());
-                    if (departmentDTO.getBranchId() != null) {
-                        department.setBranchId(departmentDTO.getBranchId());
-                    }
-                    departmentRepository.save(department);
-                    return department.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("department with this ID does not exist"));
+            .map(department -> {
+                department.setName(departmentDTO.getName());
+                if (departmentDTO.getId() != null) {
+                    department.setBranchId(departmentDTO.getId());
+                }
+                departmentRepository.save(department);
+                return department.getId();
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("department with this ID does not exist"));
         return departmentDTO.getId();
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         departmentRepository.deleteById(id);
     }
 
@@ -85,11 +82,13 @@ public class DepartmentService {
         return departmentRepository.findAllDepartments();
     }
 
-    public Page<DepartmentDTO> filterDepartment(DepartmentFilterDTO search) {
-        return departmentCustomRepository.filterDepartment(search);
+    public ListResult<CommonDTO> filterDepartment(final DepartmentFilterDTO search) {
+        Page<CommonDTO> page = departmentCustomRepository.filterDepartment(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
-    public Page<DepartmentDTO> filterDepartmentBySpecification(DepartmentFilterDTO search) {
-        return departmentCustomRepository.filterDepartmentBySpecification(search);
+    public ListResult<CommonDTO> filterDepartmentBySpecification(final DepartmentFilterDTO search) {
+        Page<CommonDTO> page = departmentCustomRepository.filterDepartmentBySpecification(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

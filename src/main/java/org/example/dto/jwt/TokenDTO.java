@@ -14,7 +14,7 @@ public class TokenDTO {
 
     String accessToken;
 
-    Long expaired;
+    Long expired;
 
     String type = "Bearer";
 }

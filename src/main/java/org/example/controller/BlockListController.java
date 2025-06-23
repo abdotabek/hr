@@ -1,8 +1,7 @@
 package org.example.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.Result;
 import org.example.dto.redis.BlockListDTO;
 import org.example.service.BlockListService;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/block-lists")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class BlockListController {
 
-    BlockListService blockListService;
+    private final BlockListService blockListService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<BlockListDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(blockListService.get(id));
+    public ResponseEntity<Result<BlockListDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(blockListService.get(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<BlockListDTO>> getAllTokens() {
-        return ResponseEntity.ok(blockListService.getList());
+    public ResponseEntity<Result<List<BlockListDTO>>> getAllTokens() {
+        return ResponseEntity.ok(Result.success(blockListService.getList()));
     }
 
 }

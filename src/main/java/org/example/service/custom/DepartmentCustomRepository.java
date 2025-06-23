@@ -4,10 +4,8 @@ package org.example.service.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.example.dto.deparment.DepartmentDTO;
+import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.DepartmentFilterDTO;
 import org.example.entity.Department;
 import org.example.exception.ExceptionUtil;
@@ -25,13 +23,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DepartmentCustomRepository {
-    EntityManager entityManager;
-    DepartmentMapper mapper;
-    DepartmentRepository departmentRepository;
+    private final EntityManager entityManager;
+    private final DepartmentMapper mapper;
+    private final DepartmentRepository departmentRepository;
 
-    public Page<DepartmentDTO> filterDepartment(DepartmentFilterDTO search) {
+    public Page<CommonDTO> filterDepartment(DepartmentFilterDTO search) {
         StringBuilder select = new StringBuilder("select d");
         StringBuilder count = new StringBuilder("select count(d.id) ");
         StringBuilder jpql = new StringBuilder(" from Department d where 1=1");
@@ -57,11 +54,11 @@ public class DepartmentCustomRepository {
         List<Department> departments = query.getResultList();
         Long totalElement = countQuery.getSingleResult();
 
-        List<DepartmentDTO> departmentDTOS = departments.stream().map(mapper::toDTO).toList();
+        List<CommonDTO> departmentDTOS = departments.stream().map(mapper::toDTO).toList();
         return new PageImpl<>(departmentDTOS, PageRequest.of(pageNo, pageSize), totalElement);
     }
 
-    public Page<DepartmentDTO> filterDepartmentBySpecification(DepartmentFilterDTO search) {
+    public Page<CommonDTO> filterDepartmentBySpecification(DepartmentFilterDTO search) {
         Specification<Department> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (!StringUtils.hasText(search.getSearch())) {
@@ -79,7 +76,7 @@ public class DepartmentCustomRepository {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 
         Page<Department> departments = departmentRepository.findAll(specification, pageRequest);
-        List<DepartmentDTO> departmentDTOS = departments.map(mapper::toDTO).toList();
+        List<CommonDTO> departmentDTOS = departments.map(mapper::toDTO).toList();
 
         return new PageImpl<>(departmentDTOS, pageRequest, departments.getTotalPages());
     }

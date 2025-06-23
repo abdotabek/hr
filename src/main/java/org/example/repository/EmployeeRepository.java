@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import org.example.dto.enums.GeneralStatus;
 import org.example.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -30,7 +29,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     boolean existsEmployeeByPhoneNumber(String phoneNumber);
 
     Optional<Employee> findByPhoneNumber(String phone);
-    Optional<Employee> findByPhoneNumberAndStatus(String phone, GeneralStatus status);
 
-    List<Employee> findByCompanyId(Long companyId);
 }

@@ -1,9 +1,7 @@
 package org.example.service;
 
 import com.google.common.collect.Iterables;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.constants.MyConstants;
 import org.example.dto.task.TaskDTO;
 import org.example.entity.Task;
@@ -23,21 +21,20 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TaskService {
 
-    TaskRepository taskRepository;
-    RabbitTemplate rabbitTemplate;
+    private final TaskRepository taskRepository;
+    private final RabbitTemplate rabbitTemplate;
 
 
     static Logger log = LoggerFactory.getLogger(TaskService.class);
     static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    public Long create(TaskDTO taskDTO) {
+    public Long create(final TaskDTO taskDTO) {
         if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("Task title is required!");
         }
-        Task task = new Task();
+        final Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setContent(taskDTO.getContent());
         task.setCreatedDate(LocalDateTime.now());
@@ -46,54 +43,54 @@ public class TaskService {
         return task.getId();
     }
 
-    public TaskDTO get(Long id) {
+    public TaskDTO get(final Long id) {
         return taskRepository.findById(id)
-                .map(task -> {
-                    TaskDTO taskDTO = new TaskDTO();
-                    taskDTO.setId(task.getId());
-                    taskDTO.setTitle(task.getTitle());
-                    taskDTO.setContent(task.getContent());
-                    taskDTO.setCreatedDate(task.getCreatedDate());
-                    taskDTO.setEmployeeId(task.getEmployeeId());
-                    return taskDTO;
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("task with id does not exist"));
+            .map(task -> {
+                final TaskDTO taskDTO = new TaskDTO();
+                taskDTO.setId(task.getId());
+                taskDTO.setTitle(task.getTitle());
+                taskDTO.setContent(task.getContent());
+                taskDTO.setCreatedDate(task.getCreatedDate());
+                taskDTO.setEmployeeId(task.getEmployeeId());
+                return taskDTO;
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("task with id does not exist"));
     }
 
     public List<TaskDTO> getList() {
         return taskRepository.findAll().stream()
-                .map(task -> {
-                    TaskDTO taskDTO = new TaskDTO();
-                    taskDTO.setId(task.getId());
-                    taskDTO.setTitle(task.getTitle());
-                    taskDTO.setContent(task.getContent());
-                    taskDTO.setCreatedDate(task.getCreatedDate());
-                    taskDTO.setEmployeeId(task.getEmployeeId());
-                    return taskDTO;
-                }).collect(Collectors.toList());
+            .map(task -> {
+                final TaskDTO taskDTO = new TaskDTO();
+                taskDTO.setId(task.getId());
+                taskDTO.setTitle(task.getTitle());
+                taskDTO.setContent(task.getContent());
+                taskDTO.setCreatedDate(task.getCreatedDate());
+                taskDTO.setEmployeeId(task.getEmployeeId());
+                return taskDTO;
+            }).collect(Collectors.toList());
     }
 
-    public TaskDTO update(Long id, TaskDTO taskDTO) {
+    public TaskDTO update(final Long id, final TaskDTO taskDTO) {
         if (taskDTO.getTitle() == null || taskDTO.getTitle().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("Task title is required!");
         }
         taskRepository.findById(id)
-                .map(task -> {
-                    task.setTitle(taskDTO.getTitle());
-                    task.setContent(taskDTO.getContent());
-                    task.setCreatedDate(taskDTO.getCreatedDate());
-                    task.setEmployeeId(taskDTO.getEmployeeId());
+            .map(task -> {
+                task.setTitle(taskDTO.getTitle());
+                task.setContent(taskDTO.getContent());
+                task.setCreatedDate(taskDTO.getCreatedDate());
+                task.setEmployeeId(taskDTO.getEmployeeId());
 
-                    taskRepository.save(task);
-                    return task.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("task with in not exist"));
+                taskRepository.save(task);
+                return task.getId();
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("task with in not exist"));
         return taskDTO;
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         taskRepository.deleteById(id);
     }
 
-    public void sendTaskIdsToQueue(List<Long> taskIds) {
+    public void sendTaskIdsToQueue(final List<Long> taskIds) {
         Iterable<List<Long>> partitions = Iterables.partition(taskIds, 4);
 
         for (List<Long> partition : partitions) {
@@ -104,7 +101,7 @@ public class TaskService {
     }
 
     @RabbitListener(queues = MyConstants.TASK_QUEUE_NAME)
-    public void deleteTask(Long taskId) {
+    public void deleteTask(final Long taskId) {
         taskRepository.deleteById(taskId);
         log.info("task with id {} has been deleted.", taskId);
     }
