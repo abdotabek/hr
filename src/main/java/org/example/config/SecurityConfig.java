@@ -32,7 +32,9 @@ public class SecurityConfig {
             "/api/auths/registration",
             "/api/auths/authorization",
             "/api/auths/refresh-token",
-            "/api/auths/login"
+            "/api/auths/login",
+        "/api/companies/filterCompany",
+        "/api/block-lists"
     };
 
     @Bean

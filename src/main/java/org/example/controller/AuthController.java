@@ -1,10 +1,9 @@
 package org.example.controller;
 
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.dto.LoginVM;
+import org.example.dto.Result;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.jwt.AuthRequestDTO;
 import org.example.dto.jwt.AuthResponseDTO;
@@ -20,24 +19,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auths")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthController {
 
-    AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<EmployeeDTO> creteRegistration(@RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.ok(authService.registration(employeeDTO));
+    public ResponseEntity<Result<EmployeeDTO>> creteRegistration(@RequestBody final EmployeeDTO employeeDTO) {
+        return ResponseEntity.ok(Result.success(authService.registration(employeeDTO)));
     }
 
     @PostMapping("/authorization")
-    public ResponseEntity<AuthResponseDTO> authorization(@RequestBody AuthRequestDTO authRequestDTO) {
-        return ResponseEntity.ok(authService.authorization(authRequestDTO));
+    public ResponseEntity<Result<AuthResponseDTO>> authorization(@RequestBody final AuthRequestDTO authRequestDTO) {
+        return ResponseEntity.ok(Result.success(authService.authorization(authRequestDTO)));
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<TokenDTO> refreshToken(@RequestBody TokenDTO tokenDTO) {
-        return ResponseEntity.ok(authService.getAccessToken(tokenDTO));
+    public ResponseEntity<Result<TokenDTO>> refreshToken(@RequestBody TokenDTO tokenDTO) {
+        return ResponseEntity.ok(Result.success(authService.getAccessToken(tokenDTO)));
     }
 
     @PostMapping("/login")

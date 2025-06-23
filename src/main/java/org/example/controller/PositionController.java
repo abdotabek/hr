@@ -1,60 +1,65 @@
 package org.example.controller;
 
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
+import org.example.dto.Result;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.PositionFilterDTO;
 import org.example.service.PositionService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/positions")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PositionController {
 
-    PositionService positionService;
+    private final PositionService positionService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody CommonDTO positionDTO) {
-        return ResponseEntity.ok(positionService.create(positionDTO));
+    public ResponseEntity<Result<Long>> create(@RequestBody final CommonDTO positionDTO) {
+        return ResponseEntity.ok(Result.success(positionService.create(positionDTO)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommonDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(positionService.get(id));
+    public ResponseEntity<Result<CommonDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(positionService.get(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<CommonDTO>> getList() {
-        return ResponseEntity.ok(positionService.getList());
+    public ResponseEntity<Result<List<CommonDTO>>> getList() {
+        return ResponseEntity.ok(Result.success(positionService.getList()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody CommonDTO positionDTO) {
-        return ResponseEntity.ok(positionService.update(id, positionDTO));
+    public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CommonDTO positionDTO) {
+        return ResponseEntity.ok(Result.success(positionService.update(id, positionDTO)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
         positionService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 
     @GetMapping("/filterPosition")
-    public ResponseEntity<Page<CommonDTO>> filterPosition(@RequestBody PositionFilterDTO search) {
-        return ResponseEntity.ok(positionService.filterPosition(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterPosition(@RequestBody final PositionFilterDTO search) {
+        return ResponseEntity.ok(Result.success(positionService.filterPosition(search)));
     }
 
     @GetMapping("/filterPositionBySpecification")
-    public ResponseEntity<Page<CommonDTO>> filterPositionBySpecification(@RequestBody PositionFilterDTO search) {
-        return ResponseEntity.ok(positionService.filterPositionBySpecification(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterPositionBySpecification(@RequestBody final PositionFilterDTO search) {
+        return ResponseEntity.ok(Result.success(positionService.filterPositionBySpecification(search)));
     }
 
 }

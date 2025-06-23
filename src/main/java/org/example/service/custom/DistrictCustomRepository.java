@@ -4,10 +4,8 @@ package org.example.service.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.example.dto.district.DistrictDTO;
+import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.DistrictFilterDTO;
 import org.example.entity.District;
 import org.example.exception.ExceptionUtil;
@@ -25,13 +23,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DistrictCustomRepository {
-    EntityManager entityManager;
-    DistrictMapper mapper;
-    DistrictRepository districtRepository;
+    private final EntityManager entityManager;
+    private final DistrictMapper mapper;
+    private final DistrictRepository districtRepository;
 
-    public Page<DistrictDTO> filterDistrict(DistrictFilterDTO search) {
+    public Page<CommonDTO> filterDistrict(final DistrictFilterDTO search) {
         StringBuilder select = new StringBuilder("select d");
         StringBuilder count = new StringBuilder("select count(d) ");
         StringBuilder jpql = new StringBuilder(" from District d where 1=1");
@@ -57,11 +54,11 @@ public class DistrictCustomRepository {
         List<District> districts = query.getResultList();
         Long totalElement = countQuery.getSingleResult();
 
-        List<DistrictDTO> districtDTOS = districts.stream().map(mapper::toDTO).toList();
+        List<CommonDTO> districtDTOS = districts.stream().map(mapper::toDTO).toList();
         return new PageImpl<>(districtDTOS, PageRequest.of(pageNo, pageSize), totalElement);
     }
 
-    public Page<DistrictDTO> filterDistrictBySpecification(DistrictFilterDTO search) {
+    public Page<CommonDTO> filterDistrictBySpecification(final DistrictFilterDTO search) {
         Specification<District> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (!StringUtils.hasText(search.getSearch())) {
@@ -79,7 +76,7 @@ public class DistrictCustomRepository {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 
         Page<District> districts = districtRepository.findAll(specification, pageRequest);
-        List<DistrictDTO> districtDTOS = districts.stream().map(mapper::toDTO).toList();
+        List<CommonDTO> districtDTOS = districts.stream().map(mapper::toDTO).toList();
 
         return new PageImpl<>(districtDTOS, pageRequest, districts.getTotalPages());
 

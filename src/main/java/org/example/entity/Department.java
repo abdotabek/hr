@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Entity
-@Table(name = "department")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Department extends BaseEntity{
 

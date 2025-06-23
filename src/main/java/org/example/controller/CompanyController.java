@@ -1,71 +1,78 @@
 package org.example.controller;
 
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
+import org.example.dto.Result;
 import org.example.dto.company.CompanyDTO;
 import org.example.dto.company.CompanyDetailDTO;
 import org.example.dto.company.CompanyListDTO;
 import org.example.dto.filter.CompanyFilterDTO;
 import org.example.service.CompanyService;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/companies")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompanyController {
 
-    CompanyService companyService;
+    private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody CompanyDTO companyDTO) {
-        return ResponseEntity.ok(companyService.create(companyDTO));
+    public ResponseEntity<Result<Long>> create(@RequestBody final CompanyDTO companyDTO) {
+        return ResponseEntity.ok(Result.success(companyService.create(companyDTO)));
     }
 
     @GetMapping("/getCompanyById/{id}")
-    public ResponseEntity<?> getBranchById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(companyService.getCompanyById(id));
+    public ResponseEntity<Result<?>> getBranchById(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(companyService.getCompanyById(id)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDetailDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(companyService.get(id));
+    public ResponseEntity<Result<CompanyDetailDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(companyService.get(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<CompanyListDTO>> getList() {
-        return ResponseEntity.ok(companyService.getList());
+    public ResponseEntity<Result<List<CompanyListDTO>>> getList() {
+        return ResponseEntity.ok(Result.success(companyService.getList()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody CompanyDTO companyDTO) {
-        return ResponseEntity.ok(companyService.update(id, companyDTO));
+    public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CompanyDTO companyDTO) {
+        return ResponseEntity.ok(Result.success(companyService.update(id, companyDTO)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
         companyService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 
     @GetMapping("/getByTin")
-    public ResponseEntity<CompanyDTO> getByTin(@RequestParam("tin") String tin) {  //getByTin?tin=
-        return ResponseEntity.ok(companyService.getByTin(tin));
+    public ResponseEntity<Result<CompanyDTO>> getByTin(@RequestParam("tin") final String tin) {  //getByTin?tin=
+        return ResponseEntity.ok(Result.success(companyService.getByTin(tin)));
     }
 
     @GetMapping("/filterCompany")
-    public ResponseEntity<Page<CompanyDTO>> filterCompany(@RequestBody CompanyFilterDTO companyFilterDTO) {
-        return ResponseEntity.ok(companyService.filterCompany(companyFilterDTO));
+    public ResponseEntity<Result<ListResult<CompanyDTO>>> filterCompany(@ParameterObject final CompanyFilterDTO companyFilterDTO) {
+        return ResponseEntity.ok(Result.success(companyService.filterCompany(companyFilterDTO)));
     }
 
     @GetMapping("/filterCompanyBySpecification")
-    public ResponseEntity<Page<CompanyDTO>> filterCompanyBySpecification(@RequestBody CompanyFilterDTO search) {
-        return ResponseEntity.ok(companyService.filterCompanyBySpecification(search));
+    public ResponseEntity<Result<ListResult<CompanyDTO>>> filterCompanyBySpecification(@ParameterObject final CompanyFilterDTO search) {
+        return ResponseEntity.ok(Result.success(companyService.filterCompanyBySpecification(search)));
     }
 }

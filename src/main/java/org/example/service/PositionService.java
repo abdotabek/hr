@@ -1,8 +1,7 @@
 package org.example.service;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.PositionFilterDTO;
 import org.example.entity.Position;
@@ -17,66 +16,67 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PositionService {
 
-    PositionRepository positionRepository;
-    PositionCustomRepository positionCustomRepository;
+    private final PositionRepository positionRepository;
+    private final PositionCustomRepository positionCustomRepository;
 
     @Transactional
-    public Long create(CommonDTO positionDTO) {
+    public Long create(final CommonDTO positionDTO) {
         if (positionDTO.getName() == null || positionDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("position name in required");
         }
-        Position position = new Position();
+        final Position position = new Position();
         position.setName(positionDTO.getName());
         return positionRepository.save(position).getId();
     }
 
-    public CommonDTO get(Long id) {
+    public CommonDTO get(final Long id) {
         return positionRepository.findById(id)
-                .map(position -> {
-                    CommonDTO positionDTO = new CommonDTO();
-                    positionDTO.setId(position.getId());
-                    positionDTO.setName(position.getName());
-                    return positionDTO;
-                }).orElseThrow(() ->
-                        ExceptionUtil.throwNotFoundException("position with this ID does not exist"));
+            .map(position -> {
+                final CommonDTO positionDTO = new CommonDTO();
+                positionDTO.setId(position.getId());
+                positionDTO.setName(position.getName());
+                return positionDTO;
+            }).orElseThrow(() ->
+                ExceptionUtil.throwNotFoundException("position with this ID does not exist"));
     }
 
     public List<CommonDTO> getList() {
         return positionRepository.findAll()
-                .stream().map(position -> {
-                    CommonDTO positionDTO = new CommonDTO();
-                    positionDTO.setId(position.getId());
-                    positionDTO.setName(position.getName());
-                    return positionDTO;
-                }).toList();
+            .stream().map(position -> {
+                final CommonDTO positionDTO = new CommonDTO();
+                positionDTO.setId(position.getId());
+                positionDTO.setName(position.getName());
+                return positionDTO;
+            }).toList();
     }
 
     @Transactional
-    public Long update(Long id, CommonDTO positionDTO) {
+    public Long update(final Long id, final CommonDTO positionDTO) {
         if (positionDTO.getName() == null || positionDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("position name is required");
         }
         return positionRepository.findById(id)
-                .map(position -> {
-                    position.setName(positionDTO.getName());
-                    positionRepository.save(position);
-                    return position.getId();
-                }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("position with this ID does not exist"));
+            .map(position -> {
+                position.setName(positionDTO.getName());
+                positionRepository.save(position);
+                return position.getId();
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("position with this ID does not exist"));
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         positionRepository.findById(id);
     }
 
-    public Page<CommonDTO> filterPosition(PositionFilterDTO search) {
-        return positionCustomRepository.filterPosition(search);
+    public ListResult<CommonDTO> filterPosition(final PositionFilterDTO search) {
+        Page<CommonDTO> page = positionCustomRepository.filterPosition(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
-    public Page<CommonDTO> filterPositionBySpecification(PositionFilterDTO search) {
-        return positionCustomRepository.filterPositionBySpecification(search);
+    public ListResult<CommonDTO> filterPositionBySpecification(final PositionFilterDTO search) {
+        Page<CommonDTO> page = positionCustomRepository.filterPositionBySpecification(search);
+        return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

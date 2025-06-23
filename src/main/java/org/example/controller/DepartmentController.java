@@ -1,69 +1,71 @@
 package org.example.controller;
 
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.example.dto.ListResult;
+import org.example.dto.Result;
 import org.example.dto.base.CommonDTO;
-import org.example.dto.deparment.DepartmentDTO;
 import org.example.dto.deparment.DepartmentDetailDTO;
 import org.example.dto.deparment.DepartmentIdNameBranchIdDTO;
 import org.example.dto.filter.DepartmentFilterDTO;
 import org.example.service.DepartmentService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/departments")
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DepartmentController {
 
-    DepartmentService departmentService;
+    private final DepartmentService departmentService;
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody DepartmentDTO departmentDTO) {
-        return ResponseEntity.ok(departmentService.create(departmentDTO));
+    public ResponseEntity<Result<Long>> create(@RequestBody final CommonDTO departmentDTO) {
+        return ResponseEntity.ok(Result.success(departmentService.create(departmentDTO)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DepartmentDetailDTO> get(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(departmentService.get(id));
+    public ResponseEntity<Result<DepartmentDetailDTO>> get(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(Result.success(departmentService.get(id)));
     }
 
     @GetMapping
-    public ResponseEntity<List<CommonDTO>> getList() {
-        return ResponseEntity.ok(departmentService.getList());
+    public ResponseEntity<Result<List<CommonDTO>>> getList() {
+        return ResponseEntity.ok(Result.success(departmentService.getList()));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Long> update(@PathVariable("id") Long id, @RequestBody DepartmentDTO departmentDTO) {
-        return ResponseEntity.ok(departmentService.update(id, departmentDTO));
+    public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CommonDTO departmentDTO) {
+        return ResponseEntity.ok(Result.success(departmentService.update(id, departmentDTO)));
     }
 
     @GetMapping("/departments-id-name")
-    public ResponseEntity<List<DepartmentIdNameBranchIdDTO>> getDepartmentIdName() {
-        return ResponseEntity.ok(departmentService.getDepartmentsIdName());
+    public ResponseEntity<Result<List<DepartmentIdNameBranchIdDTO>>> getDepartmentIdName() {
+        return ResponseEntity.ok(Result.success(departmentService.getDepartmentsIdName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
         departmentService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Result.success());
     }
 
     @GetMapping("/filterDepartment")
-    public ResponseEntity<Page<DepartmentDTO>> filterDepartment(@RequestBody DepartmentFilterDTO search) {
-        return ResponseEntity.ok(departmentService.filterDepartment(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterDepartment(@RequestBody final DepartmentFilterDTO search) {
+        return ResponseEntity.ok(Result.success(departmentService.filterDepartment(search)));
     }
 
     @GetMapping("/filterDepartmentBySpecification")
-    public ResponseEntity<Page<DepartmentDTO>> filterDepartmentBySpecification(@RequestBody DepartmentFilterDTO search) {
-        return ResponseEntity.ok(departmentService.filterDepartmentBySpecification(search));
+    public ResponseEntity<Result<ListResult<CommonDTO>>> filterDepartmentBySpecification(@RequestBody final DepartmentFilterDTO search) {
+        return ResponseEntity.ok(Result.success(departmentService.filterDepartmentBySpecification(search)));
     }
-
-
 }

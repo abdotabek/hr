@@ -1,8 +1,6 @@
 package org.example.service;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.config.CustomUserDetails;
 import org.example.config.JwtAuthenticationFilter;
 import org.example.dto.LoginVM;
@@ -32,22 +30,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthService {
 
-    AuthenticationManager authenticationManager;
-    EmployeeRepository employeeRepository;
-    BCryptPasswordEncoder cryptPasswordEncoder;
-    EmployeeMapper mapper;
-    BlockListRepository blockListRepository;
-    JwtAuthenticationFilter authenticationFilter;
+    private final AuthenticationManager authenticationManager;
+    private final EmployeeRepository employeeRepository;
+    private final BCryptPasswordEncoder cryptPasswordEncoder;
+    private final EmployeeMapper mapper;
+    private final BlockListRepository blockListRepository;
+    private final JwtAuthenticationFilter authenticationFilter;
     private final EmployeeService employeeService;
 
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
         if (employeeRepository.existsEmployeeByPhoneNumber(employeeDTO.getPhoneNumber())) {
             throw ExceptionUtil.throwConflictException("Employee with this phone number already exists");
         }
-        Employee employee = new Employee();
+        final Employee employee = new Employee();
         employee.setFirstName(employeeDTO.getFirstName());
         employee.setLastName(employeeDTO.getLastName());
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
