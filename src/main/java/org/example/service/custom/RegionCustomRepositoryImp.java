@@ -3,14 +3,13 @@ package org.example.service.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.RegionFilterDTO;
 import org.example.entity.Region;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.RegionRepository;
+import org.example.repository.imp.RegionRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,11 +22,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RegionCustomRepository {
-    EntityManager entityManager;
-    RegionRepository regionRepository;
+public class RegionCustomRepositoryImp implements RegionRepositoryCustom {
+    private final EntityManager entityManager;
+    private final RegionRepository regionRepository;
 
+    @Override
     public Page<CommonDTO> filterRegion(RegionFilterDTO search) {
         StringBuilder select = new StringBuilder("select r");
         StringBuilder count = new StringBuilder("select count(r)");
@@ -59,6 +58,7 @@ public class RegionCustomRepository {
         return new PageImpl<>(commonDTOS, PageRequest.of(pageNo, pageSize), totalElements);
     }
 
+    @Override
     public Page<CommonDTO> filterRegionBySpecification(RegionFilterDTO search) {
         Specification<Region> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

@@ -6,15 +6,14 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
 import org.example.entity.Position;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.EmployeeRepository;
+import org.example.repository.imp.EmployeeRepositoryCustom;
 import org.example.repository.mapper.EmployeeMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,13 +31,12 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class EmployeeCustomRepository {
-    EntityManager entityManager;
-    EmployeeRepository employeeRepository;
-    EmployeeMapper mapper;
+public class EmployeeCustomRepositoryImp implements EmployeeRepositoryCustom {
+    private final EntityManager entityManager;
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper mapper;
 
-
+    @Override
     public Page<EmployeeDTO> filterNameAndSurname(EmployeeFilterDTO filter) {
         StringBuilder select = new StringBuilder("select e");
         StringBuilder count = new StringBuilder("select count(e.id) ");
@@ -78,6 +76,7 @@ public class EmployeeCustomRepository {
         return new PageImpl<>(employeeDTOs, PageRequest.of(pageNo, pageSize), totalElements);
     }
 
+    @Override
     public Page<EmployeeDTO> filterByDepartmentName(EmployeeFilterDTO filter) {
         StringBuilder select = new StringBuilder("select e");
         StringBuilder count = new StringBuilder("select count(e) ");
@@ -119,6 +118,7 @@ public class EmployeeCustomRepository {
         return new PageImpl<>(employeeDTOs, PageRequest.of(pageNo, pageSize), totalElements);
     }
 
+    @Override
     public Page<EmployeeDTO> filterByNameSurname(EmployeeFilterDTO filter) {
         Specification<Employee> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -136,6 +136,7 @@ public class EmployeeCustomRepository {
         return employeeRepository.findAll(spec, pageable).map(mapper::toDTO);
     }
 
+    @Override
     public Page<EmployeeDTO> filterEmployeeByPosition(EmployeeFilterDTO filter) {
         Specification<Employee> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -157,6 +158,7 @@ public class EmployeeCustomRepository {
         return employeeRepository.findAll(specification, pageable).map(mapper::toDTO);
     }
 
+    @Override
     public Page<EmployeeDTO> filterEmployee(EmployeeFilterDTO search) {
         StringBuilder select = new StringBuilder("select e");
         StringBuilder count = new StringBuilder("select count(e)");
@@ -189,6 +191,7 @@ public class EmployeeCustomRepository {
         return new PageImpl<>(employeeDTOS, PageRequest.of(pageNo, pageSize), totalElement);
     }
 
+    @Override
     public Page<EmployeeDTO> filterBySpecification(EmployeeFilterDTO search) {
         Specification<Employee> specification = (root, query, builder) -> {
             Predicate predicate = builder.conjunction();

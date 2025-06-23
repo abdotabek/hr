@@ -15,7 +15,7 @@ import org.example.entity.Branch;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BranchRepository;
 import org.example.repository.mapper.BranchMapper;
-import org.example.service.custom.BranchCustomRepository;
+import org.example.service.custom.BranchCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class BranchService {
     private final EntityManager entityManager;
     private final BranchRepository branchRepository;
     private final BranchMapper mapper;
-    private final BranchCustomRepository customRepository;
+    private final BranchCustomRepositoryImp customRepository;
 
     @Transactional
     public Long create(final BranchDTO branchDTO) {

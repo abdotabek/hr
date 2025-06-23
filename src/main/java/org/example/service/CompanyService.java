@@ -13,7 +13,7 @@ import org.example.entity.Company;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.CompanyRepository;
 import org.example.repository.mapper.CompanyMapper;
-import org.example.service.custom.CompanyCustomRepository;
+import org.example.service.custom.CompanyCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper mapper;
-    private final CompanyCustomRepository customRepository;
+    private final CompanyCustomRepositoryImp customRepository;
 
     @Transactional
     public Long create(final CompanyDTO companyDTO) {

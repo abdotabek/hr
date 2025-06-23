@@ -3,14 +3,13 @@ package org.example.service.custom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.Predicate;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.example.dto.branch.BranchDTO;
 import org.example.dto.filter.BranchFilterDTO;
 import org.example.entity.Branch;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BranchRepository;
+import org.example.repository.imp.BranchRepositoryCustom;
 import org.example.repository.mapper.BranchMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,12 +23,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class BranchCustomRepository {
-    EntityManager entityManager;
-    BranchMapper mapper;
-    BranchRepository branchRepository;
+public class BranchCustomRepositoryImp implements BranchRepositoryCustom {
+    private final EntityManager entityManager;
+    private final BranchMapper mapper;
+    private final BranchRepository branchRepository;
 
+    @Override
     public Page<BranchDTO> filterBranch(BranchFilterDTO search) {
         StringBuilder select = new StringBuilder("select b");
         StringBuilder count = new StringBuilder("select count(b) ");
@@ -63,6 +62,7 @@ public class BranchCustomRepository {
         return new PageImpl<>(branchDTOS, PageRequest.of(pageNo, pageSize), totalElement);
     }
 
+    @Override
     public Page<BranchDTO> filterBranchBySpecification(BranchFilterDTO search) {
         Specification<Branch> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

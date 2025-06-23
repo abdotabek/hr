@@ -10,6 +10,7 @@ import org.example.dto.filter.CompanyFilterDTO;
 import org.example.entity.Company;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.CompanyRepository;
+import org.example.repository.imp.CompanyRepositoryCustom;
 import org.example.repository.mapper.CompanyMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,11 +23,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CompanyCustomRepository {
+public class CompanyCustomRepositoryImp implements CompanyRepositoryCustom {
     private final CompanyMapper mapper;
     private final EntityManager entityManager;
     private final CompanyRepository companyRepository;
 
+    @Override
     public Page<CompanyDTO> filterCompany(CompanyFilterDTO search) {
         StringBuilder select = new StringBuilder("select c");
         StringBuilder count = new StringBuilder("select count(c.id) ");
@@ -62,6 +64,7 @@ public class CompanyCustomRepository {
         return new PageImpl<>(companyDTOS, PageRequest.of(pageNo, pageSize), totalElements);
     }
 
+    @Override
     public Page<CompanyDTO> filterCompanyBySpecification(CompanyFilterDTO search) {
         Specification<Company> specification = (root, query, builder) -> {
             Predicate predicate = builder.conjunction();
