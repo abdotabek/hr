@@ -1,4 +1,4 @@
-package org.example.repository.imp;
+package org.example.repository;
 
 import org.example.dto.company.CompanyDTO;
 import org.example.dto.filter.CompanyFilterDTO;

@@ -1,6 +1,10 @@
 package org.example.dto.company;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.example.dto.address.AddressDTO;
 import org.example.dto.base.CommonDTO;

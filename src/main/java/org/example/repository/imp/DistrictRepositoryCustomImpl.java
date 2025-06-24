@@ -1,4 +1,4 @@
-package org.example.service.custom;
+package org.example.repository.imp;
 
 
 import jakarta.persistence.EntityManager;
@@ -9,13 +9,11 @@ import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.DistrictFilterDTO;
 import org.example.entity.District;
 import org.example.exception.ExceptionUtil;
-import org.example.repository.DistrictRepository;
-import org.example.repository.imp.DistrictRepositoryCustom;
+import org.example.repository.DistrictRepositoryCustom;
 import org.example.repository.mapper.DistrictMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -24,10 +22,9 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DistrictCustomRepositoryImp implements DistrictRepositoryCustom {
+public class DistrictRepositoryCustomImpl implements DistrictRepositoryCustom {
     private final EntityManager entityManager;
     private final DistrictMapper mapper;
-    private final DistrictRepository districtRepository;
 
     @Override
     public Page<CommonDTO> filterDistrict(final DistrictFilterDTO search) {
@@ -62,26 +59,53 @@ public class DistrictCustomRepositoryImp implements DistrictRepositoryCustom {
 
     @Override
     public Page<CommonDTO> filterDistrictBySpecification(final DistrictFilterDTO search) {
-        Specification<District> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (!StringUtils.hasText(search.getSearch())) {
-                throw ExceptionUtil.throwCustomIllegalArgumentException("district data is required");
-            }
-            String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern));
-            if (search.getDistrictId() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("id"), search.getDistrictId()));
-            }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
+        if (!StringUtils.hasText(search.getSearch())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("district data is required");
+        }
+
         int pageNo = search.getPageNo();
         int pageSize = search.getPageSize();
-        PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 
-        Page<District> districts = districtRepository.findAll(specification, pageRequest);
-        List<CommonDTO> districtDTOS = districts.stream().map(mapper::toDTO).toList();
+        String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
 
-        return new PageImpl<>(districtDTOS, pageRequest, districts.getTotalPages());
+        var cb = entityManager.getCriteriaBuilder();
 
+        // Основной запрос для выборки
+        var cq = cb.createQuery(District.class);
+        var root = cq.from(District.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.like(cb.lower(root.get("name")), searchPattern));
+        if (search.getDistrictId() != null) {
+            predicates.add(cb.equal(root.get("id"), search.getDistrictId()));
+        }
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        TypedQuery<District> typedQuery = entityManager.createQuery(cq)
+            .setFirstResult(pageNo * pageSize)
+            .setMaxResults(pageSize);
+
+        List<District> districts = typedQuery.getResultList();
+
+        // Запрос для подсчёта
+        var countCq = cb.createQuery(Long.class);
+        var countRoot = countCq.from(District.class);
+
+        List<Predicate> countPredicates = new ArrayList<>();
+        countPredicates.add(cb.like(cb.lower(countRoot.get("name")), searchPattern));
+        if (search.getDistrictId() != null) {
+            countPredicates.add(cb.equal(countRoot.get("id"), search.getDistrictId()));
+        }
+        countCq.select(cb.count(countRoot));
+        countCq.where(cb.and(countPredicates.toArray(new Predicate[0])));
+
+        Long total = entityManager.createQuery(countCq).getSingleResult();
+
+        List<CommonDTO> districtDTOs = districts.stream()
+            .map(mapper::toDTO)
+            .toList();
+
+        return new PageImpl<>(districtDTOs, PageRequest.of(pageNo, pageSize), total);
     }
+
 }

@@ -1,4 +1,4 @@
-package org.example.service.custom;
+package org.example.repository.imp;
 
 
 import jakarta.persistence.EntityManager;
@@ -9,13 +9,11 @@ import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.DepartmentFilterDTO;
 import org.example.entity.Department;
 import org.example.exception.ExceptionUtil;
-import org.example.repository.DepartmentRepository;
-import org.example.repository.imp.DepartmentRepositoryCustom;
+import org.example.repository.DepartmentRepositoryCustom;
 import org.example.repository.mapper.DepartmentMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -24,10 +22,9 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class DepartmentCustomRepositoryImp implements DepartmentRepositoryCustom {
+public class DepartmentRepositoryCustomImpl implements DepartmentRepositoryCustom {
     private final EntityManager entityManager;
     private final DepartmentMapper mapper;
-    private final DepartmentRepository departmentRepository;
 
     @Override
     public Page<CommonDTO> filterDepartment(DepartmentFilterDTO search) {
@@ -62,6 +59,57 @@ public class DepartmentCustomRepositoryImp implements DepartmentRepositoryCustom
 
     @Override
     public Page<CommonDTO> filterDepartmentBySpecification(DepartmentFilterDTO search) {
+        if (!StringUtils.hasText(search.getSearch())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("department data is required");
+        }
+
+        int pageNo = search.getPageNo();
+        int pageSize = search.getPageSize();
+
+        String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
+
+        var cb = entityManager.getCriteriaBuilder();
+
+        // Основной запрос для выборки
+        var cq = cb.createQuery(Department.class);
+        var root = cq.from(Department.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.like(cb.lower(root.get("name")), searchPattern));
+        if (search.getDepartmentId() != null) {
+            predicates.add(cb.equal(root.get("id"), search.getDepartmentId()));
+        }
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        TypedQuery<Department> typedQuery = entityManager.createQuery(cq)
+            .setFirstResult(pageNo * pageSize)
+            .setMaxResults(pageSize);
+
+        List<Department> departments = typedQuery.getResultList();
+
+        // Запрос для подсчёта
+        var countCq = cb.createQuery(Long.class);
+        var countRoot = countCq.from(Department.class);
+
+        List<Predicate> countPredicates = new ArrayList<>();
+        countPredicates.add(cb.like(cb.lower(countRoot.get("name")), searchPattern));
+        if (search.getDepartmentId() != null) {
+            countPredicates.add(cb.equal(countRoot.get("id"), search.getDepartmentId()));
+        }
+        countCq.select(cb.count(countRoot));
+        countCq.where(cb.and(countPredicates.toArray(new Predicate[0])));
+        Long total = entityManager.createQuery(countCq).getSingleResult();
+
+        List<CommonDTO> departmentDTOs = departments.stream()
+            .map(mapper::toDTO)
+            .toList();
+
+        return new PageImpl<>(departmentDTOs, PageRequest.of(pageNo, pageSize), total);
+    }
+
+
+    /*@Override
+    public Page<CommonDTO> filterDepartmentBySpecification(DepartmentFilterDTO search) {
         Specification<Department> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (!StringUtils.hasText(search.getSearch())) {
@@ -82,5 +130,5 @@ public class DepartmentCustomRepositoryImp implements DepartmentRepositoryCustom
         List<CommonDTO> departmentDTOS = departments.map(mapper::toDTO).toList();
 
         return new PageImpl<>(departmentDTOS, pageRequest, departments.getTotalPages());
-    }
+    }*/
 }
