@@ -13,7 +13,6 @@ import org.example.entity.Company;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.CompanyRepository;
 import org.example.repository.mapper.CompanyMapper;
-import org.example.service.custom.CompanyCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper mapper;
-    private final CompanyCustomRepositoryImp customRepository;
 
     @Transactional
     public Long create(final CompanyDTO companyDTO) {
@@ -128,12 +126,12 @@ public class CompanyService {
     }
 
     public ListResult<CompanyDTO> filterCompany(final CompanyFilterDTO companyFilterDTO) {
-        Page<CompanyDTO> page = customRepository.filterCompany(companyFilterDTO);
+        Page<CompanyDTO> page = companyRepository.filterCompany(companyFilterDTO);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<CompanyDTO> filterCompanyBySpecification(final CompanyFilterDTO search) {
-        Page<CompanyDTO> page = customRepository.filterCompanyBySpecification(search);
+        Page<CompanyDTO> page = companyRepository.filterCompanyBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 

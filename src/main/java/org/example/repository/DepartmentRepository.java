@@ -2,7 +2,6 @@ package org.example.repository;
 
 import org.example.dto.deparment.DepartmentIdNameBranchIdDTO;
 import org.example.entity.Department;
-import org.example.repository.imp.DepartmentRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

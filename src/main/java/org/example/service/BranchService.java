@@ -15,7 +15,6 @@ import org.example.entity.Branch;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BranchRepository;
 import org.example.repository.mapper.BranchMapper;
-import org.example.service.custom.BranchCustomRepositoryImp;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ public class BranchService {
     private final EntityManager entityManager;
     private final BranchRepository branchRepository;
     private final BranchMapper mapper;
-    private final BranchCustomRepositoryImp customRepository;
 
     @Transactional
     public Long create(final BranchDTO branchDTO) {
@@ -163,12 +161,12 @@ public class BranchService {
     }
 
     public ListResult<BranchDTO> filterBranch(final BranchFilterDTO branchFilterDTO) {
-        Page<BranchDTO> page = customRepository.filterBranch(branchFilterDTO);
+        Page<BranchDTO> page = branchRepository.filterBranch(branchFilterDTO);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
     public ListResult<BranchDTO> filterBranchBySpecification(final BranchFilterDTO search) {
-        Page<BranchDTO> page = customRepository.filterBranchBySpecification(search);
+        Page<BranchDTO> page = branchRepository.filterBranchBySpecification(search);
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 }

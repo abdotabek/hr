@@ -1,4 +1,4 @@
-package org.example.service.custom;
+package org.example.repository.imp;
 
 
 import jakarta.persistence.EntityManager;
@@ -9,13 +9,11 @@ import org.example.dto.company.CompanyDTO;
 import org.example.dto.filter.CompanyFilterDTO;
 import org.example.entity.Company;
 import org.example.exception.ExceptionUtil;
-import org.example.repository.CompanyRepository;
-import org.example.repository.imp.CompanyRepositoryCustom;
+import org.example.repository.CompanyRepositoryCustom;
 import org.example.repository.mapper.CompanyMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -23,10 +21,9 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CompanyCustomRepositoryImp implements CompanyRepositoryCustom {
+public class CompanyRepositoryCustomImpl implements CompanyRepositoryCustom {
     private final CompanyMapper mapper;
     private final EntityManager entityManager;
-    private final CompanyRepository companyRepository;
 
     @Override
     public Page<CompanyDTO> filterCompany(CompanyFilterDTO search) {
@@ -66,6 +63,53 @@ public class CompanyCustomRepositoryImp implements CompanyRepositoryCustom {
 
     @Override
     public Page<CompanyDTO> filterCompanyBySpecification(CompanyFilterDTO search) {
+        if (!StringUtils.hasText(search.getSearch())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("data company is required");
+        }
+
+        int pageNo = search.getPageNo();
+        int pageSize = search.getPageSize();
+
+        String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
+
+        var cb = entityManager.getCriteriaBuilder();
+
+        // Основной запрос для выборки
+        var cq = cb.createQuery(Company.class);
+        var root = cq.from(Company.class);
+
+        Predicate namePredicate = cb.like(cb.lower(root.get("name")), searchPattern);
+        Predicate tinPredicate = cb.like(cb.lower(root.get("tin")), searchPattern);
+        Predicate brandPredicate = cb.like(cb.lower(root.get("brand")), searchPattern);
+        cq.where(cb.or(namePredicate, tinPredicate, brandPredicate));
+
+        TypedQuery<Company> typedQuery = entityManager.createQuery(cq)
+            .setFirstResult(pageNo * pageSize)
+            .setMaxResults(pageSize);
+
+        List<Company> companies = typedQuery.getResultList();
+
+        // Запрос для подсчёта
+        var countCq = cb.createQuery(Long.class);
+        var countRoot = countCq.from(Company.class);
+
+        Predicate countNamePredicate = cb.like(cb.lower(countRoot.get("name")), searchPattern);
+        Predicate countTinPredicate = cb.like(cb.lower(countRoot.get("tin")), searchPattern);
+        Predicate countBrandPredicate = cb.like(cb.lower(countRoot.get("brand")), searchPattern);
+        countCq.select(cb.count(countRoot));
+        countCq.where(cb.or(countNamePredicate, countTinPredicate, countBrandPredicate));
+        Long total = entityManager.createQuery(countCq).getSingleResult();
+
+        List<CompanyDTO> companyDTOs = companies.stream()
+            .map(mapper::toDTO)
+            .toList();
+
+        return new PageImpl<>(companyDTOs, PageRequest.of(pageNo, pageSize), total);
+    }
+
+
+    /*@Override
+    public Page<CompanyDTO> filterCompanyBySpecification(CompanyFilterDTO search) {
         Specification<Company> specification = (root, query, builder) -> {
             Predicate predicate = builder.conjunction();
 
@@ -87,5 +131,5 @@ public class CompanyCustomRepositoryImp implements CompanyRepositoryCustom {
         List<CompanyDTO> companyDTOS = companyPage.stream().map(mapper::toDTO).toList();
 
         return new PageImpl<>(companyDTOS, PageRequest.of(pageNo, pageSize), companyPage.getTotalElements());
-    }
+    }*/
 }

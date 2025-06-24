@@ -1,25 +1,25 @@
-package org.example.service.custom;
+package org.example.repository.imp;
 
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.employee.EmployeeDTO;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
 import org.example.entity.Position;
 import org.example.exception.ExceptionUtil;
-import org.example.repository.EmployeeRepository;
-import org.example.repository.imp.EmployeeRepositoryCustom;
+import org.example.repository.EmployeeRepositoryCustom;
 import org.example.repository.mapper.EmployeeMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -31,9 +31,8 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class EmployeeCustomRepositoryImp implements EmployeeRepositoryCustom {
+public class EmployeeRepositoryCustomImpl implements EmployeeRepositoryCustom {
     private final EntityManager entityManager;
-    private final EmployeeRepository employeeRepository;
     private final EmployeeMapper mapper;
 
     @Override
@@ -120,42 +119,73 @@ public class EmployeeCustomRepositoryImp implements EmployeeRepositoryCustom {
 
     @Override
     public Page<EmployeeDTO> filterByNameSurname(EmployeeFilterDTO filter) {
-        Specification<Employee> spec = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
-            if (filter.getSearch() != null && !filter.getSearch().isEmpty()) {
-                String searchTerm = "%" + filter.getSearch().toLowerCase() + "%";
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
 
-                Predicate firstName = criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), searchTerm);
-                Predicate lastName = criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), searchTerm);
-                predicates.add(criteriaBuilder.or(firstName, lastName));
-            }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-        Pageable pageable = PageRequest.of(filter.getPageNo(), filter.getPageSize());
-        return employeeRepository.findAll(spec, pageable).map(mapper::toDTO);
+        List<Predicate> predicates = new ArrayList<>();
+        if (StringUtils.hasText(filter.getSearch())) {
+            String pattern = "%" + filter.getSearch().toLowerCase() + "%";
+            predicates.add(cb.or(
+                cb.like(cb.lower(root.get("firstName")), pattern),
+                cb.like(cb.lower(root.get("lastName")), pattern)
+            ));
+        }
+        query.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Employee> typedQuery = entityManager.createQuery(query);
+        typedQuery.setFirstResult(filter.getPageNo() * filter.getPageSize());
+        typedQuery.setMaxResults(filter.getPageSize());
+        List<Employee> employees = typedQuery.getResultList();
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Employee> countRoot = countQuery.from(Employee.class);
+        countQuery.select(cb.count(countRoot)).where(predicates.toArray(new Predicate[0]));
+        Long total = entityManager.createQuery(countQuery).getSingleResult();
+
+        return new PageImpl<>(
+            employees.stream().map(mapper::toDTO).toList(),
+            PageRequest.of(filter.getPageNo(), filter.getPageSize()),
+            total
+        );
     }
 
     @Override
     public Page<EmployeeDTO> filterEmployeeByPosition(EmployeeFilterDTO filter) {
-        Specification<Employee> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        Join<Employee, Position> positionJoin = root.join("position", JoinType.LEFT);
 
-            if (filter.getSearch() != null && !filter.getSearch().isEmpty()) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (StringUtils.hasText(filter.getSearch())) {
+            String pattern = "%" + filter.getSearch().toLowerCase() + "%";
+            predicates.add(cb.or(
+                cb.like(cb.lower(root.get("firstName")), pattern),
+                cb.like(cb.lower(root.get("lastName")), pattern),
+                cb.like(cb.lower(positionJoin.get("name")), pattern)
+            ));
+        }
+        query.where(predicates.toArray(new Predicate[0]));
 
-                Join<Employee, Position> positionJoin = root.join("position", JoinType.LEFT);
-                String searchTerm = "%" + filter.getSearch().toLowerCase() + "%";
+        TypedQuery<Employee> typedQuery = entityManager.createQuery(query);
+        typedQuery.setFirstResult(filter.getPageNo() * filter.getPageSize());
+        typedQuery.setMaxResults(filter.getPageSize());
+        List<Employee> employees = typedQuery.getResultList();
 
-                Predicate byPositionName = criteriaBuilder.like(criteriaBuilder.lower(positionJoin.get("name")), searchTerm);
-                Predicate firstName = criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), searchTerm);
-                Predicate lastName = criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), searchTerm);
+        // Считаем общее количество
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Employee> countRoot = countQuery.from(Employee.class);
+        Join<Employee, Position> countJoin = countRoot.join("position", JoinType.LEFT);
+        countQuery.select(cb.count(countRoot)).where(predicates.toArray(new Predicate[0]));
+        Long total = entityManager.createQuery(countQuery).getSingleResult();
 
-                predicates.add(criteriaBuilder.or(firstName, lastName, byPositionName));
-            }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-        Pageable pageable = PageRequest.of(filter.getPageNo(), filter.getPageSize());
-        return employeeRepository.findAll(specification, pageable).map(mapper::toDTO);
+        return new PageImpl<>(
+            employees.stream().map(mapper::toDTO).toList(),
+            PageRequest.of(filter.getPageNo(), filter.getPageSize()),
+            total
+        );
     }
 
     @Override
@@ -193,27 +223,50 @@ public class EmployeeCustomRepositoryImp implements EmployeeRepositoryCustom {
 
     @Override
     public Page<EmployeeDTO> filterBySpecification(EmployeeFilterDTO search) {
-        Specification<Employee> specification = (root, query, builder) -> {
-            Predicate predicate = builder.conjunction();
+        if (!StringUtils.hasText(search.getSearch())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("employee data is required");
+        }
 
-            if (!StringUtils.hasText(search.getSearch())) {
-                throw ExceptionUtil.throwCustomIllegalArgumentException("employee data is required");
-            }
-            String searchPatter = "%" + search.getSearch().toLowerCase() + "%";
-            Predicate firstPredicate = builder.like(builder.lower(root.get("firstName")), searchPatter);
-            Predicate lastNamePredicate = builder.like(builder.lower(root.get("lastName")), searchPatter);
-            Predicate emailPredicate = builder.like(builder.lower(root.get("email")), searchPatter);
-            Predicate phonePredicate = builder.like(builder.lower(root.get("phoneNumber")), searchPatter);
-            Predicate logonPredicate = builder.like(builder.lower(root.get("login")), searchPatter);
-            predicate = builder.and(predicate, builder.or(firstPredicate, lastNamePredicate, emailPredicate, phonePredicate, logonPredicate));
-            return predicate;
-        };
+        String pattern = "%" + search.getSearch().toLowerCase() + "%";
         int pageNo = search.getPageNo();
         int pageSize = search.getPageSize();
 
-        Page<Employee> employeePage = employeeRepository.findAll(specification, PageRequest.of(pageNo, pageSize));
-        List<EmployeeDTO> employeeDTOS = employeePage.stream().map(mapper::toDTO).toList();
+        var cb = entityManager.getCriteriaBuilder();
+        var cq = cb.createQuery(Employee.class);
+        var root = cq.from(Employee.class);
 
-        return new PageImpl<>(employeeDTOS, PageRequest.of(pageNo, pageSize), employeePage.getTotalPages());
+        var predicate = cb.or(
+            cb.like(cb.lower(root.get("firstName")), pattern),
+            cb.like(cb.lower(root.get("lastName")), pattern),
+            cb.like(cb.lower(root.get("email")), pattern),
+            cb.like(cb.lower(root.get("phoneNumber")), pattern),
+            cb.like(cb.lower(root.get("login")), pattern)
+        );
+
+        cq.where(predicate);
+
+        var typedQuery = entityManager.createQuery(cq)
+            .setFirstResult(pageNo * pageSize)
+            .setMaxResults(pageSize);
+
+        List<Employee> employees = typedQuery.getResultList();
+
+        var countCq = cb.createQuery(Long.class);
+        var countRoot = countCq.from(Employee.class);
+        countCq.select(cb.count(countRoot)).where(
+            cb.or(
+                cb.like(cb.lower(countRoot.get("firstName")), pattern),
+                cb.like(cb.lower(countRoot.get("lastName")), pattern),
+                cb.like(cb.lower(countRoot.get("email")), pattern),
+                cb.like(cb.lower(countRoot.get("phoneNumber")), pattern),
+                cb.like(cb.lower(countRoot.get("login")), pattern)
+            )
+        );
+
+        Long total = entityManager.createQuery(countCq).getSingleResult();
+
+        List<EmployeeDTO> dtos = employees.stream().map(mapper::toDTO).toList();
+
+        return new PageImpl<>(dtos, PageRequest.of(pageNo, pageSize), total);
     }
 }

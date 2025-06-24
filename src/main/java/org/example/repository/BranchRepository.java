@@ -1,7 +1,6 @@
 package org.example.repository;
 
 import org.example.entity.Branch;
-import org.example.repository.imp.BranchRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

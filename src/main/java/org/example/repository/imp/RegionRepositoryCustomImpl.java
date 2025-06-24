@@ -1,19 +1,20 @@
-package org.example.service.custom;
+package org.example.repository.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.RegionFilterDTO;
 import org.example.entity.Region;
 import org.example.exception.ExceptionUtil;
-import org.example.repository.RegionRepository;
-import org.example.repository.imp.RegionRepositoryCustom;
+import org.example.repository.RegionRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -22,9 +23,8 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class RegionCustomRepositoryImp implements RegionRepositoryCustom {
+public class RegionRepositoryCustomImpl implements RegionRepositoryCustom {
     private final EntityManager entityManager;
-    private final RegionRepository regionRepository;
 
     @Override
     public Page<CommonDTO> filterRegion(RegionFilterDTO search) {
@@ -60,28 +60,56 @@ public class RegionCustomRepositoryImp implements RegionRepositoryCustom {
 
     @Override
     public Page<CommonDTO> filterRegionBySpecification(RegionFilterDTO search) {
-        Specification<Region> specification = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (!StringUtils.hasText(search.getSearch())) {
-                throw ExceptionUtil.throwCustomIllegalArgumentException("region data is required");
-            }
-            String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern));
-            if (search.getRegionId() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("id"), search.getRegionId()));
-            }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
+        if (!StringUtils.hasText(search.getSearch())) {
+            throw ExceptionUtil.throwCustomIllegalArgumentException("region data is required");
+        }
+
         int pageNo = search.getPageNo();
         int pageSize = search.getPageSize();
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize);
 
-        Page<Region> regionsPage = regionRepository.findAll(specification, pageRequest);
+        String searchPattern = "%" + search.getSearch().toLowerCase() + "%";
 
-        List<CommonDTO> commonDTOS = regionsPage.map(this::toDTO).stream().toList();
-        return new PageImpl<>(commonDTOS, pageRequest, regionsPage.getTotalPages());
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
+        // Основной запрос
+        CriteriaQuery<Region> cq = cb.createQuery(Region.class);
+        Root<Region> root = cq.from(Region.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.like(cb.lower(root.get("name")), searchPattern));
+        if (search.getRegionId() != null) {
+            predicates.add(cb.equal(root.get("id"), search.getRegionId()));
+        }
+
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
+
+        TypedQuery<Region> typedQuery = entityManager.createQuery(cq)
+            .setFirstResult(pageNo * pageSize)
+            .setMaxResults(pageSize);
+
+        List<Region> regions = typedQuery.getResultList();
+
+        // Запрос для подсчёта total
+        CriteriaQuery<Long> countCq = cb.createQuery(Long.class);
+        Root<Region> countRoot = countCq.from(Region.class);
+
+        List<Predicate> countPredicates = new ArrayList<>();
+        countPredicates.add(cb.like(cb.lower(countRoot.get("name")), searchPattern));
+        if (search.getRegionId() != null) {
+            countPredicates.add(cb.equal(countRoot.get("id"), search.getRegionId()));
+        }
+
+        countCq.select(cb.count(countRoot));
+        countCq.where(cb.and(countPredicates.toArray(new Predicate[0])));
+
+        Long total = entityManager.createQuery(countCq).getSingleResult();
+
+        List<CommonDTO> commonDTOs = regions.stream().map(this::toDTO).toList();
+
+        return new PageImpl<>(commonDTOs, pageRequest, total);
     }
+
 
     private CommonDTO toDTO(Region region) {
         CommonDTO regionDTO = new CommonDTO();
