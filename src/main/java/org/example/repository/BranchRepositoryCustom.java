@@ -1,4 +1,4 @@
-package org.example.repository.imp;
+package org.example.repository;
 
 import org.example.dto.branch.BranchDTO;
 import org.example.dto.filter.BranchFilterDTO;
