@@ -21,7 +21,6 @@ public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
 
-
     @Transactional
     public Long create(final CommonDTO departmentDTO) {
         if (departmentDTO.getName() == null || departmentDTO.getName().isEmpty()) {
