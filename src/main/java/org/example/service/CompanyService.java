@@ -10,6 +10,8 @@ import org.example.dto.company.CompanyListDTO;
 import org.example.dto.filter.CompanyFilterDTO;
 import org.example.entity.Address;
 import org.example.entity.Company;
+import org.example.entity.District;
+import org.example.entity.Region;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.CompanyRepository;
 import org.example.repository.mapper.CompanyMapper;
@@ -135,4 +137,20 @@ public class CompanyService {
         return new ListResult<>(page.getContent(), page.getTotalElements());
     }
 
+    public Long updateAddress(Long id, AddressDetailsDTO addressDTO) {
+        companyRepository.findById(id).map(company -> {
+            Region region = new Region();
+            region.setName(addressDTO.getRegion());
+
+            District district = new District();
+            district.setName(addressDTO.getDistrict());
+
+            Address address = new Address();
+            address.setRegion(region);
+            address.setDistrict(district);
+            company.setAddress(address);
+            return companyRepository.save(company);
+        }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("address with this ID does not exist"));
+        return id;
+    }
 }

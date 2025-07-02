@@ -4,6 +4,7 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.ListResult;
 import org.example.dto.Result;
+import org.example.dto.address.AddressDetailsDTO;
 import org.example.dto.company.CompanyDTO;
 import org.example.dto.company.CompanyDetailDTO;
 import org.example.dto.company.CompanyListDTO;
@@ -53,6 +54,11 @@ public class CompanyController {
     @PutMapping("/{id}")
     public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CompanyDTO companyDTO) {
         return ResponseEntity.ok(Result.success(companyService.update(id, companyDTO)));
+    }
+
+    @PutMapping("/update-address/{id}")
+    public ResponseEntity<Result<Long>> updateAddress(@PathVariable("id") final Long id, @RequestBody final AddressDetailsDTO addressDTO) {
+        return ResponseEntity.ok(Result.success(companyService.updateAddress(id, addressDTO)));
     }
 
     @DeleteMapping("/{id}")
