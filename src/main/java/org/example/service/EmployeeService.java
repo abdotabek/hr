@@ -12,6 +12,7 @@ import org.example.dto.enums.GeneralStatus;
 import org.example.dto.filter.EmployeeFilterDTO;
 import org.example.entity.Employee;
 import org.example.entity.redis.BlackList;
+import org.example.enums.AppLanguage;
 import org.example.exception.ExceptionUtil;
 import org.example.exception.NotFoundException;
 import org.example.repository.BlockListRepository;
@@ -37,12 +38,13 @@ public class EmployeeService {
     private final EntityManager entityManager;
     private final TokenStoreRepository tokenStoreRepository;
     private final BlockListRepository blockListRepository;
+    private final ResourceBundleService localizationService;
 
 
     @Transactional
-    public Long create(final EmployeeDTO employeeDTO) {
+    public Long create(final EmployeeDTO employeeDTO, AppLanguage language) {
         if (employeeRepository.existsEmployeeByEmail(employeeDTO.getEmail())) {
-            throw ExceptionUtil.throwConflictException("employee with this email already exists!");
+            throw ExceptionUtil.throwConflictException(localizationService.getMessage("email.phone.exist", language));
         }
         final Employee employee = new Employee();
         employee.setFirstName(employeeDTO.getFirstName());
@@ -57,7 +59,7 @@ public class EmployeeService {
         return employeeRepository.save(employee).getId();
     }
 
-    public EmployeeDetailDTO get(final Long id) {
+    public EmployeeDetailDTO get(final Long id, AppLanguage language) {
         return employeeRepository.findById(id)
             .map(employee -> {
                 final EmployeeDetailDTO employeeDetailDTO = new EmployeeDetailDTO();
@@ -70,7 +72,7 @@ public class EmployeeService {
                 employeeDetailDTO.setPositionName(employee.getPosition() != null ? employee.getPosition().getName() : null);
                 employeeDetailDTO.setDepartmentName(employee.getDepartment() != null ? employee.getDepartment().getName() : null);
                 return employeeDetailDTO;
-            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException("employee with this ID does not exist"));
+            }).orElseThrow(() -> ExceptionUtil.throwNotFoundException(localizationService.getMessage("profile.not.found", language)));
     }
 
     public List<EmployeeListDTO> getList() {

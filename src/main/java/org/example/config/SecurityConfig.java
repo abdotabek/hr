@@ -34,7 +34,8 @@ public class SecurityConfig {
             "/api/auths/refresh-token",
             "/api/auths/login",
         "/api/companies/filterCompany",
-        "/api/block-lists"
+        "/api/block-lists",
+        "/api/employees"
     };
 
     @Bean

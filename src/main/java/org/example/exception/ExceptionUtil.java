@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 public class ExceptionUtil {
-    public static NotFoundExceptions throwNotFoundException(String message) {
+    public static NotFoundExceptions throwNotFoundException(final String message) {
 
         ErrorDTO errorDTO = ErrorDTO
                 .builder()
@@ -19,7 +19,7 @@ public class ExceptionUtil {
         throw new NotFoundExceptions(errorDTO, message);
     }
 
-    public static ConflictException throwConflictException(String message) {
+    public static ConflictException throwConflictException(final String message) {
 
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Conflict Error")
@@ -30,7 +30,7 @@ public class ExceptionUtil {
         throw new ConflictException(errorDTO, message);
     }
 
-    public static IllegalArgumentException throwCustomIllegalArgumentException(String message) {
+    public static IllegalArgumentException throwCustomIllegalArgumentException(final String message) {
 
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Bad Request")
@@ -42,7 +42,7 @@ public class ExceptionUtil {
         throw new CustomIllegalArgumentException(errorDTO, message);
     }
 
-    public static UserBlockedException throwUserBlockedException(String message) {
+    public static UserBlockedException throwUserBlockedException(final String message) {
 
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Access Denied")
@@ -53,7 +53,7 @@ public class ExceptionUtil {
         throw new UserBlockedException(errorDTO, message);
     }
 
-    public static EmployeeNotFoundException throwEmployeeNotFoundException(String message) {
+    public static EmployeeNotFoundException throwEmployeeNotFoundException(final String message) {
 
         ErrorDTO errorDTO = ErrorDTO.builder()
                 .title("Access Denied")

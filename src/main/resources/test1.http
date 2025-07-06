@@ -128,3 +128,6 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9PV05FUiIsImlkIjo3N
   "title": "password"
 }
 
+###
+GET localhost:8080/api/employees/7
+

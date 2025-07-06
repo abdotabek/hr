@@ -14,17 +14,17 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, Emplo
     List<Employee> findAllEmployees();
 
     @Query(value = "SELECT * FROM employee WHERE first_name = :firstName", nativeQuery = true)
-    List<Employee> findByName(String firstName);
+    List<Employee> findByName(final String firstName);
 
     @Query(value = "SELECT id, name FROM employee WHERE last_name = :lastName", nativeQuery = true)
-    List<Object[]> findIdsAndNamesBySurname(String lastName);
+    List<Object[]> findIdsAndNamesBySurname(final String lastName);
 
     @Query(value = "SELECT id AS id, name AS employeeName FROM employee WHERE phone_number = :phoneNumber", nativeQuery = true)
-    List<?> findEmployeeDTOByPhone(String phoneNumber);
+    List<?> findEmployeeDTOByPhone(final String phoneNumber);
 
-    boolean existsEmployeeByEmail(String email);
+    boolean existsEmployeeByEmail(final String email);
 
-    boolean existsEmployeeByPhoneNumber(String phoneNumber);
+    boolean existsEmployeeByPhoneNumber(final String phoneNumber);
 
     Optional<Employee> findByPhoneNumber(String phone);
 
