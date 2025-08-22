@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.ListResult;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.PositionFilterDTO;
+import org.example.dto.position.PositionDTO;
 import org.example.entity.Position;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.PositionRepository;
@@ -20,12 +21,13 @@ public class PositionService {
     private final PositionRepository positionRepository;
 
     @Transactional
-    public Long create(final CommonDTO positionDTO) {
+    public Long create(final PositionDTO positionDTO) {
         if (positionDTO.getName() == null || positionDTO.getName().isEmpty()) {
             throw ExceptionUtil.throwCustomIllegalArgumentException("position name in required");
         }
         final Position position = new Position();
         position.setName(positionDTO.getName());
+        position.setLogType(positionDTO.getLogType());
         return positionRepository.save(position).getId();
     }
 
@@ -40,12 +42,13 @@ public class PositionService {
                 ExceptionUtil.throwNotFoundException("position with this ID does not exist"));
     }
 
-    public List<CommonDTO> getList() {
+    public List<PositionDTO> getList() {
         return positionRepository.findAll()
             .stream().map(position -> {
-                final CommonDTO positionDTO = new CommonDTO();
+                final PositionDTO positionDTO = new PositionDTO();
                 positionDTO.setId(position.getId());
                 positionDTO.setName(position.getName());
+                positionDTO.setLogType(position.getLogType());
                 return positionDTO;
             }).toList();
     }

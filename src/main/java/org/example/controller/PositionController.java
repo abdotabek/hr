@@ -6,6 +6,7 @@ import org.example.dto.ListResult;
 import org.example.dto.Result;
 import org.example.dto.base.CommonDTO;
 import org.example.dto.filter.PositionFilterDTO;
+import org.example.dto.position.PositionDTO;
 import org.example.service.PositionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ public class PositionController {
     private final PositionService positionService;
 
     @PostMapping
-    public ResponseEntity<Result<Long>> create(@RequestBody final CommonDTO positionDTO) {
+    public ResponseEntity<Result<Long>> create(@RequestBody final PositionDTO positionDTO) {
         return ResponseEntity.ok(Result.success(positionService.create(positionDTO)));
     }
 
@@ -37,7 +38,7 @@ public class PositionController {
     }
 
     @GetMapping
-    public ResponseEntity<Result<List<CommonDTO>>> getList() {
+    public ResponseEntity<Result<List<PositionDTO>>> getList() {
         return ResponseEntity.ok(Result.success(positionService.getList()));
     }
 
