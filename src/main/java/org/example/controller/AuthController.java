@@ -13,11 +13,9 @@ import org.example.dto.jwt.TokenDTO;
 import org.example.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auths")
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerApi {
 

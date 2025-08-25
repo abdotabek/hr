@@ -7,13 +7,11 @@ import org.example.dto.redis.TokenStoreDTO;
 import org.example.service.TokenStoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/token-stores")
 @RequiredArgsConstructor
 public class TokenStoreController implements TokenStoreControllerApi {
 
