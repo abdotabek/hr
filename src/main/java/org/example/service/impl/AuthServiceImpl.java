@@ -17,7 +17,6 @@ import org.example.repository.BlockListRepository;
 import org.example.repository.EmployeeRepository;
 import org.example.repository.mapper.EmployeeMapper;
 import org.example.service.AuthService;
-import org.example.service.EmployeeService;
 import org.example.util.JwtUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final EmployeeMapper mapper;
     private final BlockListRepository blockListRepository;
     private final JwtAuthenticationFilter authenticationFilter;
-    private final EmployeeService employeeService;
+    private final EmployeeServiceImpl employeeServiceImpl;
 
     @Override
     public EmployeeDTO registration(EmployeeDTO employeeDTO) {
@@ -138,10 +137,10 @@ public class AuthServiceImpl implements AuthService {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
 
-            employeeService.authenticationSuccessHandler(loginVM);
+            employeeServiceImpl.authenticationSuccessHandler(loginVM);
             return new ResponseEntity<>(loginVMDTO, headers, HttpStatus.OK);
         } catch (Exception e) {
-            employeeService.authenticationFailureHandler(loginVM, e);
+            employeeServiceImpl.authenticationFailureHandler(loginVM, e);
             throw e;
         }
     }

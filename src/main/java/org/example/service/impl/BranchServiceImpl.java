@@ -15,6 +15,7 @@ import org.example.entity.Branch;
 import org.example.exception.ExceptionUtil;
 import org.example.repository.BranchRepository;
 import org.example.repository.mapper.BranchMapper;
+import org.example.service.BranchService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BranchService implements org.example.service.BranchService {
+public class BranchServiceImpl implements BranchService {
 
     private final EntityManager entityManager;
     private final BranchRepository branchRepository;
