@@ -11,7 +11,7 @@ import org.example.dto.branch.BranchDTO;
 import org.example.dto.branch.BranchDetailsDTO;
 import org.example.dto.branch.BranchIdNameCompanyDTO;
 import org.example.dto.filter.BranchFilterDTO;
-import org.example.service.impl.BranchServiceImpl;
+import org.example.service.impl.BranchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,71 +23,71 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BranchController implements BranchControllerApi {
 
-    private final BranchServiceImpl branchServiceImpl;
+    private final BranchService branchService;
 
     @Override
     public ResponseEntity<Result<Long>> create(@RequestBody @Valid final BranchDTO branchDTO) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.create(branchDTO)));
+        return ResponseEntity.ok(Result.success(branchService.create(branchDTO)));
     }
 
     @Override
     public ResponseEntity<Result<BranchDetailsDTO>> get(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.get(id)));
+        return ResponseEntity.ok(Result.success(branchService.get(id)));
     }
 
     @Override
     public ResponseEntity<Result<List<CommonDTO>>> getList() {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getList()));
+        return ResponseEntity.ok(Result.success(branchService.getList()));
     }
 
     @Override
     public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody @Valid final BranchDTO branchDTO) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.update(id, branchDTO)));
+        return ResponseEntity.ok(Result.success(branchService.update(id, branchDTO)));
     }
 
     @Override
     public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
-        branchServiceImpl.delete(id);
+        branchService.delete(id);
         return ResponseEntity.ok(Result.success());
     }
 
     @Override
     public ResponseEntity<Result<List<BranchDTO>>> getAllBranches() {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getAllBranches()));
+        return ResponseEntity.ok(Result.success(branchService.getAllBranches()));
     }
 
     @Override
     public ResponseEntity<Result<List<BranchDTO>>> getBranchesByName(@PathVariable("name") final String name) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getBranchesByName(name)));
+        return ResponseEntity.ok(Result.success(branchService.getBranchesByName(name)));
     }
 
     @Override
     public ResponseEntity<Result<List<BranchDTO>>> getBranchesByCompany(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getBranchesByCompanyId(id)));
+        return ResponseEntity.ok(Result.success(branchService.getBranchesByCompanyId(id)));
     }
 
     @Override
     public ResponseEntity<Result<Long>> getBranchCountByCompanyId(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getBranchCountByCompanyId(id)));
+        return ResponseEntity.ok(Result.success(branchService.getBranchCountByCompanyId(id)));
     }
 
     @Override
     public ResponseEntity<Result<List<String>>> getAllBranchNames() {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getAllBranchNames()));
+        return ResponseEntity.ok(Result.success(branchService.getAllBranchNames()));
     }
 
     @Override
     public ResponseEntity<Result<List<BranchIdNameCompanyDTO>>> getBranchList() {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.getBranchList()));
+        return ResponseEntity.ok(Result.success(branchService.getBranchList()));
     }
 
     @Override
     public ResponseEntity<Result<ListResult<BranchDTO>>> filterBranch(@RequestBody final BranchFilterDTO branchFilterDTO) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.filterBranch(branchFilterDTO)));
+        return ResponseEntity.ok(Result.success(branchService.filterBranch(branchFilterDTO)));
     }
 
     @Override
     public ResponseEntity<Result<ListResult<BranchDTO>>> filterBranchBySpecification(@RequestBody final BranchFilterDTO search) {
-        return ResponseEntity.ok(Result.success(branchServiceImpl.filterBranchBySpecification(search)));
+        return ResponseEntity.ok(Result.success(branchService.filterBranchBySpecification(search)));
     }
 }

@@ -10,7 +10,7 @@ import org.example.dto.company.CompanyDTO;
 import org.example.dto.company.CompanyDetailDTO;
 import org.example.dto.company.CompanyListDTO;
 import org.example.dto.filter.CompanyFilterDTO;
-import org.example.service.impl.CompanyServiceImpl;
+import org.example.service.CompanyService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,56 +24,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompanyController implements CompanyControllerApi {
 
-    private final CompanyServiceImpl companyServiceImpl;
+    private final CompanyService companyService;
 
     @Override
     public ResponseEntity<Result<Long>> create(@RequestBody final CompanyDTO companyDTO) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.create(companyDTO)));
+        return ResponseEntity.ok(Result.success(companyService.create(companyDTO)));
     }
 
     @Override
     public ResponseEntity<Result<?>> getBranchById(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.getCompanyById(id)));
+        return ResponseEntity.ok(Result.success(companyService.getCompanyById(id)));
     }
 
     @Override
     public ResponseEntity<Result<CompanyDetailDTO>> get(@PathVariable("id") final Long id) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.get(id)));
+        return ResponseEntity.ok(Result.success(companyService.get(id)));
     }
 
     @Override
     public ResponseEntity<Result<List<CompanyListDTO>>> getList() {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.getList()));
+        return ResponseEntity.ok(Result.success(companyService.getList()));
     }
 
     @Override
     public ResponseEntity<Result<Long>> update(@PathVariable("id") final Long id, @RequestBody final CompanyDTO companyDTO) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.update(id, companyDTO)));
+        return ResponseEntity.ok(Result.success(companyService.update(id, companyDTO)));
     }
 
     @Override
     public ResponseEntity<Result<Long>> updateAddress(@PathVariable("id") final Long id, @RequestBody final AddressDetailsDTO addressDTO) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.updateAddress(id, addressDTO)));
+        return ResponseEntity.ok(Result.success(companyService.updateAddress(id, addressDTO)));
     }
 
     @Override
     public ResponseEntity<Result<Void>> delete(@PathVariable("id") final Long id) {
-        companyServiceImpl.delete(id);
+        companyService.delete(id);
         return ResponseEntity.ok(Result.success());
     }
 
     @Override
     public ResponseEntity<Result<CompanyDTO>> getByTin(@RequestParam("tin") final String tin) {  //getByTin?tin=
-        return ResponseEntity.ok(Result.success(companyServiceImpl.getByTin(tin)));
+        return ResponseEntity.ok(Result.success(companyService.getByTin(tin)));
     }
 
     @Override
     public ResponseEntity<Result<ListResult<CompanyDTO>>> filterCompany(@ParameterObject final CompanyFilterDTO companyFilterDTO) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.filterCompany(companyFilterDTO)));
+        return ResponseEntity.ok(Result.success(companyService.filterCompany(companyFilterDTO)));
     }
 
     @Override
     public ResponseEntity<Result<ListResult<CompanyDTO>>> filterCompanyBySpecification(@ParameterObject final CompanyFilterDTO search) {
-        return ResponseEntity.ok(Result.success(companyServiceImpl.filterCompanyBySpecification(search)));
+        return ResponseEntity.ok(Result.success(companyService.filterCompanyBySpecification(search)));
     }
 }
