@@ -2,11 +2,11 @@ package org.example.service;
 
 import org.example.dto.ListResult;
 import org.example.dto.base.CommonDTO;
+import org.example.dto.branch.BranchDTO;
 import org.example.dto.branch.BranchDetailsDTO;
 import org.example.dto.branch.BranchIdNameCompanyDTO;
 import org.example.dto.filter.BranchFilterDTO;
 import org.springframework.transaction.annotation.Transactional;
-import org.example.dto.branch.BranchDTO;
 
 import java.util.List;
 

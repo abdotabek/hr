@@ -2,8 +2,8 @@ package org.example.controller.api;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.example.config.doc.DocMethodAuth;
 import jakarta.validation.Valid;
+import org.example.config.doc.DocMethodAuth;
 import org.example.dto.ListResult;
 import org.example.dto.Result;
 import org.example.dto.base.CommonDTO;

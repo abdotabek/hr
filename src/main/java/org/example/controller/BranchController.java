@@ -11,7 +11,6 @@ import org.example.dto.branch.BranchDTO;
 import org.example.dto.branch.BranchDetailsDTO;
 import org.example.dto.branch.BranchIdNameCompanyDTO;
 import org.example.dto.filter.BranchFilterDTO;
-
 import org.example.service.BranchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
